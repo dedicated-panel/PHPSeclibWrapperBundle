@@ -8,6 +8,6 @@ class ConnectionErrorException extends \exception
 {
     public function __construct(ServerInterface $server)
     {
-        parent::__construct('Connection to ' . $server->getUser() . '@' . $server->getHost() . ':' . $server->getPort() . ' failed.');
+        parent::__construct('Connection to ' . $server->getUsername() . '@' . $server->getHostname() . ':' . $server->getPort() . ' failed.');
     }
 }

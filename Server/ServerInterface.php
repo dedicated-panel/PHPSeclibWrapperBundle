@@ -3,22 +3,45 @@
 namespace DP\PHPSeclibWrapperBundle\Server;
 
 interface ServerInterface
-{
+{    
     /**
      * Sets the host IP
      * 
-     * @param string $host IP address
+     * @param int $ip IP address
      * 
      * @return \DP\PHPSeclibWrapperBundle\Server\ServerInterface 
      */
-    public function setHost($host);
+    public function setIP($ip);
     
     /**
      * Gets the host IP
      * 
+     * @return int
+     */
+    public function getIP();
+    
+    /**
+     * Sets the hostname
+     * 
+     * @param string $hostname Server hostname
+     * 
+     * @return \DP\PHPSeclibWrapperBundle\Server\ServerInterface 
+     */
+    public function setHostname($hostname);
+    
+    /**
+     * Gets the hostname
+     * 
      * @return string
      */
-    public function getHost();
+    public function getHostname();
+    
+    /**
+     * Gets the server IP from $ip (if set) or from $host (resolved)
+     * 
+     * @return string
+     */
+    public function getServerIP();
     
     /**
      * Sets the port

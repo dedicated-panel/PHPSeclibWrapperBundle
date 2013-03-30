@@ -6,14 +6,68 @@ use DP\PHPSeclibWrapperBundle\Server\Server;
 
 class ServerTest extends \PHPUnit_Framework_TestCase
 {
-    public function testHost()
+    public function testIPv4Host()
     {
         $server = $this->getServer();
-        $this->assertNull($server->getHost());
-        var_dump($server->getHost());
-        $server->setHost('127.0.0.1');
+        $this->assertNull($server->getIP());
         
-        $this->assertEquals('127.0.0.1', $server->getHost());
+        $server->setIP('127.0.0.1');
+        $this->assertEquals('127.0.0.1', $server->getIP());
+    }
+    
+    public function testIPv6HostRestriction()
+    {
+        $this->setExpectedException('DP\PHPSeclibWrapperBundle\Server\Exception\ServerIPv6HostException');
+        
+        $server = $this->getServer();
+        $this->assertNull($server->getIP());
+        
+        $server->setIP('::1');
+    }
+    
+    public function testHostname()
+    {        
+        $server = $this->getServer();
+        $this->assertNull($server->getHostname());        
+        $server->setHostname('www.dedicated-panel.net');
+        $this->assertEquals('www.dedicated-panel.net', $server->getHostname());
+    }
+    
+    public function testBadHostnameResolution()
+    {
+        $this->setExpectedException('DP\PHPSeclibWrapperBundle\Server\Exception\HostnameUnresolvedException');
+        
+        $server = $this->getServer();
+        $this->assertNull($server->getHostname());
+        $this->assertNull($server->getIP());
+        
+        $server->setHostname('test.test');
+        $this->assertEquals('test.test', $server->getHostname());
+        
+        // Gets the server info for exception testing
+        $server->getServerIP();
+    }
+    
+    public function testEmptyConnectionInfo()
+    {
+        $this->setExpectedException('DP\PHPSeclibWrapperBundle\Server\Exception\EmptyServerInfosException');
+        
+        $server = $this->getServer();
+        $this->assertNull($server->getHostname());
+        $this->assertNull($server->getIP());
+        
+        // Gets the server info for exception testing
+        $server->getServerIP();
+    }
+    
+    public function testHostnameResolution()
+    {        
+        $server = $this->getServer();
+        $this->assertNull($server->getHostname());
+        
+        $server->setHostname('ks3278363.kimsufi.com');
+        $this->assertEquals('ks3278363.kimsufi.com', $server->getHostname());
+        $this->assertEquals('5.39.91.107', $server->getServerIP());
     }
     
     public function testPort()
@@ -30,8 +84,8 @@ class ServerTest extends \PHPUnit_Framework_TestCase
         $server = $this->getServer();
         $this->assertNull($server->getUsername());
 
-        $server->setUsername('tony');
-        $this->assertEquals('tony', $server->getUsername());
+        $server->setUsername('test');
+        $this->assertEquals('test', $server->getUsername());
     }
     
     public function testHome()

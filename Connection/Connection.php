@@ -3,7 +3,7 @@
 namespace DP\PHPSeclibWrapperBundle\Connection;
 
 use DP\PHPSeclibWrapperBundle\Server\ServerInterface;
-use DP\PHPSeclibWrapperBundle\Connection\Exception\IncompleteLoginIDException;
+use DP\PHPSeclibWrapperBundle\Connection\Exception\IncompleteLoginCredentialsException;
 use DP\PHPSeclibWrapperBundle\Connection\Exception\ConnectionErrorException;
 
 class Connection
@@ -14,12 +14,27 @@ class Connection
     protected $ssh;
     protected $sftp;
     
+    /**
+     * @param ServerInterface   $server Server representation containing informations about it
+     * @param boolean           $debug  Indicates whether connection need to be in debug mode
+     * 
+     * @return Connection       Current instance, for method chaining
+     */
     public function __construct(ServerInterface $server, $debug = false)
     {
         $this->server = $server;
         $this->debug = $debug;
+        
+        return $this;
     }
     
+    /**
+     * Sets the debug mode
+     * 
+     * @param boolean $debug Indicates whether connection need to be in debug mode
+     * 
+     * @return Connection Current instance, for method chaining  
+     */
     public function setDebug($debug)
     {
         $this->debug = $debug;
@@ -27,31 +42,46 @@ class Connection
         return $this;
     }
     
+    /**
+     * Gets the debug mode
+     * 
+     * @return boolean Current debug mode for ssh/sftp connections
+     */
     public function getDebug()
     {
         return $this->debug;
     }
     
+    /**
+     * Gets the PHPSeclib SSH instance associated to this Connection instance.
+     * If not already openned, we tried to connect with the server informations.
+     * 
+     * @throws IncompleteLoginCredentialsException  If no private key and no password are defined
+     * @throws ConnectionErrorException             If the connection can't be done (mostly due to bad credentials or timeout)
+     * 
+     * @return \Net_SSH2        PHPSeclib SSH connection
+     */
     public function getSSH()
     {
         if (!isset($this->ssh)) {
-            $ssh = new \Net_SSH2($this->server->getHost(), $this->server->getPort());
+            $ssh = new \Net_SSH2($this->server->getHostname(), $this->server->getPort());
             
-            $privateKey = $this->server->getPrivateKey();
+            $username = $this->server->getUsername();
             $password = $this->server->getPassword();
+            $privateKey = $this->server->getPrivateKey();
             
             if (!empty($privateKey)) {
-                $login = $ssh->login($this->server->getUser(), $privateKey);
+                $login = $ssh->login($username, $privateKey);
             }
             elseif (!empty($password)) {
-                $login = $ssh->login($this->server->getUser(), $password);
+                $login = $ssh->login($username, $password);
             }
             else {
-                throw new IncompleteLoginIDException($this);
+                throw new IncompleteLoginCredentialsException($this->server);
             }
             
             if ($login === false) {
-                throw new ConnectionErrorException($this);
+                throw new ConnectionErrorException($this->server);
             }
             
             $this->ssh = $ssh;
@@ -59,27 +89,37 @@ class Connection
         
         return $this->ssh;
     }
-    
+
+    /**
+     * Gets the PHPSeclib SFTP instance associated to this Connection instance.
+     * If not already openned, we tried to connect with the server informations.
+     * 
+     * @throws IncompleteLoginCredentialsException  If no private key and no password are defined
+     * @throws ConnectionErrorException             If the connection can't be done (mostly due to bad credentials or timeout)
+     * 
+     * @return \Net_SFTP        PHPSeclib SFTP connection
+     */    
     public function getSFTP()
     {
         if (!isset($this->sftp)) {
-            $sftp = new \Net_SFTP($this->server->getHost(), $this->server->getPort());
+            $sftp = new \Net_SFTP($this->server->getHostname(), $this->server->getPort());
             
-            $privateKey = $this->server->getPrivateKey();
+            $username = $this->server->getUsername();
             $password = $this->server->getPassword();
+            $privateKey = $this->server->getPrivateKey();
             
             if (!empty($privateKey)) {
-                $login = $sftp->login($this->server->getUser(), $privateKey);
+                $login = $sftp->login($username, $privateKey);
             }
             elseif (!empty($password)) {
-                $login = $sftp->login($this->server->getUser(), $password);
+                $login = $sftp->login($username, $password);
             }
             else {
-                throw new IncompleteLoginIDException($this);
+                throw new IncompleteLoginCredentialsException($this->server);
             }
             
             if ($login === false) {
-                throw new ConnectionErrorException($this);
+                throw new ConnectionErrorException($this->server);
             }
             
             $this->sftp = $sftp;

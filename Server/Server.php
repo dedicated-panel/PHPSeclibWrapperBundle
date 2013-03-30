@@ -3,22 +3,31 @@
 namespace DP\PHPSeclibWrapperBundle\Server;
 
 use DP\PHPSeclibWrapperBundle\Server\ServerInterface;
+use DP\PHPSeclibWrapperBundle\Server\Exception\ServerIPv6HostException;
+use DP\PHPSeclibWrapperBundle\Server\Exception\EmptyServerInfosException;
+use DP\PHPSeclibWrapperBundle\Server\Exception\HostnameUnresolvedException;
 
 class Server implements ServerInterface
 {
-    protected $host;
+    protected $ip;
+    protected $hostname;
     protected $port;
     protected $username;
     protected $home;
     protected $password;
     protected $privateKey;
     
+    
     /**
      * {@inheritdoc}
      */
-    public function setHost($host)
+    public function setIP($ip)
     {
-        $this->host = $host;
+        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+            throw new ServerIPv6HostException($ip);
+        }
+        
+        $this->ip = $ip;
         
         return $this;
     }
@@ -26,11 +35,50 @@ class Server implements ServerInterface
     /**
      * {@inheritdoc}
      */
-    public function getHost()
+    public function getIP()
     {
-        return $this->host;
+        return $this->ip;
     }
     
+    /**
+     * {@inheritdoc}
+     */
+    public function setHostname($hostname)
+    {
+        $this->hostname = $hostname;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getHostname()
+    {
+        return $this->hostname;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+     public function getServerIP()
+     {
+         if (!empty($this->ip)) {
+             return $this->ip;
+         }
+         elseif (!empty($this->hostname)) {
+             $ip = gethostbyname($this->hostname);
+             
+             if ($ip != $this->hostname) {
+                 return $ip;
+             }
+             else {
+                 throw new HostnameUnresolvedException($this->hostname);
+             }
+         }
+         else {
+             throw new EmptyServerInfosException;
+         }
+     }
+     
     /**
      * {@inheritdoc}
      */

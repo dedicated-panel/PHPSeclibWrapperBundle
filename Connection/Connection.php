@@ -10,6 +10,7 @@ class Connection
 {
     protected $server;
     protected $debug;
+    protected $connectionId;
     
     protected $ssh;
     protected $sftp;
@@ -27,6 +28,11 @@ class Connection
         
         return $this;
     }
+    
+    /**
+     * Interdit le clonage de l'objet
+     */
+    private function __clone() {}
     
     /**
      * Sets the debug mode
@@ -50,6 +56,30 @@ class Connection
     public function getDebug()
     {
         return $this->debug;
+    }
+    
+    /**
+     * Sets the connection id
+     * 
+     * @param integer $connectionId Connection Id
+     * 
+     * @return Connection Current instance, for method chaining
+     */
+    public function setConnectionId($connectionId)
+    {
+        $this->connectionId = $connectionId;
+        
+        return $this;
+    }
+    
+    /**
+     * Gets the connection id assigned by the manager
+     * 
+     * @return integer Connection id
+     */
+    public function getConnectionId()
+    {
+        return $this->connectionId;
     }
     
     /**
@@ -126,5 +156,41 @@ class Connection
         }
         
         return $this->sftp;
+    }
+    
+    /**
+     * Executes a shell command on the server
+     * 
+     * @param string $cmd Command to execute
+     * 
+     * @return string Return the shell command output
+     */
+    public function exec($cmd)
+    {
+        $ret = $this->getSSH()->exec($cmd);
+        $ret = trim($ret);
+        
+        return $ret;
+    }
+    
+    /**
+     * Verifies that we can access the server with server credentials
+     * 
+     * @return boolean Can we connect ?
+     */
+    public function connectionTest()
+    {
+        try {
+            $echo = $this->exec('echo dedipanel');
+            
+            if (empty($echo) || $echo != 'dedipanel') {
+                return false;
+            }
+        }
+        catch (\Exception $e) {
+            return false;
+        }
+        
+        return true;
     }
 }

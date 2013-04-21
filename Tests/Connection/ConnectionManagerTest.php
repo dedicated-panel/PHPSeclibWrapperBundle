@@ -39,7 +39,7 @@ class ConnectionManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($conn1, $conn2);
     }
     
-    public function testGetMultipleDifferentConnFromManager()
+    public function testGetDifferentConnIdFromManager()
     {
         $server = $this->getGoodServer();
         $manager = new ConnectionManager;

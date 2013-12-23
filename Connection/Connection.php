@@ -367,6 +367,9 @@ abstract class Connection implements GenericConnectionInterface
         return true;
     }
     
+    /**
+     * @{inheritDoc}
+     */
     public function fileExists($filepath)
     {
         $ret = $this->getSSH()->exec('if [ -f ' . $filepath . ' ]; then echo 1; else echo 0; fi');
@@ -374,10 +377,21 @@ abstract class Connection implements GenericConnectionInterface
         return intval($ret) == 1;
     }
     
+    /**
+     * @{inheritDoc}
+     */
     public function dirExists($dirpath)
     {
         $ret = $this->getSSH()->exec('if [ -d ' . $dirpath . ' ]; then echo 1; else echo 0; fi');
         
         return intval($ret) == 1;
+    }
+    
+    /**
+     * @{inheritDoc}
+     */
+    public function remove($path)
+    {
+        return $this->getSSH()->delete($path, true);
     }
 }

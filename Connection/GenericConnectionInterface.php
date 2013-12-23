@@ -57,4 +57,13 @@ interface GenericConnectionInterface
      * @return boolean Return true if the dir exists
      */
     public function dirExists($dirpath);
+    
+    /**
+     * Removes the file or directory
+     * 
+     * @param $path string
+     * 
+     * @return boolean Return true if the file (or directory) has been deleted
+     */
+     public function remove($path);
 }

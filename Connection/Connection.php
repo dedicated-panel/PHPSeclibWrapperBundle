@@ -366,4 +366,18 @@ abstract class Connection implements GenericConnectionInterface
         
         return true;
     }
+    
+    public function fileExists($filepath)
+    {
+        $ret = $this->getSSH()->exec('if [ -f ' . $filepath . ' ]; then echo 1; else echo 0; fi');
+        
+        return intval($ret) == 1;
+    }
+    
+    public function dirExists($dirpath)
+    {
+        $ret = $this->getSSH()->exec('if [ -d ' . $dirpath . ' ]; then echo 1; else echo 0; fi');
+        
+        return intval($ret) == 1;
+    }
 }

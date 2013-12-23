@@ -23,4 +23,12 @@ class DebianConnection extends Connection implements OsSpecificConnectionInterfa
         // La commande ne renvoie rien
         return $this->getSSH()->exec($cmd) == '';
     }
+    
+    /**
+     * @{inheritDoc}
+     */
+    public function createDirectory($dirpath)
+    {
+        return $this->getSSH()->exec('mkdir ' . $dirpath) == '';
+    }
 }

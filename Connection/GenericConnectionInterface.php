@@ -34,9 +34,27 @@ interface GenericConnectionInterface
     public function download($filepath);
     
     /**
-     * Verifies that we can access the server with server credentials
+     * Verify that we can access the server with server credentials
      *
      * @return boolean Can we connect ?
      */
     public function connectionTest();
+    
+    /**
+     * Verify if the file $filepath exists
+     * 
+     * @param $filepath string
+     * 
+     * @return boolean Return true if the file exists
+     */
+    public function fileExists($filepath);
+    
+    /**
+     * Verify if the dir $dirpath exists
+     * 
+     * @param $dirpath string
+     * 
+     * @return boolean Return true if the dir exists
+     */
+    public function dirExists($dirpath);
 }

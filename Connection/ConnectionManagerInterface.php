@@ -12,11 +12,11 @@ interface ConnectionManagerInterface
      * and $cid connection id
      * 
      * @param ServerInterface $server 
-     * @param interger        $cid    Connection id identifying the connection to the $server
+     * @param interger        $cid    0 if creating a new one or cid
      * 
      * @return ConnectionInterface    Return an already opened connection, or one freshly opened
      */
-    public function getConnectionFromServer(ServerInterface $server, $cid = 0);
+    public function getConnectionFromServer(ServerInterface $server, $cid = 1);
     
     /**
      * Retrieves the connection id associated to $connection instance

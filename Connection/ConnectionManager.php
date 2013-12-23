@@ -24,22 +24,26 @@ class ConnectionManager extends ContainerAware implements ConnectionManagerInter
         $this->logger = $logger;
     }
     
-    public function getConnectionFromServer(ServerInterFace $server, $cid = 0)
+    public function getConnectionFromServer(ServerInterFace $server, $cid = 1)
     {
-        $key = $this->getServerHash($server);
+        $hash = $this->getServerHash($server);
         
-        if (!array_key_exists($key, $this->connections)) {
-            $this->connections[$key] = array();
+        if (!isset($this->connections[$hash])) {
+            $this->connections[$hash] = array();
         }
         
-        if (!isset($this->connections[$key][$cid]) || empty($this->connections[$key][$cid])) {
+        if ($cid == 0) {
+            $cid = (count($this->connections[$hash]) > 0 ? max(array_keys($this->connections[$hash])) + 1 : 1);
+        }
+        
+        if (!isset($this->connections[$hash][$cid]) || empty($this->connections[$hash][$cid])) {
             $conn = new Connection($server, $this->logger, $this->debug);
             $conn->setConnectionId($cid);
             
-            $this->connections[$key][$cid] = $conn;
+            $this->connections[$hash][$cid] = $conn;
         }
         
-        return $this->connections[$key][$cid];
+        return $this->connections[$hash][$cid];
     }
     
     private function getServerHash(ServerInterface $server)

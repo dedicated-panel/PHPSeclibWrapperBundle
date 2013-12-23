@@ -65,9 +65,9 @@ class ServerTest extends \PHPUnit_Framework_TestCase
         $server = $this->getServer();
         $this->assertNull($server->getHostname());
         
-        $server->setHostname('ks3278363.kimsufi.com');
-        $this->assertEquals('ks3278363.kimsufi.com', $server->getHostname());
-        $this->assertEquals('5.39.91.107', $server->getServerIP());
+        $server->setHostname('localhost');
+        $this->assertEquals('localhost', $server->getHostname());
+        $this->assertEquals('127.0.0.1', $server->getServerIP());
     }
     
     public function testPort()

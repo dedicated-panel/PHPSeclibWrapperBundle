@@ -5,9 +5,10 @@ namespace DP\PHPSeclibWrapperBundle\Connection;
 use DP\PHPSeclibWrapperBundle\Server\ServerInterface;
 use DP\PHPSeclibWrapperBundle\Connection\Exception\IncompleteLoginCredentialsException;
 use DP\PHPSeclibWrapperBundle\Connection\Exception\ConnectionErrorException;
+use DP\PHPSeclibWrapperBundle\Connection\ConnectionInterface;
 use Psr\Log\LoggerInterface;
 
-class Connection
+abstract class Connection implements ConnectionInterface
 {
     /** @var Server\ServerInterface **/
     protected $server;
@@ -239,11 +240,7 @@ class Connection
     }
     
     /**
-     * Executes a shell command on the server
-     *
-     * @param string $cmd Command to execute
-     *
-     * @return string Return the shell command output
+     * @{inheritDoc}
      */
     public function exec($cmd)
     {
@@ -266,13 +263,7 @@ class Connection
     }
     
     /**
-     * Upload $data in $filepath and modified file chmod
-     * 
-     * @param 	$filepath	string			File path of the file on the server
-     * @param	$data		string			Data to upload
-     * @param   $chmod		integer|boolean	Chmod of the file (octal integer in php need to start with a trailing 0)
-     * 										Can be false to disable file perms modification
-     * @return 	boolean
+     * @{inheritDoc}
      */
     public function upload($filepath, $data, $chmod = 0750)
     {
@@ -313,9 +304,30 @@ class Connection
     }
     
     /**
-     * Verifies that we can access the server with server credentials
-     *
-     * @return boolean Can we connect ?
+     * @{inheritDoc}
+     */
+    public function download($filepath)
+    {
+        $this->logger->notice(get_class($this) . '::download - Download {filepath} on sftp server {server} (cid: {cid}).', array(
+            'server' => strval($this->server),
+            'cid' => $this->getConnectionId(),
+            'filepath' => $filepath, 
+        ));
+        
+        $content = $this->getSFTP()->get($filepath);
+        
+        $this->logger->debug(get_class($this) . '::download - Downloading {size} bytes from {filepath} on sftp server {server} (cid: {cid}).', array(
+            'server' => strval($this->server),
+            'cid' => $this->getConnectionId(),
+            'size' => strlen($content),
+            'filepath' => $filepath, 
+        ));
+        
+        return $content;
+    }
+    
+    /**
+     * @{inheritDoc}
      */
     public function connectionTest()
     {

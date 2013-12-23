@@ -2,7 +2,7 @@
 
 namespace DP\PHPSeclibWrapperBundle\Connection;
 
-interface ConnectionInterface
+interface GenericConnectionInterface
 {
     /**
      * Executes a shell command on the server

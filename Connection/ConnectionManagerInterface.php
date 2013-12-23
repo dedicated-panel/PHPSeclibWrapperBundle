@@ -5,6 +5,11 @@ namespace DP\PHPSeclibWrapperBundle\Connection;
 use DP\PHPSeclibWrapperBundle\Server\ServerInterface;
 use DP\PHPSeclibWrapperBundle\Connection\ConnectionInterface;
 
+/**
+ * @author Albin Kerouanton
+ * @license http://opensource.org/licenses/MIT
+ * @version 1.0
+ */
 interface ConnectionManagerInterface
 {
     /**

@@ -2,6 +2,11 @@
 
 namespace DP\PHPSeclibWrapperBundle\Server;
 
+/**
+ * @author Albin Kerouanton
+ * @license http://opensource.org/licenses/MIT
+ * @version 1.0
+ */
 interface ServerInterface
 {    
     /**

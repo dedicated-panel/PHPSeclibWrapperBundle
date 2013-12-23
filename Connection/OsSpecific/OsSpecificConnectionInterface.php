@@ -5,6 +5,11 @@ namespace DP\PHPSeclibWrapperBundle\Connection;
 use DP\PHPSeclibWrapperBundle\Connection\OsSpecific\Exception\MethodNotImplementedException;
 use DP\PHPSeclibWrapperBundle\Connection\OsSpecific\Exception\UnavailableMethodException;
 
+/**
+ * @author Albin Kerouanton
+ * @license http://opensource.org/licenses/MIT
+ * @version 1.0
+ */
 interface OsSpecificConnectionInterface
 {
     /**

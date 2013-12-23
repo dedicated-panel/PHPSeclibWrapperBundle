@@ -5,6 +5,11 @@ namespace DP\PHPSeclibWrapperBundle\Connection\OsSpecific;
 use DP\PHPSeclibWrapperBundle\Connection\Connection;
 use DP\PHPSeclibWrapperBundle\Connection\OsSpecific\OsSpecificConnectionInterface;
 
+/**
+ * @author Albin Kerouanton
+ * @license http://opensource.org/licenses/MIT
+ * @version 1.0
+ */
 class DebianConnection extends Connection implements OsSpecificConnectionInterface
 {
     protected $home;

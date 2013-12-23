@@ -9,6 +9,11 @@ use DP\PHPSeclibWrapperBundle\Server\ServerInterface;
 use DP\PHPSeclibWrapperBundle\Connection\ConnectionInterface;
 use DP\PHPSeclibWrapperBundle\Connection\Connection;
 
+/**
+ * @author Albin Kerouanton
+ * @license http://opensource.org/licenses/MIT
+ * @version 1.0
+ */
 class ConnectionManager extends ContainerAware implements ConnectionManagerInterface
 {
     protected $connections;

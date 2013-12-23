@@ -8,6 +8,11 @@ use DP\PHPSeclibWrapperBundle\Connection\Exception\ConnectionErrorException;
 use DP\PHPSeclibWrapperBundle\Connection\ConnectionInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @author Albin Kerouanton
+ * @license http://opensource.org/licenses/MIT
+ * @version 1.0
+ */
 class Connection implements ConnectionInterface
 {
     /** @var Server\ServerInterface **/

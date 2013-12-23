@@ -7,6 +7,11 @@ use DP\PHPSeclibWrapperBundle\Server\Exception\ServerIPv6HostException;
 use DP\PHPSeclibWrapperBundle\Server\Exception\EmptyServerInfosException;
 use DP\PHPSeclibWrapperBundle\Server\Exception\HostnameUnresolvedException;
 
+/**
+ * @author Albin Kerouanton
+ * @license http://opensource.org/licenses/MIT
+ * @version 1.0
+ */
 class Server implements ServerInterface
 {
     protected $ip;

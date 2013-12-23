@@ -87,4 +87,16 @@ class DebianConnection extends Connection implements OsSpecificConnectionInterfa
             return $this->isInstalled('ia32-libs');
         }
     }
+    
+    /**
+     * @{inheritDoc}
+     */
+    public function getScreenContent($screenName)
+    {
+        $tmpFile = '/tmp/' . uniqid();
+        $cmd = 'screen -S "' . $screenName . '" -X hardcopy ' . $tmpFile . '; sleep 1s;';
+        $cmd .= 'if [ -e ' . $tmpFile . ' ]; then cat ' . $tmpFile . '; rm -f ' . $tmpFile . '; fi';
+        
+        return $this->getSSH()->exec($cmd);
+    }
 }

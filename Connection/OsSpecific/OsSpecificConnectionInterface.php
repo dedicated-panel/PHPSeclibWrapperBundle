@@ -81,4 +81,16 @@ interface OsSpecificConnectionInterface
      * @return boolean
      */
     public function hasCompatLib();
+    
+    /**
+     * Gets the screen $screenName content
+     * 
+     * @param $screenName string The screen name
+     * 
+     * @throws MethodNotImplementedException
+     * @throws UnavailableMethodException
+     * 
+     * @return string
+     */
+    public function getScreenContent($screenName);
 }

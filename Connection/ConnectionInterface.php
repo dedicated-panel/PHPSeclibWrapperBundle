@@ -2,8 +2,10 @@
 
 namespace DP\PHPSeclibWrapperBundle\Connection;
 
-interface GenericConnectionInterface
+interface ConnectionInterface
 {
+    public function getServer();
+    
     /**
      * Executes a shell command on the server
      *

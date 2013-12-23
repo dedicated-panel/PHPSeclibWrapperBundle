@@ -5,10 +5,10 @@ namespace DP\PHPSeclibWrapperBundle\Connection;
 use DP\PHPSeclibWrapperBundle\Server\ServerInterface;
 use DP\PHPSeclibWrapperBundle\Connection\Exception\IncompleteLoginCredentialsException;
 use DP\PHPSeclibWrapperBundle\Connection\Exception\ConnectionErrorException;
-use DP\PHPSeclibWrapperBundle\Connection\GenericConnectionInterface;
+use DP\PHPSeclibWrapperBundle\Connection\ConnectionInterface;
 use Psr\Log\LoggerInterface;
 
-abstract class Connection implements GenericConnectionInterface
+class Connection implements ConnectionInterface
 {
     /** @var Server\ServerInterface **/
     protected $server;
@@ -112,6 +112,16 @@ abstract class Connection implements GenericConnectionInterface
     public function getLogger()
     {
         return $this->logger;
+    }
+    
+    /**
+     * Gets the server
+     * 
+     * @return ServerInterface
+     */
+    public function getServer()
+    {
+        return $this->server;
     }
     
     /**

@@ -113,4 +113,73 @@ interface ConnectionInterface
      * @return boolean Return true if the file (or directory) has been deleted
      */
      public function remove($path);
+    
+    /**
+     * Adds the $key to the authorized_keys of the user (create it if not exists)
+     * 
+     * @api
+     * 
+     * @param string $key Public key to add to the server
+     * 
+     * @return boolean
+     */
+    public function addKey($key);
+    
+    /**
+     * Removes the $key from the authorized_keys of the user
+     * 
+     * @api
+     * 
+     * @param string Public key to remove from the server
+     * 
+     * @return boolean Return true if key successfully deleted or if authorized_keys doesn't exists
+     */
+    public function removeKey($key);
+    
+    /**
+     * Creates $filepath or modify its modification time
+     * 
+     * @api
+     * 
+     * @param $filepath string    File path of the file to create or to update
+     * @param $mtime    \DateTime Mtime you want to set on the file
+     * 
+     * @return boolean
+     */
+    public function touch($filepath, \DateTime $mtime = null);
+    
+    /**
+     * Creates $filepath
+     * 
+     * @api
+     * 
+     * @param $filepath string File path of the file to create
+     * 
+     * @return boolean
+     */
+    public function createFile($filepath);
+    
+    /**
+     * Creates directory $dirpath
+     * 
+     * @api
+     * 
+     * @param $dirpath string Absolute path of the directory to create
+     * 
+     * @return boolean
+     */
+    public function createDir($dirpath);
+    
+    /**
+     * Change permissions on $path
+     * 
+     * @api
+     * 
+     * @param $path string Absolute path
+     * @param $chmod integer Chmod octal integer
+     * @param $recursive boolean Change permissions recursivly ?
+     * 
+     * @return boolean
+     */
+    public function chmod($path, $recursive = true);
 }

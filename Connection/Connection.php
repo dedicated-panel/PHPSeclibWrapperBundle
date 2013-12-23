@@ -416,4 +416,116 @@ class Connection implements ConnectionInterface
         
         return $ret;
     }
+    
+    /**
+     * @{inheritDoc}
+     */
+    public function addKey($key)
+    {
+        if (!$this->dirExists('~/.ssh')) {
+            $this->createDir('~/.ssh');
+        }
+        
+        if (!$this->fileExists('~/.ssh/authorized_keys')) {
+            $this->touch('~/.ssh/authorized_keys');
+        }
+        
+        $this->chmod('~/.ssh', 0700);
+        
+        $authorized = $this->download('~/.ssh/authorized_keys');
+        $authorized .= $pair['publickey'] . "\n";
+        
+        return $this->upload('~/.ssh/authorized_keys', $authorized);
+    }
+    
+    /**
+     * @{inheritDoc}
+     */
+    public function removeKey($key)
+    {
+        if (!$this->dirExists('~/.ssh') || !$this->fileExists('~/.ssh/authorized_keys')) {
+            return true;
+        }
+        
+        $authorized = $this->download('~/.ssh/authorized_keys');
+        $authorized = str_replace("$key\n", '', $authorized);
+        
+        return $this->upload('~/.ssh/authorized_keys', $authorized);
+    }
+    
+    public function touch($filepath, \DateTime $mtime = null)
+    {
+        $this->logger->notice(get_class($this) . '::touch - Touch file {filepath} on {mtime} on ssh server {server} (cid: {cid}).', array(
+            'server' => strval($this->server),
+            'cid' => $this->getConnectionId(),
+            'filepath' => $filepath, 
+            'mtime' => $mtime->format('d/m/y H:i:s'), 
+        ));
+        
+        $ret = $this->getSFTP()->touch($filepath, $mtime->getTimestamp());
+        
+        $this->logger->notice(get_class($this) . '::touch - Touching file {filepath} on ssh server {server} (cid: {cid}) : {ret}.', array(
+            'server' => strval($this->server),
+            'cid' => $this->getConnectionId(),
+            'filepath' => $filepath, 
+            'mtime' => $mtime->format('d/m/y H:i:s'), 
+            'ret' => ($ret == true ? 'successfully' : 'failed'), 
+        ));
+        
+        return $ret;
+    }
+    
+    /**
+     * @{inheritDoc}
+     */
+    public function createFile($filepath)
+    {
+        return $this->touch($filepath);
+    }
+    
+    /**
+     * @{inheritDoc}
+     */
+    public function createDir($dirpath)
+    {
+        $this->logger->notice(get_class($this) . '::createDir - Create directory {dirpath} on ssh server {server} (cid: {cid}).', array(
+            'server' => strval($this->server),
+            'cid' => $this->getConnectionId(),
+            'dirpath' => $dirpath, 
+        ));
+        
+        $ret = $this->getSFTP()->mkdir($dirpath);
+        
+        $this->logger->notice(get_class($this) . '::createDir - Creating directory {dirpath} on ssh server {server} (cid: {cid}) : {ret}.', array(
+            'server' => strval($this->server),
+            'cid' => $this->getConnectionId(),
+            'dirpath' => $dirpath, 
+            'ret' => ($ret == true ? 'successfully' : 'failed'),
+        ));
+        
+        return $ret;
+    }
+    
+    /**
+     * @{inheritDoc}
+     */
+    public function chmod($path, $chmod, $recursive = true)
+    {
+        $this->logger->notice(get_class($this) . '::chmod - Chmod {chmod} on {path} on ssh server {server} (cid: {cid}).', array(
+            'server' => strval($this->server),
+            'cid' => $this->getConnectionId(),
+            'path' => $path, 
+        ));
+        
+        $ret = $this->getSFTP()->chmod($path, $chmod);
+        
+        $this->logger->notice(get_class($this) . '::chmod - Chmoding {chmod} on {path} on ssh server {server} (cid: {cid}) : {ret}.', array(
+            'server' => strval($this->server),
+            'cid' => $this->getConnectionId(),
+            'path' => $path, 
+            'ret' => ($ret == true ? 'successfully' : 'failed'),
+        ));
+        
+        return $ret;
+    }
 }

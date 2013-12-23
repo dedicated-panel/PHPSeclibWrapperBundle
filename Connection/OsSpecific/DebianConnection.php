@@ -29,30 +29,6 @@ class DebianConnection extends Connection implements OsSpecificConnectionInterfa
     /**
      * @{inheritDoc}
      */
-    public function touch($filepath, \DateTime $mtime = null)
-    {
-        $cmd = 'touch ' . $filepath;
-        
-        if (!is_null($mtime)) {
-            $mtime = $mtime->format('Ymdhi.s');
-            
-            $cmd = 'touch -t ' . $mtime . ' ' . $filepath; 
-        }
-        
-        return $this->exec($cmd) == '';
-    }
-    
-    /**
-     * @{inheritDoc}
-     */
-    public function createDirectory($dirpath)
-    {
-        return $this->exec('mkdir ' . $dirpath) == '';
-    }
-    
-    /**
-     * @{inheritDoc}
-     */
     public function is64BitSystem()
     {
         return strlen($this->exec('uname -r | grep "\-64"')) > 0;

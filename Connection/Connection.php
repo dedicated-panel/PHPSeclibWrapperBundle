@@ -5,10 +5,12 @@ namespace DP\PHPSeclibWrapperBundle\Connection;
 use DP\PHPSeclibWrapperBundle\Server\ServerInterface;
 use DP\PHPSeclibWrapperBundle\Connection\Exception\IncompleteLoginCredentialsException;
 use DP\PHPSeclibWrapperBundle\Connection\Exception\ConnectionErrorException;
+use Psr\Log\LoggerInterface;
 
 class Connection
 {
     protected $server;
+    protected $logger;
     protected $debug;
     
     protected $ssh;
@@ -16,13 +18,15 @@ class Connection
     
     /**
      * @param ServerInterface   $server Server representation containing informations about it
+     * @param LoggerInterface   $logger The logger instance used for logging error and debug messages
      * @param boolean           $debug  Indicates whether connection need to be in debug mode
      * 
      * @return Connection       Current instance, for method chaining
      */
-    public function __construct(ServerInterface $server, $debug = false)
+    public function __construct(ServerInterface $server, LoggerInterface $logger, $debug = false)
     {
         $this->server = $server;
+        $this->logger = $logger;
         $this->debug = $debug;
         
         return $this;

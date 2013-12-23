@@ -256,6 +256,59 @@ class Connection
         $ret = $this->getSSH()->exec($cmd);
         $ret = trim($ret);
         
+        $this->logger->debug(get_class($this) . '::exec - Return of the command {cmd} executed on cid {cid} : {ret}.', array(
+            'cid' => $this->getConnectionId(),
+            'cmd' => $cmd,
+            'ret' => $ret, 
+        ));
+        
+        return $ret;
+    }
+    
+    /**
+     * Upload $data in $filepath and modified file chmod
+     * 
+     * @param 	$filepath	string			File path of the file on the server
+     * @param	$data		string			Data to upload
+     * @param   $chmod		integer|boolean	Chmod of the file (octal integer in php need to start with a trailing 0)
+     * 										Can be false to disable file perms modification
+     * @return 	boolean
+     */
+    public function upload($filepath, $data, $chmod = 0750)
+    {
+        $this->logger->notice(get_class($this) . '::upload - Upload {bytes} bytes to {filepath} on sftp server ({server}, cid: {cid}).', array(
+            'server' => strval($this->server),
+            'cid' => $this->getConnectionId(),
+            'bytes' => strlen($data), 
+            'filepath' => $filepath, 
+        ));
+        
+        $sftp = $this->getSFTP();
+        $ret = $sftp->put($filepath, $data);
+        
+        $this->logger->debug(get_class($this) . '::exec - Uploading to {filtepath} on sftp server {server} (cid: {cid}) : {ret}.', array(
+            'cid' => $this->getConnectionId(),
+            'cmd' => $cmd,
+            'ret' => ($ret == true ? 'successful' : 'failed'), 
+        ));
+        
+        if ($chmod !== false) {
+            $this->logger->notice(get_class($this) . '::upload - Chmod {filepath} to {chmod} on sftp server {server} (cid: {cid}).', array(
+                'server' => strval($this->server),
+                'cid' => $this->getConnectionId(), 
+                'filepath' => $filepath, 
+            ));
+        
+            $sftp->chmod($chmod, $filepath);
+            
+            $this->logger->debug(get_class($this) . '::upload - Chmoding {filepath} to {chmod} on sftp server {server} (cid: {cid}) : {ret}.', array(
+                'server' => strval($this->server),
+                'cid' => $this->getConnectionId(), 
+                'filepath' => $filepath,
+                'ret' => ($ret == true ? 'successful' : 'failed'),
+            ));
+        }
+        
         return $ret;
     }
     

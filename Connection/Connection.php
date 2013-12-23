@@ -15,10 +15,14 @@ class Connection implements ConnectionInterface
     /** @var integer Connection id used by the connection manager **/
     protected $connectionId;
     
+    /** @var boolean **/
     protected $debug;
+    /** @var LoggerInterface **/
     protected $logger;
     
+    /** @var \Net_SSH2 PHPSeclib ssh2 instance **/
     protected $ssh;
+    /** @var \Net_SFTP PHPSeclib sftp instance **/
     protected $sftp;
     
     /**
@@ -115,7 +119,7 @@ class Connection implements ConnectionInterface
     }
     
     /**
-     * Gets the server
+     * Gets the server instance
      * 
      * @return ServerInterface
      */
@@ -125,13 +129,7 @@ class Connection implements ConnectionInterface
     }
     
     /**
-     * Gets the PHPSeclib SSH instance associated to this Connection instance.
-     * If not already openned, we tried to connect with the server informations.
-     *
-     * @throws IncompleteLoginCredentialsException  If no private key and no password are defined
-     * @throws ConnectionErrorException             If the connection can't be done (mostly due to bad credentials or timeout)
-     *
-     * @return \Net_SSH2        PHPSeclib SSH connection
+     * @{inheritDoc}
      */
     public function getSSH()
     {
@@ -187,15 +185,9 @@ class Connection implements ConnectionInterface
         
         return $this->ssh;
     }
-
+    
     /**
-     * Gets the PHPSeclib SFTP instance associated to this Connection instance.
-     * If not already openned, we tried to connect with the server informations.
-     *
-     * @throws IncompleteLoginCredentialsException  If no private key and no password are defined
-     * @throws ConnectionErrorException             If the connection can't be done (mostly due to bad credentials or timeout)
-     *
-     * @return \Net_SFTP        PHPSeclib SFTP connection
+     * @{inheritDoc}
      */
     public function getSFTP()
     {

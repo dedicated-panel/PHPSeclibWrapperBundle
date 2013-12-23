@@ -7,7 +7,35 @@ interface ConnectionInterface
     public function getServer();
     
     /**
+     * Gets the PHPSeclib SSH instance associated to this Connection instance.
+     * If not already openned, we tried to connect with the server informations.
+     * 
+     * @api
+     *
+     * @throws IncompleteLoginCredentialsException  If no private key and no password are defined
+     * @throws ConnectionErrorException             If the connection can't be done (mostly due to bad credentials or timeout)
+     *
+     * @return \Net_SSH2        PHPSeclib SSH connection
+     */
+    public function getSSH();
+
+    /**
+     * Gets the PHPSeclib SFTP instance associated to this Connection instance.
+     * If not already openned, we tried to connect with the server informations.
+     * 
+     * @api
+     *
+     * @throws IncompleteLoginCredentialsException  If no private key and no password are defined
+     * @throws ConnectionErrorException             If the connection can't be done (mostly due to bad credentials or timeout)
+     *
+     * @return \Net_SFTP        PHPSeclib SFTP connection
+     */
+    public function getSFTP();
+    
+    /**
      * Executes a shell command on the server
+     * 
+     * @api
      *
      * @param string $cmd Command to execute
      *
@@ -17,6 +45,8 @@ interface ConnectionInterface
     
     /**
      * Upload $data in $filepath and modified file chmod
+     * 
+     * @api
      * 
      * @param   $filepath   string          File path of the file on the server
      * @param   $data       string          Data to upload
@@ -29,6 +59,8 @@ interface ConnectionInterface
     /**
      * Download $filepath
      * 
+     * @api
+     * 
      * @param $filepath string File path of the file to download
      * 
      * @return boolean|string  Return false if the file can't be accessed or the file content
@@ -37,6 +69,8 @@ interface ConnectionInterface
     
     /**
      * Verify that we can access the server with server credentials
+     * 
+     * @api
      *
      * @return boolean Can we connect ?
      */
@@ -44,6 +78,8 @@ interface ConnectionInterface
     
     /**
      * Verify if the file $filepath exists
+     * 
+     * @api
      * 
      * @param $filepath string
      * 
@@ -54,6 +90,8 @@ interface ConnectionInterface
     /**
      * Verify if the dir $dirpath exists
      * 
+     * @api
+     * 
      * @param $dirpath string
      * 
      * @return boolean Return true if the dir exists
@@ -62,6 +100,8 @@ interface ConnectionInterface
     
     /**
      * Removes the file or directory
+     * 
+     * @api
      * 
      * @param $path string
      * 

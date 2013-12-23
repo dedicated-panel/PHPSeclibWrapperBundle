@@ -11,6 +11,8 @@ interface ConnectionManagerInterface
      * Retrieves a connection, or open it accordingly to the $server instance 
      * and $cid connection id
      * 
+     * @api
+     * 
      * @param ServerInterface $server 
      * @param interger        $cid    0 if creating a new one or cid
      * 
@@ -20,6 +22,8 @@ interface ConnectionManagerInterface
     
     /**
      * Retrieves the connection id associated to $connection instance
+     * 
+     * @api
      * 
      * @param ConnectionInterface $connection
      * 

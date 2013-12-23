@@ -10,6 +10,8 @@ interface OsSpecificConnectionInterface
     /**
      * Gets the user home
      * 
+     * @api
+     * 
      * @throws MethodNotImplementedException
      * @throws UnavailableMethodException
      * 
@@ -19,6 +21,8 @@ interface OsSpecificConnectionInterface
     
     /**
      * Creates $filepath or modify its modification time
+     * 
+     * @api
      * 
      * @param $filepath string    File path of the file to create or to update
      * @param $mtime    \DateTime Mtime you want to set on the file
@@ -33,6 +37,8 @@ interface OsSpecificConnectionInterface
     /**
      * Creates directory $dirpath
      * 
+     * @api
+     * 
      * @param $dirpath string Absolute path of the directory to create
      * 
      * @throws MethodNotImplementedException
@@ -45,6 +51,8 @@ interface OsSpecificConnectionInterface
     /**
      * Determine whether the os is a 64 bit system
      * 
+     * @api
+     * 
      * @throws MethodNotImplementedException
      * @throws UnavailableMethodException
      * 
@@ -54,6 +62,8 @@ interface OsSpecificConnectionInterface
     
     /**
      * Determine whether the $program is installed
+     * 
+     * @api
      * 
      * @throws MethodNotImplementedException
      * @throws UnavailableMethodException
@@ -65,6 +75,8 @@ interface OsSpecificConnectionInterface
     /**
      * Determine whether java is installed
      * 
+     * @api
+     * 
      * @throws MethodNotImplementedException
      * @throws UnavailableMethodException
      * 
@@ -75,6 +87,8 @@ interface OsSpecificConnectionInterface
     /**
      * Determine whether if the 32/64 bits compatability library is installed (ia32-libs)
      * 
+     * @api
+     * 
      * @throws MethodNotImplementedException
      * @throws UnavailableMethodException
      * 
@@ -84,6 +98,8 @@ interface OsSpecificConnectionInterface
     
     /**
      * Gets the screen $screenName content
+     * 
+     * @api
      * 
      * @param $screenName string The screen name
      * 

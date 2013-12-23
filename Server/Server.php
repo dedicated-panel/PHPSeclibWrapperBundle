@@ -23,6 +23,9 @@ class Server implements ServerInterface
      */
     public function setIP($ip)
     {
+        /**
+         * Les IPv6 ne sont, pour l'instant, pas géré
+         */
         if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
             throw new ServerIPv6HostException($ip);
         }

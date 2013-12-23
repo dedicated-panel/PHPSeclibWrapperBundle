@@ -10,17 +10,19 @@ use Psr\Log\LoggerInterface;
 class Connection
 {
     protected $server;
-    protected $logger;
-    protected $debug;
+    protected $connectionId;
     
+    protected $debug;
+    protected $logger;
+
     protected $ssh;
     protected $sftp;
-    
+
     /**
      * @param ServerInterface   $server Server representation containing informations about it
      * @param LoggerInterface   $logger The logger instance used for logging error and debug messages
      * @param boolean           $debug  Indicates whether connection need to be in debug mode
-     * 
+     *
      * @return Connection       Current instance, for method chaining
      */
     public function __construct(ServerInterface $server, LoggerInterface $logger, $debug = false)
@@ -28,130 +30,263 @@ class Connection
         $this->server = $server;
         $this->logger = $logger;
         $this->debug = $debug;
-        
+
         return $this;
     }
-    
+
+    /**
+     * Interdit le clonage de l'objet
+     */
+    private function __clone() {}
+
+    /**
+     * Sets the connection id
+     *
+     * @param integer $connectionId Connection Id
+     *
+     * @return Connection Current instance, for method chaining
+     */
+    public function setConnectionId($connectionId)
+    {
+        $this->connectionId = $connectionId;
+
+        return $this;
+    }
+
+    /**
+     * Gets the connection id assigned by the manager
+     *
+     * @return integer Connection id
+     */
+    public function getConnectionId()
+    {
+        return $this->connectionId;
+    }
+
     /**
      * Sets the debug mode
-     * 
+     *
      * @param boolean $debug Indicates whether connection need to be in debug mode
-     * 
-     * @return Connection Current instance, for method chaining  
+     *
+     * @return Connection Current instance, for method chaining
      */
     public function setDebug($debug)
     {
         $this->debug = $debug;
-        
+
         return $this;
     }
-    
+
     /**
      * Gets the debug mode
-     * 
+     *
      * @return boolean Current debug mode for ssh/sftp connections
      */
     public function getDebug()
     {
         return $this->debug;
     }
-    
+
+    /**
+     * Sets the logger
+     *
+     * @param LoggerInterface $logger
+     *
+     * @return Connection
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+
+        return $this;
+    }
+
+    /**
+     * Gets the logger
+     *
+     * @return LogerInterface Logger instance
+     */
+    public function getLogger()
+    {
+        return $this->logger;
+    }
+
     /**
      * Gets the PHPSeclib SSH instance associated to this Connection instance.
      * If not already openned, we tried to connect with the server informations.
-     * 
+     *
      * @throws IncompleteLoginCredentialsException  If no private key and no password are defined
      * @throws ConnectionErrorException             If the connection can't be done (mostly due to bad credentials or timeout)
-     * 
+     *
      * @return \Net_SSH2        PHPSeclib SSH connection
      */
     public function getSSH()
     {
         if (!isset($this->ssh)) {
-            $ssh = new \Net_SSH2($this->server->getHostname(), $this->server->getPort());
-            
+            $hostname = $this->server->getHostname();
+            $port = $this->server->getPort();
+
+            $ssh = new \Net_SSH2($hostname, $port);
+
             $username = $this->server->getUsername();
             $password = $this->server->getPassword();
             $privateKey = $this->server->getPrivateKey();
-            
+
             if (!empty($privateKey)) {
+            	$this->logger->notice(get_class($this) . '::getSSH - Trying to connect to ssh server ({server}, cid: {cid}) with private keyfile.', array(
+                    'server' => strval($this->server), 
+                    'cid' => $this->getConnectionId(),
+                ));
+
                 $login = $ssh->login($username, $privateKey);
             }
             elseif (!empty($password)) {
+            	$this->logger->notice(get_class($this) . '::getSSH - Trying to connect to ssh server ({server}, cid: {cid}) with password.', array(
+                    'server' => strval($this->server),
+                    'cid' => $this->getConnectionId(),
+                ));
+
                 $login = $ssh->login($username, $password);
             }
             else {
+            	$this->logger->warning(get_class($this) . '::getSSH - Can\'t connect to ssh server ({server}, cid: {cid}) because no private key and no password are set.', array(
+                    'server' => strval($this->server),
+                    'cid' => $this->getConnectionId(),
+                ));
+
                 throw new IncompleteLoginCredentialsException($this->server);
             }
-            
+
             if ($login === false) {
+            	$this->logger->warning(get_class($this) . '::getSSH - Connection to ssh server ({server}, cid: {cid}) failed.', array(
+                    'server' => strval($this->server),
+                    'cid' => $this->getConnectionId(),
+                ));
+
                 throw new ConnectionErrorException($this->server);
             }
-            
+
             $this->ssh = $ssh;
         }
-        
+
         return $this->ssh;
     }
 
     /**
      * Gets the PHPSeclib SFTP instance associated to this Connection instance.
      * If not already openned, we tried to connect with the server informations.
-     * 
+     *
      * @throws IncompleteLoginCredentialsException  If no private key and no password are defined
      * @throws ConnectionErrorException             If the connection can't be done (mostly due to bad credentials or timeout)
-     * 
+     *
      * @return \Net_SFTP        PHPSeclib SFTP connection
-     */    
+     */
     public function getSFTP()
     {
         if (!isset($this->sftp)) {
-            $sftp = new \Net_SFTP($this->server->getHostname(), $this->server->getPort());
-            
+            $hostname = $this->server->getHostname();
+            $port = $this->server->getPort();
+
+            $sftp = new \Net_SFTP($hostname, $port);
+
             $username = $this->server->getUsername();
             $password = $this->server->getPassword();
             $privateKey = $this->server->getPrivateKey();
-            
+
             if (!empty($privateKey)) {
+            	$this->logger->notice(get_class($this) . '::getSFTP - Trying to connect to sftp server ({server}, cid: {cid}) with private keyfile.', array(
+                    'server' => strval($this->server),
+                    'cid' => $this->getConnectionId(),
+                ));
+
                 $login = $sftp->login($username, $privateKey);
             }
             elseif (!empty($password)) {
+            	$this->logger->notice(get_class($this) . '::getSFTP - Trying to connect to sftp server ({server}, cid: {cid}) with password.', array(
+                    'server' => strval($this->server),
+                    'cid' => $this->getConnectionId(),
+                ));
+
                 $login = $sftp->login($username, $password);
             }
             else {
+            	$this->logger->warning(get_class($this) . '::getSFTP - Can\'t connect to sftp server ({server}:{port}, cid: {cid}) because no private key and no password are set.', array(
+                    'server' => strval($this->server),
+                    'cid' => $this->getConnectionId(),
+                ));
+
                 throw new IncompleteLoginCredentialsException($this->server);
             }
-            
+
             if ($login === false) {
+                $this->logger->warning(get_class($this) . '::getSFTP - Connection to sftp server ({server}:{port}, cid: {cid}) failed.', array(
+                    'server' => strval($this->server),
+                    'cid' => $this->getConnectionId(),
+                ));
+
                 throw new ConnectionErrorException($this->server);
             }
-            
+
             $this->sftp = $sftp;
         }
-        
+
         return $this->sftp;
     }
-    
+
     /**
-     * Execute $cmd through the PHPSeclib ssh instance
-     * 
-     * @param string $cmd SSH command to execute
-     * 
-     * @return string
+     * Executes a shell command on the server
+     *
+     * @param string $cmd Command to execute
+     *
+     * @return string Return the shell command output
      */
     public function exec($cmd)
     {
-        if ($this->debug) {
-            $this->logger->debug("Envoi de la commande \"$cmd\" sur le serveur $this->server.");
-        }
-        
+    	$this->logger->notice(get_class($this) . '::exec - Execute {cmd} on ssh server ({server}, cid: {cid}).', array(
+            'server' => strval($this->server),
+            'cid' => $this->getConnectionId(),
+            'cmd' => $cmd,
+        ));
+
         $ret = $this->getSSH()->exec($cmd);
         $ret = trim($ret);
-        
-        if ($this->debug) {
-            $this->logger->debug("Retour de la commande \"$cmd\" : \"$ret\".");
-        }
-        
+
         return $ret;
+    }
+
+    /**
+     * Verifies that we can access the server with server credentials
+     *
+     * @return boolean Can we connect ?
+     */
+    public function connectionTest()
+    {
+    	$this->logger->notice(get_class($this) . '::connectionTest - Test connection to ssh server ({server}, cid: {cid}).', array(
+            'server' => strval($this->server),
+            'cid' => $this->getConnectionId(),
+        ));
+
+        try {
+            $echo = $this->exec('echo test');
+
+            if (empty($echo) || $echo != 'test') {
+                return false;
+            }
+        }
+        catch (\Exception $e) {
+            $this->logger->notice(get_class($this) . '::connectionTest - Connection test to ssh server ({server}, cid: {cid}) failed.', array(
+                'server' => strval($this->server),
+                'cid' => $this->getConnectionId(),
+            ));
+
+            return false;
+        }
+
+    	$this->logger->notice(get_class($this) . '::connectionTest - Connection test to ssh server ({server}, cid: {cid}) succeeded.', array(
+            'server' => strval($this->server),
+            'cid' => $this->getConnectionId(),
+        ));
+
+        return true;
     }
 }

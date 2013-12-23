@@ -73,7 +73,7 @@ class ServerTest extends \PHPUnit_Framework_TestCase
     public function testPort()
     {
         $server = $this->getServer();
-        $this->assertNull($server->getPort());
+        $this->assertEquals($server->getPort(), 22);
         
         $server->setPort(22);
         $this->assertEquals(22, $server->getPort());

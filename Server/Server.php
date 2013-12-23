@@ -11,7 +11,7 @@ class Server implements ServerInterface
 {
     protected $ip;
     protected $hostname;
-    protected $port;
+    protected $port = 22;
     protected $username;
     protected $home;
     protected $password;
@@ -49,6 +49,8 @@ class Server implements ServerInterface
     public function setHostname($hostname)
     {
         $this->hostname = $hostname;
+        
+        return $this;
     }
     
     /**

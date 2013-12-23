@@ -62,25 +62,30 @@ class Server implements ServerInterface
     /**
      * {@inheritdoc}
      */
-     public function getServerIP()
-     {
-         if (!empty($this->ip)) {
-             return $this->ip;
-         }
-         elseif (!empty($this->hostname)) {
-             $ip = gethostbyname($this->hostname);
-             
-             if ($ip != $this->hostname) {
-                 return $ip;
-             }
-             else {
-                 throw new HostnameUnresolvedException($this->hostname);
-             }
-         }
-         else {
-             throw new EmptyServerInfosException;
-         }
-     }
+    public function getServerIP()
+    {
+        if (!empty($this->ip)) {
+            return $this->ip;
+        }
+        elseif (!empty($this->hostname)) {
+            // gethostbyname renvoie le hostname s'il n'a pas pu être résolu
+            $ip = gethostbyname($this->hostname);
+            
+            if ($ip != $this->hostname) {
+                return $ip;
+            }
+            // Renvoie tout de même le hostname si celui-ci correspond à une IPv4
+            elseif (filter_var($this->hostname, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false) {
+                return $this->hostname;
+            }
+            else {
+                throw new HostnameUnresolvedException($this->hostname);
+            }
+        }
+        else {
+            throw new EmptyServerInfosException;
+        }
+    }
      
     /**
      * {@inheritdoc}

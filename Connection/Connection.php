@@ -131,4 +131,27 @@ class Connection
         
         return $this->sftp;
     }
+    
+    /**
+     * Execute $cmd through the PHPSeclib ssh instance
+     * 
+     * @param string $cmd SSH command to execute
+     * 
+     * @return string
+     */
+    public function exec($cmd)
+    {
+        if ($this->debug) {
+            $this->logger->debug("Envoi de la commande \"$cmd\" sur le serveur $this->server.");
+        }
+        
+        $ret = $this->getSSH()->exec($cmd);
+        $ret = trim($ret);
+        
+        if ($this->debug) {
+            $this->logger->debug("Retour de la commande \"$cmd\" : \"$ret\".");
+        }
+        
+        return $ret;
+    }
 }

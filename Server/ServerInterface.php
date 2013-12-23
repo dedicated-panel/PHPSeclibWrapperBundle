@@ -122,4 +122,9 @@ interface ServerInterface
        * @return string
        */
       public function getPrivateKey();
+      
+      /**
+       * Gets the server string representation
+       */
+      public function __toString();
 }

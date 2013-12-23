@@ -277,7 +277,7 @@ abstract class Connection implements GenericConnectionInterface
         $sftp = $this->getSFTP();
         $ret = $sftp->put($filepath, $data);
         
-        $this->logger->debug(get_class($this) . '::exec - Uploading to {filtepath} on sftp server {server} (cid: {cid}) : {ret}.', array(
+        $this->logger->debug(get_class($this) . '::upload - Uploading to {filtepath} on sftp server {server} (cid: {cid}) : {ret}.', array(
             'cid' => $this->getConnectionId(),
             'cmd' => $cmd,
             'ret' => ($ret == true ? 'successful' : 'failed'), 
@@ -372,7 +372,7 @@ abstract class Connection implements GenericConnectionInterface
      */
     public function fileExists($filepath)
     {
-        $ret = $this->getSSH()->exec('if [ -f ' . $filepath . ' ]; then echo 1; else echo 0; fi');
+        $ret = $this->exec('if [ -f ' . $filepath . ' ]; then echo 1; else echo 0; fi');
         
         return intval($ret) == 1;
     }
@@ -382,7 +382,7 @@ abstract class Connection implements GenericConnectionInterface
      */
     public function dirExists($dirpath)
     {
-        $ret = $this->getSSH()->exec('if [ -d ' . $dirpath . ' ]; then echo 1; else echo 0; fi');
+        $ret = $this->exec('if [ -d ' . $dirpath . ' ]; then echo 1; else echo 0; fi');
         
         return intval($ret) == 1;
     }
@@ -392,6 +392,21 @@ abstract class Connection implements GenericConnectionInterface
      */
     public function remove($path)
     {
-        return $this->getSSH()->delete($path, true);
+        $this->logger->notice(get_class($this) . '::remove - Remove {path} from ssh server {server} (cid: {cid}).', array(
+            'server' => strval($this->server),
+            'cid'    => $this->getConnectionId(),
+            'path'   => $path, 
+        ));
+        
+        $ret = $this->getSFTP()->delete($path, true);
+        
+        $this->logger->notice(get_class($this) . '::remove - Removing {path} from ssh server {server} (cid: {cid}) : {ret}.', array(
+            'server' => strval($this->server),
+            'cid'    => $this->getConnectionId(),
+            'path'   => $path, 
+            'ret'    => ($ret == true ? 'successfull' : 'failed'), 
+        ));
+        
+        return $ret;
     }
 }

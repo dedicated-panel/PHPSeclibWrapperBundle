@@ -15,7 +15,7 @@ class DebianConnection extends Connection implements OsSpecificConnectionInterfa
     public function getHome()
     {
         if (!isset($this->home)) {
-            $this->home = $this->getSSH()->exec('cd ~ && pwd');
+            $this->home = $this->exec('cd ~ && pwd');
         }
         
         return $this->home;
@@ -34,7 +34,7 @@ class DebianConnection extends Connection implements OsSpecificConnectionInterfa
             $cmd = 'touch -t ' . $mtime . ' ' . $filepath; 
         }
         
-        return $this->getSSH()->exec($cmd) == '';
+        return $this->exec($cmd) == '';
     }
     
     /**
@@ -42,7 +42,7 @@ class DebianConnection extends Connection implements OsSpecificConnectionInterfa
      */
     public function createDirectory($dirpath)
     {
-        return $this->getSSH()->exec('mkdir ' . $dirpath) == '';
+        return $this->exec('mkdir ' . $dirpath) == '';
     }
     
     /**
@@ -50,7 +50,7 @@ class DebianConnection extends Connection implements OsSpecificConnectionInterfa
      */
     public function is64BitSystem()
     {
-        return strlen($this->getSSH()->exec('uname -r | grep "\-64"')) > 0;
+        return strlen($this->exec('uname -r | grep "\-64"')) > 0;
     }
     
     /**
@@ -68,7 +68,7 @@ class DebianConnection extends Connection implements OsSpecificConnectionInterfa
      */
     public function isJavaInstalled()
     {
-        return strlen($this->getSSH()->exec('type java 2>/dev/null')) > 0;
+        return strlen($this->exec('type java 2>/dev/null')) > 0;
     }
     
     /**
@@ -78,7 +78,7 @@ class DebianConnection extends Connection implements OsSpecificConnectionInterfa
     {
         // On récupère la version du système debian utilisé
         // puisque le paquet à vérifier diffère avec la debian wheezy
-        $os_version = floatval(trim($this->getSSH()->exec('cat /etc/debian_version')));
+        $os_version = floatval(trim($this->exec('cat /etc/debian_version')));
         
         if ($os_version >= 7) {
             return $this->isInstalled('libc6:i386');
@@ -97,6 +97,6 @@ class DebianConnection extends Connection implements OsSpecificConnectionInterfa
         $cmd = 'screen -S "' . $screenName . '" -X hardcopy ' . $tmpFile . '; sleep 1s;';
         $cmd .= 'if [ -e ' . $tmpFile . ' ]; then cat ' . $tmpFile . '; rm -f ' . $tmpFile . '; fi';
         
-        return $this->getSSH()->exec($cmd);
+        return $this->exec($cmd);
     }
 }

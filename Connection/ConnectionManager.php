@@ -2,21 +2,26 @@
 
 namespace DP\PHPSeclibWrapperBundle\Connection;
 
-use DP\PHPSeclibWrapperBundle\Server\ServerInterface;
-use DP\PHPSeclibWrapperBundle\Connection\Connection;
 use Symfony\Component\DependencyInjection\ContainerAware;
+use DP\PHPSeclibWrapperBundle\Connection\ConnectionManagerInterface;
+use Psr\Log\LoggerInterface;
+use DP\PHPSeclibWrapperBundle\Server\ServerInterface;
+use DP\PHPSeclibWrapperBundle\Connection\ConnectionInterface;
+use DP\PHPSeclibWrapperBundle\Connection\Connection;
 
-class ConnectionManager extends ContainerAware
+class ConnectionManager extends ContainerAware implements ConnectionManagerInterface
 {
     protected $connections;
     protected $debug;
+    protected $logger;
     
-    public function __construct($debug = false)
+    public function __construct(LoggerInterface $logger, $debug = false)
     {
         $this->servers = array();
         $this->connections = array();
         
         $this->debug = $debug;
+        $this->logger = $logger;
     }
     
     public function getConnectionFromServer(ServerInterFace $server, $cid = 0)
@@ -28,7 +33,7 @@ class ConnectionManager extends ContainerAware
         }
         
         if (!isset($this->connections[$key][$cid]) || empty($this->connections[$key][$cid])) {
-            $conn = new Connection($server, $this->debug);
+            $conn = new Connection($server, $this->logger, $this->debug);
             $conn->setConnectionId($cid);
             
             $this->connections[$key][$cid] = $conn;
@@ -37,8 +42,18 @@ class ConnectionManager extends ContainerAware
         return $this->connections[$key][$cid];
     }
     
-    public function getServerHash(ServerInterface $server)
+    private function getServerHash(ServerInterface $server)
     {
         return $server->getUsername() . '@' . $server->getServerIP() . ':' . $server->getPort();
+    }
+    
+    public function getConnectionId(ConnectionInterface $connection)
+    {
+        $server = $connection->getServer();
+        $hash = $this->getServerHash($server);
+        
+        $ret = array_keys($this->connections[$hash], $connection, true);
+        
+        return (!empty($ret) ? array_pop($ret) : null);
     }
 }

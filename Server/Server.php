@@ -176,4 +176,19 @@ class Server implements ServerInterface
     {
         return $this->privateKey;
     }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function __toString()
+    {
+        $hostname = $this->getHostname();
+        $host = $this->getIP();
+        
+        if (!empty($hostname)) {
+            $host = $hostname;
+        }
+        
+        return $this->user . '@' . $host;
+    }
 }

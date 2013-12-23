@@ -6,7 +6,6 @@ use DP\PHPSeclibWrapperBundle\Server\ServerInterface;
 use DP\PHPSeclibWrapperBundle\Connection\Exception\IncompleteLoginCredentialsException;
 use DP\PHPSeclibWrapperBundle\Connection\Exception\ConnectionErrorException;
 use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
 
 class Connection
 {
@@ -23,15 +22,16 @@ class Connection
     
     /**
      * @param ServerInterface   $server Server representation containing informations about it
+     * @param LoggerInterface   $logger The logger instance used for logging error and debug messages
      * @param boolean           $debug  Indicates whether connection need to be in debug mode
      *
      * @return Connection       Current instance, for method chaining
      */
-    public function __construct(ServerInterface $server, $debug = false)
+    public function __construct(ServerInterface $server, LoggerInterface $logger, $debug = false)
     {
         $this->server = $server;
+        $this->logger = $logger;
         $this->debug = $debug;
-        $this->logger = new NullLogger;
         
         return $this;
     }
@@ -138,30 +138,24 @@ class Connection
                 $key = new \Crypt_RSA();
                 $key->loadKey($privateKey);
                 
-                $this->logger->notice(get_class($this) . '::getSSH - Trying to connect to ssh server ({username}@{host}:{port}, cid: {cid}) using private keyfile.', array(
-                    'host' => $hostname,
-                    'port' => $port,
-                    'username' => $username,
+                $this->logger->notice(get_class($this) . '::getSSH - Trying to connect to ssh server ({server}, cid: {cid}) using private keyfile.', array(
+                    'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
                 
                 $login = $ssh->login($username, $key);
             }
             elseif (!empty($password)) {
-                $this->logger->notice(get_class($this) . '::getSSH - Trying to connect to ssh server ({username}@{host}:{port}, cid: {cid}) using password.', array(
-                    'host' => $hostname,
-                    'port' => $port,
-                    'username' => $username,
+                $this->logger->notice(get_class($this) . '::getSSH - Trying to connect to ssh server ({server}, cid: {cid}) using password.', array(
+                    'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
                 
                 $login = $ssh->login($username, $password);
             }
             else {
-                $this->logger->warning(get_class($this) . '::getSSH - Can\'t connect to ssh server ({username}@{host}:{port}, cid: {cid}) because no private key and no password are set.', array(
-                    'host' => $hostname,
-                    'port' => $port,
-                    'username' => $username,
+                $this->logger->warning(get_class($this) . '::getSSH - Can\'t connect to ssh server ({server}, cid: {cid}) because no private key and no password are set.', array(
+                    'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
                 
@@ -169,10 +163,8 @@ class Connection
             }
             
             if ($login === false) {
-                $this->logger->warning(get_class($this) . '::getSSH - Connection to ssh server ({username}@{host}:{port}, cid: {cid}) failed.', array(
-                    'host' => $hostname,
-                    'port' => $port,
-                    'username' => $username,
+                $this->logger->warning(get_class($this) . '::getSSH - Connection to ssh server ({server}, cid: {cid}) failed.', array(
+                    'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
                 
@@ -207,30 +199,24 @@ class Connection
             $privateKey = $this->server->getPrivateKey();
             
             if (!empty($privateKey)) {
-                $this->logger->notice(get_class($this) . '::getSFTP - Trying to connect to sftp server ({username}@{host}:{port}, cid: {cid}) with private keyfile.', array(
-                    'host' => $hostname,
-                    'port' => $port,
-                    'username' => $username,
+                $this->logger->notice(get_class($this) . '::getSFTP - Trying to connect to sftp server ({server}, cid: {cid}) with private keyfile.', array(
+                    'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
                 
                 $login = $sftp->login($username, $privateKey);
             }
             elseif (!empty($password)) {
-                $this->logger->notice(get_class($this) . '::getSFTP - Trying to connect to sftp server ({username}@{host}:{port}, cid: {cid}) with password.', array(
-                    'host' => $hostname,
-                    'port' => $port,
-                    'username' => $username,
+                $this->logger->notice(get_class($this) . '::getSFTP - Trying to connect to sftp server ({server}, cid: {cid}) with password.', array(
+                    'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
                 
                 $login = $sftp->login($username, $password);
             }
             else {
-                $this->logger->warning(get_class($this) . '::getSFTP - Can\'t connect to sftp server ({username}@{host}:{port}, cid: {cid}) because no private key and no password are set.', array(
-                    'host' => $hostname,
-                    'port' => $port,
-                    'username' => $username,
+                $this->logger->warning(get_class($this) . '::getSFTP - Can\'t connect to sftp server ({server}, cid: {cid}) because no private key and no password are set.', array(
+                    'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
                 
@@ -238,10 +224,8 @@ class Connection
             }
             
             if ($login === false) {
-                $this->logger->warning(get_class($this) . '::getSFTP - Connection to sftp server ({username}@{host}:{port}, cid: {cid}) failed.', array(
-                    'host' => $hostname,
-                    'port' => $port,
-                    'username' => $username,
+                $this->logger->warning(get_class($this) . '::getSFTP - Connection to sftp server ({server}:{port}, cid: {cid}) failed.', array(
+                    'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
                 
@@ -263,10 +247,8 @@ class Connection
      */
     public function exec($cmd)
     {
-        $this->logger->notice(get_class($this) . '::exec - Execute {cmd} on ssh server ({username}@{host}:{port}, cid: {cid}).', array(
-            'host' => $this->server->getHostname(),
-            'port' => $this->server->getPort(),
-            'username' => $this->server->getUsername(),
+        $this->logger->notice(get_class($this) . '::exec - Execute {cmd} on ssh server ({server}, cid: {cid}).', array(
+            'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
             'cmd' => $cmd,
         ));
@@ -284,10 +266,8 @@ class Connection
      */
     public function connectionTest()
     {
-        $this->logger->notice(get_class($this) . '::connectionTest - Test connection to ssh server ({username}@{host}:{port}, cid: {cid}).', array(
-            'host' => $this->server->getHostname(),
-            'port' => $this->server->getPort(),
-            'username' => $this->server->getUsername(),
+        $this->logger->notice(get_class($this) . '::connectionTest - Test connection to ssh server ({server}, cid: {cid}).', array(
+            'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
         ));
         
@@ -306,20 +286,16 @@ class Connection
             }
         }
         catch (\Exception $e) {
-            $this->logger->notice(get_class($this) . '::connectionTest - Connection test to ssh server ({username}@{host}:{port}, cid: {cid}) failed.', array(
-                'host' => $this->server->getHostname(),
-                'port' => $this->server->getPort(),
-                'username' => $this->server->getUsername(),
+            $this->logger->notice(get_class($this) . '::connectionTest - Connection test to ssh server ({server}, cid: {cid}) failed.', array(
+                'server' => strval($this->server),
                 'cid' => $this->getConnectionId(),
             ));
             
             return false;
         }
         
-        $this->logger->notice(get_class($this) . '::connectionTest - Connection test to ssh server ({username}@{host}:{port}, cid: {cid}) succeeded.', array(
-            'host' => $this->server->getHostname(),
-            'port' => $this->server->getPort(),
-            'username' => $this->server->getUsername(),
+        $this->logger->notice(get_class($this) . '::connectionTest - Connection test to ssh server ({server}, cid: {cid}) succeeded.', array(
+            'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
         ));
         

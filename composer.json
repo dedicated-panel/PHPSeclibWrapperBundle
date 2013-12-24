@@ -1,8 +1,17 @@
 {
-    "name": "dp/phpseclib-bundle",
+    "name": "dedipanel/phpseclib-wrapper-bundle",
+    "description": "PHPSeclib Wrapper with connections manager, logging, os-specific helpers, ...", 
+    "keywords": [ "phpseclib", "ssh", "sftp", "shell" ], 
+    "license": "MIT", 
+    "authors": [
+        {
+            "name": "Albin Kerouanton", 
+            "role": "Developer"
+        }
+    ], 
     "require": {
         "php": ">=5.3.2", 
-        "symfony/framework-bundle": ">=2.1,<2.2-dev",
+        "symfony/framework-bundle": ">=2.1",
         "phpseclib/phpseclib": "dev-master", 
         "psr/log": ">=1.0,<2.0"
     },

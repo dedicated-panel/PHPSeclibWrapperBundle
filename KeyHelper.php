@@ -32,14 +32,17 @@ class KeyHelper
      * 
      * @return string Public key
      */
-    public function createKeyPair(OsSpecificConnectionInterface $connection, $keyName)
+    public function createKeyPair($keyName, OsSpecificConnectionInterface $connection = null)
     {        
         $rsa = new \Crypt_RSA();
         $rsa->setPublicKeyFormat(CRYPT_RSA_PUBLIC_FORMAT_OPENSSH);
         $pair = $rsa->createKey();
         
         $this->store->store($keyName, $pair['privatekey']);
-        $this->connection->addKey($pair['publickey']);
+        
+        if (!is_null($connection)) {
+            $connection->addKey($pair['publickey']);
+        }
         
         return $pair['publickey'];
     }
@@ -53,10 +56,13 @@ class KeyHelper
      * 
      * @return boolean
      */
-    public function deleteKeyPair(OsSpecificConnectionInterface $connection, $keyName)
+    public function deleteKeyPair($keyName, OsSpecificConnectionInterface $connection = null)
     {
-        $this->connection->removeKey($this->store->get($keyName));
         $this->store->remove($keyName);
+        
+        if (!is_null($connection)) {
+            $connection->removeKey($this->store->get($keyName));
+        }
         
         return true;
     }

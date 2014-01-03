@@ -1,7 +1,8 @@
 {
-    "name": "dedipanel/phpseclib-wrapper-bundle",
+    "name": "dedipanel/phpseclib-wrapper-bundle", 
+    "version": "0.1", 
     "description": "PHPSeclib Wrapper with connections manager, logging, os-specific helpers, ...", 
-    "keywords": [ "phpseclib", "ssh", "sftp", "shell" ], 
+    "keywords": [ "phpseclib", "ssh", "sftp" ], 
     "license": "MIT", 
     "authors": [
         {
@@ -19,10 +20,14 @@
 		"phpunit/phpunit": "3.7.x-dev"
     },
     "autoload": {
-        "psr-0": { "DP\\PHPSeclibWrapperBundle": "" }
+        "psr-0": { 
+            "DP\\PHPSeclibWrapperBundle": ""
+        }
     },
     "target-dir": "DP/PHPSeclibWrapperBundle", 
     "suggest": {
-        "monolog/monolog": "Allows more advanced logging of ssh/sftp connections."
+        "monolog/monolog": "Allows more advanced logging of ssh/sftp connections.", 
+        "ext-mcrypt": "Install the Mcrypt extension in order to speed up a wide variety of cryptographic operations.",
+        "ext-gmp": "Install the GMP (GNU Multiple Precision) extension in order to speed up arbitrary precision integer arithmetic operations."
     }
 }

@@ -181,5 +181,5 @@ interface ConnectionInterface
      * 
      * @return boolean
      */
-    public function chmod($path, $recursive = true);
+    public function chmod($path, $chmod, $recursive = true);
 }

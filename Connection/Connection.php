@@ -443,7 +443,7 @@ class Connection implements ConnectionInterface
      */
     public function removeKey($key)
     {
-        if (!$this->dirExists('~/.ssh') || !$this->fileExists('~/.ssh/authorized_keys')) {
+        if (!$this->dirExists('~/.ssh') || !$this->fileExists('~/.ssh/authorized_keys')) {
             return true;
         }
         

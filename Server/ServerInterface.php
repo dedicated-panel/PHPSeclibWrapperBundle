@@ -43,6 +43,9 @@ interface ServerInterface
 
     /**
      * Gets the server IP from $ip (if set) or from $host (resolved)
+     * 
+     * @throws \Dedipanel\PHPSeclibWrapperBundle\Server\Exception\UnresolvedHostnameException
+     * @throws \Dedipanel\PHPSeclibWrapperBundle\Server\Exception\EmptyServerInfosException
      *
      * @return string
      */

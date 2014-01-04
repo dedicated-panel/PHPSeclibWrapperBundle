@@ -73,11 +73,7 @@ class Server implements ServerInterface
         if (!empty($this->ip)) {
             return $this->ip;
         } elseif (!empty($this->hostname)) {
-            try {
-                return $this->resolveHostname();
-            } catch (UnresolvedHostnameException $e) {
-                return $this->hostname;
-            }
+            return $this->resolveHostname();
         } else {
             throw new EmptyServerInfosException;
         }

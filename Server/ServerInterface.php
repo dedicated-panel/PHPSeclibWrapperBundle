@@ -47,6 +47,15 @@ interface ServerInterface
      * @return string
      */
     public function getServerIP();
+    
+    /**
+     * Resolves the hostname
+     * 
+     * @throws \Dedipanel\PHPSeclibWrapperBundle\Server\Exception\HostnameUnresolvedException
+     * 
+     * @return string|null Return the hostname (resolved) 
+     */
+    public function resolveHostname();
 
     /**
      * Sets the port

@@ -1,4 +1,4 @@
-parameteres:
+parameters:
     dedipanel.key_store.file.class: Dedipanel\PHPSeclibWrapperBundle\KeyStore\FileKeyStore
     dedipanel.key_store.file.path: '%kernel.root_dir%/keys/'
     dedipanel.key_helper.class: Dedipanel\PHPSeclibWrapperBundle\KeyHelper

@@ -13,7 +13,7 @@
     "require": {
         "php": ">=5.3.2", 
         "symfony/framework-bundle": ">=2.1",
-        "phpseclib/phpseclib": "dev-master", 
+        "phpseclib/phpseclib": "dev-php5", 
         "psr/log": ">=1.0,<2.0"
     },
     "require-dev": {

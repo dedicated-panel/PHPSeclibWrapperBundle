@@ -9,11 +9,11 @@ services:
     dedipanel.key_store.file:
         class: %dedipanel.key_store.file.class%
         arguments: [ %dedipanel.key_store.file.path ]
-    
+
     dedipanel.key_helper:
         class: %dedipanel.key_helper.class%
         arguments: [ @dedipanel.key_store.file ]
-    
+
     dedipanel.connection_manager:
         class: %dedipanel.connection_manager.class%
         arguments: [ @logger, %dedipanel.connection_manager.debug% ]

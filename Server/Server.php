@@ -21,8 +21,7 @@ class Server implements ServerInterface
     protected $home;
     protected $password;
     protected $privateKey;
-    
-    
+
     /**
      * {@inheritdoc}
      */
@@ -34,12 +33,12 @@ class Server implements ServerInterface
         if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
             throw new ServerIPv6HostException($ip);
         }
-        
+
         $this->ip = $ip;
-        
+
         return $this;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -47,17 +46,17 @@ class Server implements ServerInterface
     {
         return $this->ip;
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function setHostname($hostname)
     {
         $this->hostname = $hostname;
-        
+
         return $this;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -73,37 +72,34 @@ class Server implements ServerInterface
     {
         if (!empty($this->ip)) {
             return $this->ip;
-        }
-        elseif (!empty($this->hostname)) {
+        } elseif (!empty($this->hostname)) {
             // gethostbyname renvoie le hostname s'il n'a pas pu être résolu
             $ip = gethostbyname($this->hostname);
-            
+
             if ($ip != $this->hostname) {
                 return $ip;
             }
             // Renvoie tout de même le hostname si celui-ci correspond à une IPv4
             elseif (filter_var($this->hostname, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false) {
                 return $this->hostname;
-            }
-            else {
+            } else {
                 throw new HostnameUnresolvedException($this->hostname);
             }
-        }
-        else {
+        } else {
             throw new EmptyServerInfosException;
         }
     }
-     
+
     /**
      * {@inheritdoc}
      */
     public function setPort($port)
     {
         $this->port = $port;
-        
+
         return $this;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -111,17 +107,17 @@ class Server implements ServerInterface
     {
         return $this->port;
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function setUsername($username)
     {
         $this->username = $username;
-        
+
         return $this;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -129,17 +125,17 @@ class Server implements ServerInterface
     {
         return $this->username;
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function setHome($home)
     {
         $this->home = $home;
-        
+
         return $this;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -147,17 +143,17 @@ class Server implements ServerInterface
     {
         return $this->home;
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function setPassword($password)
     {
         $this->password = $password;
-        
+
         return $this;
     }
-    
+
     /*
      * {@inheritdoc}
      */
@@ -165,17 +161,17 @@ class Server implements ServerInterface
     {
         return $this->password;
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function setPrivateKey($privateKey)
     {
         $this->privateKey = $privateKey;
-        
+
         return $this;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -183,7 +179,7 @@ class Server implements ServerInterface
     {
         return $this->privateKey;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -191,11 +187,11 @@ class Server implements ServerInterface
     {
         $hostname = $this->getHostname();
         $host = $this->getIP();
-        
+
         if (!empty($hostname)) {
             $host = $hostname;
         }
-        
+
         return $this->user . '@' . $host;
     }
 }

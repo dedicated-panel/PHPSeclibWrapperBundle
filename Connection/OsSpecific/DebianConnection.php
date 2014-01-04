@@ -13,7 +13,7 @@ use Dedipanel\PHPSeclibWrapperBundle\Connection\OsSpecific\OsSpecificConnectionI
 class DebianConnection extends Connection implements OsSpecificConnectionInterface
 {
     protected $home;
-    
+
     /**
      * @{inheritDoc}
      */
@@ -22,10 +22,10 @@ class DebianConnection extends Connection implements OsSpecificConnectionInterfa
         if (!isset($this->home)) {
             $this->home = $this->exec('cd ~ && pwd');
         }
-        
+
         return $this->home;
     }
-    
+
     /**
      * @{inheritDoc}
      */
@@ -33,17 +33,17 @@ class DebianConnection extends Connection implements OsSpecificConnectionInterfa
     {
         return strlen($this->exec('uname -r | grep "\-64"')) > 0;
     }
-    
+
     /**
      * @{inheritDoc}
      */
     public function isInstalled($packet)
     {
         $ret = trim($this->exec('dpkg-query -W --showformat=\'${Status}\n\' ' . $packet . ' | grep \'install ok installed\''));
-        
+
         return $ret == 'install ok installed';
     }
-    
+
     /**
      * @{inheritDoc}
      */
@@ -51,7 +51,7 @@ class DebianConnection extends Connection implements OsSpecificConnectionInterfa
     {
         return strlen($this->exec('type java 2>/dev/null')) > 0;
     }
-    
+
     /**
      * @{inheritDoc}
      */
@@ -60,15 +60,14 @@ class DebianConnection extends Connection implements OsSpecificConnectionInterfa
         // On récupère la version du système debian utilisé
         // puisque le paquet à vérifier diffère avec la debian wheezy
         $os_version = floatval(trim($this->exec('cat /etc/debian_version')));
-        
+
         if ($os_version >= 7) {
             return $this->isInstalled('libc6:i386');
-        }
-        else {
+        } else {
             return $this->isInstalled('ia32-libs');
         }
     }
-    
+
     /**
      * @{inheritDoc}
      */
@@ -77,7 +76,7 @@ class DebianConnection extends Connection implements OsSpecificConnectionInterfa
         $tmpFile = '/tmp/' . uniqid();
         $cmd = 'screen -S "' . $screenName . '" -X hardcopy ' . $tmpFile . '; sleep 1s;';
         $cmd .= 'if [ -e ' . $tmpFile . ' ]; then cat ' . $tmpFile . '; rm -f ' . $tmpFile . '; fi';
-        
+
         return $this->exec($cmd);
     }
 }

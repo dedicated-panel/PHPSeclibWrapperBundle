@@ -5,7 +5,7 @@ namespace Dedipanel\PHPSeclibWrapperBundle\Server;
 use Dedipanel\PHPSeclibWrapperBundle\Server\ServerInterface;
 use Dedipanel\PHPSeclibWrapperBundle\Server\Exception\ServerIPv6HostException;
 use Dedipanel\PHPSeclibWrapperBundle\Server\Exception\EmptyServerInfosException;
-use Dedipanel\PHPSeclibWrapperBundle\Server\Exception\HostnameUnresolvedException;
+use Dedipanel\PHPSeclibWrapperBundle\Server\Exception\UnresolvedHostnameException;
 
 /**
  * @author Albin Kerouanton
@@ -76,7 +76,7 @@ class Server implements ServerInterface
             try {
                 return $this->resolveHostname();
             }
-            catch (HostnameUnresolvedException $e) {
+            catch (UnresolvedHostnameException $e) {
                 return $this->hostname;
             }
         } else {
@@ -96,7 +96,7 @@ class Server implements ServerInterface
             if ($ip != $this->hostname) {
                 return $ip;
             } else {
-                throw new HostnameUnresolvedException($this->hostname);
+                throw new UnresolvedHostnameException($this->hostname);
             }
         }
         

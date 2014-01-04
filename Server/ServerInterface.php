@@ -51,7 +51,7 @@ interface ServerInterface
     /**
      * Resolves the hostname
      * 
-     * @throws \Dedipanel\PHPSeclibWrapperBundle\Server\Exception\HostnameUnresolvedException
+     * @throws \Dedipanel\PHPSeclibWrapperBundle\Server\Exception\UnresolvedHostnameException
      * 
      * @return string|null Return the hostname (resolved) 
      */

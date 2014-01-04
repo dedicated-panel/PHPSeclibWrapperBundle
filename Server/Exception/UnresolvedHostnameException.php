@@ -7,7 +7,7 @@ namespace Dedipanel\PHPSeclibWrapperBundle\Server\Exception;
  * @license http://opensource.org/licenses/MIT
  * @version 1.0
  */
-class HostnameUnresolvedException extends \Exception
+class UnresolvedHostnameException extends \Exception
 {
     public function __construct($host)
     {

@@ -1,11 +1,11 @@
 <?php
 
-namespace DP\PHPSeclibWrapperBundle\Connection;
+namespace Dedipanel\PHPSeclibWrapperBundle\Connection;
 
-use DP\PHPSeclibWrapperBundle\Server\ServerInterface;
-use DP\PHPSeclibWrapperBundle\Connection\Exception\IncompleteLoginCredentialsException;
-use DP\PHPSeclibWrapperBundle\Connection\Exception\ConnectionErrorException;
-use DP\PHPSeclibWrapperBundle\Connection\ConnectionInterface;
+use Dedipanel\PHPSeclibWrapperBundle\Server\ServerInterface;
+use Dedipanel\PHPSeclibWrapperBundle\Connection\Exception\IncompleteLoginCredentialsException;
+use Dedipanel\PHPSeclibWrapperBundle\Connection\Exception\ConnectionErrorException;
+use Dedipanel\PHPSeclibWrapperBundle\Connection\ConnectionInterface;
 use Psr\Log\LoggerInterface;
 
 /**

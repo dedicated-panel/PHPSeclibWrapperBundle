@@ -1,9 +1,9 @@
 <?php
 
-namespace DP\PHPSeclibWrapperBundle\Connection\OsSpecific;
+namespace Dedipanel\PHPSeclibWrapperBundle\Connection\OsSpecific;
 
-use DP\PHPSeclibWrapperBundle\Connection\Connection;
-use DP\PHPSeclibWrapperBundle\Connection\OsSpecific\OsSpecificConnectionInterface;
+use Dedipanel\PHPSeclibWrapperBundle\Connection\Connection;
+use Dedipanel\PHPSeclibWrapperBundle\Connection\OsSpecific\OsSpecificConnectionInterface;
 
 /**
  * @author Albin Kerouanton

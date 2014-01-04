@@ -1,8 +1,8 @@
 <?php
 
-namespace DP\PHPSeclibWrapperBundle\KeyStore;
+namespace Dedipanel\PHPSeclibWrapperBundle\KeyStore;
 
-use DP\PHPSeclibWrapperBundle\KeyStore\Exception\KeyNotExistsException;
+use Dedipanel\PHPSeclibWrapperBundle\KeyStore\Exception\KeyNotExistsException;
 
 /**
  * @author Albin Kerouanton

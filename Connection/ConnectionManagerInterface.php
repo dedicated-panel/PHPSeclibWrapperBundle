@@ -1,9 +1,9 @@
 <?php
 
-namespace DP\PHPSeclibWrapperBundle\Connection;
+namespace Dedipanel\PHPSeclibWrapperBundle\Connection;
 
-use DP\PHPSeclibWrapperBundle\Server\ServerInterface;
-use DP\PHPSeclibWrapperBundle\Connection\ConnectionInterface;
+use Dedipanel\PHPSeclibWrapperBundle\Server\ServerInterface;
+use Dedipanel\PHPSeclibWrapperBundle\Connection\ConnectionInterface;
 
 /**
  * @author Albin Kerouanton

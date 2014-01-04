@@ -1,6 +1,6 @@
 <?php
 
-namespace DP\PHPSeclibWrapperBundle\Server\Exception;
+namespace Dedipanel\PHPSeclibWrapperBundle\Server\Exception;
 
 /**
  * @author Albin Kerouanton

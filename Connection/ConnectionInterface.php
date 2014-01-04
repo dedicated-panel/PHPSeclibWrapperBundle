@@ -1,6 +1,6 @@
 <?php
 
-namespace DP\PHPSeclibWrapperBundle\Connection;
+namespace Dedipanel\PHPSeclibWrapperBundle\Connection;
 
 /**
  * @author Albin Kerouanton

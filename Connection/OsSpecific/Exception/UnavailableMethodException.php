@@ -1,6 +1,6 @@
 <?php
 
-namespace DP\PHPSeclibWrapperBundle\Connection\OsSpecific\Exception;
+namespace Dedipanel\PHPSeclibWrapperBundle\Connection\OsSpecific\Exception;
 
 /**
  * @author Albin Kerouanton

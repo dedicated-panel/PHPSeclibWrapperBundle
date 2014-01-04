@@ -1,8 +1,8 @@
 <?php
 
-namespace DP\PHPSeclibWrapperBundle\Connection\Exception;
+namespace Dedipanel\PHPSeclibWrapperBundle\Connection\Exception;
 
-use DP\PHPSeclibWrapperBundle\Server\ServerInterface;
+use Dedipanel\PHPSeclibWrapperBundle\Server\ServerInterface;
 
 /**
  * @author Albin Kerouanton

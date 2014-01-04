@@ -1,6 +1,6 @@
 <?php
 
-namespace DP\PHPSeclibWrapperBundle\Server;
+namespace Dedipanel\PHPSeclibWrapperBundle\Server;
 
 /**
  * @author Albin Kerouanton
@@ -14,7 +14,7 @@ interface ServerInterface
      * 
      * @param int $ip IP address
      * 
-     * @return \DP\PHPSeclibWrapperBundle\Server\ServerInterface 
+     * @return \Dedipanel\PHPSeclibWrapperBundle\Server\ServerInterface 
      */
     public function setIP($ip);
     
@@ -30,7 +30,7 @@ interface ServerInterface
      * 
      * @param string $hostname Server hostname
      * 
-     * @return \DP\PHPSeclibWrapperBundle\Server\ServerInterface 
+     * @return \Dedipanel\PHPSeclibWrapperBundle\Server\ServerInterface 
      */
     public function setHostname($hostname);
     
@@ -53,7 +53,7 @@ interface ServerInterface
      * 
      * @param integer $port SSH Port
      * 
-     * @return \DP\PHPSeclibWrapperBundle\Server\ServerInterface
+     * @return \Dedipanel\PHPSeclibWrapperBundle\Server\ServerInterface
      */
     public function setPort($port);
      
@@ -69,7 +69,7 @@ interface ServerInterface
        * 
        * @param string $username Username
        * 
-       * @return \DP\PHPSeclibWrapperBundle\Server\ServerInterface
+       * @return \Dedipanel\PHPSeclibWrapperBundle\Server\ServerInterface
        */
       public function setUsername($username);
       
@@ -85,7 +85,7 @@ interface ServerInterface
        * 
        * @param string $home Absolute home dir path
        * 
-       * @return \DP\PHPSeclibWrapperBundle\Server\ServerInterface
+       * @return \Dedipanel\PHPSeclibWrapperBundle\Server\ServerInterface
        */
       public function setHome($home);
       
@@ -101,7 +101,7 @@ interface ServerInterface
        * 
        * @param string $password User password
        * 
-       * @return \DP\PHPSeclibWrapperBundle\Server\ServerInterface
+       * @return \Dedipanel\PHPSeclibWrapperBundle\Server\ServerInterface
        */
       public function setPassword($password);
       
@@ -117,7 +117,7 @@ interface ServerInterface
        * 
        * @param string $privateKey Private key used for ssh/sftp connections
        * 
-       * @return \DP\PHPSeclibWrapperBundle\Server\ServerInterface
+       * @return \Dedipanel\PHPSeclibWrapperBundle\Server\ServerInterface
        */
       public function setPrivateKey($privateKey);
       

@@ -21,10 +21,10 @@
     },
     "autoload": {
         "psr-0": { 
-            "DP\\PHPSeclibWrapperBundle": ""
+            "Dedipanel\\PHPSeclibWrapperBundle": ""
         }
     },
-    "target-dir": "DP/PHPSeclibWrapperBundle", 
+    "target-dir": "Dedipanel/PHPSeclibWrapperBundle", 
     "suggest": {
         "monolog/monolog": "Allows more advanced logging of ssh/sftp connections.", 
         "ext-mcrypt": "Install the Mcrypt extension in order to speed up a wide variety of cryptographic operations.",

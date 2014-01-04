@@ -1,6 +1,6 @@
 <?php
 
-namespace DP\PHPSeclibWrapperBundle;
+namespace Dedipanel\PHPSeclibWrapperBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -9,6 +9,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  * @license http://opensource.org/licenses/MIT
  * @version 1.0
  */
-class DPPHPSeclibWrapperBundle extends Bundle
+class DedipanelPHPSeclibWrapperBundle extends Bundle
 {
 }

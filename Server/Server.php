@@ -1,11 +1,11 @@
 <?php
 
-namespace DP\PHPSeclibWrapperBundle\Server;
+namespace Dedipanel\PHPSeclibWrapperBundle\Server;
 
-use DP\PHPSeclibWrapperBundle\Server\ServerInterface;
-use DP\PHPSeclibWrapperBundle\Server\Exception\ServerIPv6HostException;
-use DP\PHPSeclibWrapperBundle\Server\Exception\EmptyServerInfosException;
-use DP\PHPSeclibWrapperBundle\Server\Exception\HostnameUnresolvedException;
+use Dedipanel\PHPSeclibWrapperBundle\Server\ServerInterface;
+use Dedipanel\PHPSeclibWrapperBundle\Server\Exception\ServerIPv6HostException;
+use Dedipanel\PHPSeclibWrapperBundle\Server\Exception\EmptyServerInfosException;
+use Dedipanel\PHPSeclibWrapperBundle\Server\Exception\HostnameUnresolvedException;
 
 /**
  * @author Albin Kerouanton

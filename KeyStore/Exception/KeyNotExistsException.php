@@ -1,6 +1,6 @@
 <?php
 
-namespace DP\PHPSeclibWrapperBundle\KeyStore\Exception;
+namespace Dedipanel\PHPSeclibWrapperBundle\KeyStore\Exception;
 
 /**
  * @author Albin Kerouanton

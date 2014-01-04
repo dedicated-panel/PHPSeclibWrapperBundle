@@ -1,9 +1,9 @@
 <?php
 
-namespace DP\PHPSeclibWrapperBundle;
+namespace Dedipanel\PHPSeclibWrapperBundle;
 
-use DP\PHPSeclibWrapperBundle\Connection\OsSpecific\OsSpecificConnectionInterface;
-use DP\PHPSeclibWrapperBundle\KeyStore\AbstractKeyStore;
+use Dedipanel\PHPSeclibWrapperBundle\Connection\OsSpecific\OsSpecificConnectionInterface;
+use Dedipanel\PHPSeclibWrapperBundle\KeyStore\AbstractKeyStore;
 
 /**
  * @author Albin Kerouanton

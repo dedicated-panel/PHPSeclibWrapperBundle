@@ -1,13 +1,13 @@
 <?php
 
-namespace DP\PHPSeclibWrapperBundle\Connection;
+namespace Dedipanel\PHPSeclibWrapperBundle\Connection;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
-use DP\PHPSeclibWrapperBundle\Connection\ConnectionManagerInterface;
+use Dedipanel\PHPSeclibWrapperBundle\Connection\ConnectionManagerInterface;
 use Psr\Log\LoggerInterface;
-use DP\PHPSeclibWrapperBundle\Server\ServerInterface;
-use DP\PHPSeclibWrapperBundle\Connection\ConnectionInterface;
-use DP\PHPSeclibWrapperBundle\Connection\Connection;
+use Dedipanel\PHPSeclibWrapperBundle\Server\ServerInterface;
+use Dedipanel\PHPSeclibWrapperBundle\Connection\ConnectionInterface;
+use Dedipanel\PHPSeclibWrapperBundle\Connection\Connection;
 
 /**
  * @author Albin Kerouanton

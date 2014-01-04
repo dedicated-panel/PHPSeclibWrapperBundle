@@ -1,9 +1,9 @@
 <?php
 
-namespace DP\PHPSeclibWrapperBundle\Connection;
+namespace Dedipanel\PHPSeclibWrapperBundle\Connection;
 
-use DP\PHPSeclibWrapperBundle\Connection\OsSpecific\Exception\MethodNotImplementedException;
-use DP\PHPSeclibWrapperBundle\Connection\OsSpecific\Exception\UnavailableMethodException;
+use Dedipanel\PHPSeclibWrapperBundle\Connection\OsSpecific\Exception\MethodNotImplementedException;
+use Dedipanel\PHPSeclibWrapperBundle\Connection\OsSpecific\Exception\UnavailableMethodException;
 
 /**
  * @author Albin Kerouanton

@@ -1,5 +1,7 @@
 PHPSeclib Wrapper Bundle
 ====
+[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/NiR-/PHPSeclibWrapperBundle/badges/quality-score.png?s=311420b59d0b3636eb346cd18573b864fc231d1f)](https://scrutinizer-ci.com/g/NiR-/PHPSeclibWrapperBundle/)
+
 This bundle contains useful methods (connection managing, easy key storing, packet installed verification ...) on top of PHPSeclib library (pure php ssh/sftp client).
 
 You can easily connect to ssh/sftp servers and do some basic operations (supports os-specific "basic" operations) via the API (upload, download, mkdir, touch, chmod, ...). You can also access directly the phpseclib API.

@@ -19,11 +19,5 @@
     </testsuites>
 	
     <php>
-    	<!-- 
-        <const name="SERVER_HOST" value="localhost" />
-        <const name="SERVER_PORT" value="22" />
-        <const name="SERVER_USER" value="test" />
-        <const name="SERVER_PASSWD" value="test" />
-    	-->
     </php>
 </phpunit>

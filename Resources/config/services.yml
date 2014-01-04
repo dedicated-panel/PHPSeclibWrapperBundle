@@ -6,7 +6,7 @@ parameters:
     dedipanel.connection_manager.debug: false
 
 services:
-    dedipanel.key_store:
+    dedipanel.key_store.file:
         class: %dedipanel.key_store.file.class%
         arguments: [ %dedipanel.key_store.file.path ]
     

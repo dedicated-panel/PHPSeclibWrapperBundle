@@ -43,6 +43,8 @@ interface KeyStoreInterface
      *
      * @param string $name Key name
      *
+     * @throws KeyNotExistsException
+     *
      * @return boolean Return true if file has been successfully deleted
      *                 or if the file is already deleted
      */

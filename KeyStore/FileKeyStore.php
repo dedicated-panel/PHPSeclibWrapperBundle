@@ -44,12 +44,15 @@ class FileKeyStore implements KeyStoreInterface
         return file_get_contents($filepath);
     }
 
+    /**
+     * @{inheritDoc}
+     */
     public function remove($name)
     {
         $filepath = $this->getFilepath($name);
 
         if (!file_exists($filepath)) {
-            return true;
+            throw new KeyNotExistsException;
         }
 
         return unlink($filepath);

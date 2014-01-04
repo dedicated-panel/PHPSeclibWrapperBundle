@@ -34,3 +34,8 @@ By default, these keys are stored and retrieved to/from files, but you can imple
 You can also use the KeyHelper for directly uploading the public key to the server :
 
     $keyHelper->createKey($privateKeyId, $connection);
+
+You can also use the services :
+  * `$this->getContainer()->get('dedipanel.key_store');`
+  * `$this->getContainer()->get('dediapenl.key_helper');`
+  * `$this->getContainer()->get('dedipanel.connection_manager');`

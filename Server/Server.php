@@ -75,8 +75,7 @@ class Server implements ServerInterface
         } elseif (!empty($this->hostname)) {
             try {
                 return $this->resolveHostname();
-            }
-            catch (UnresolvedHostnameException $e) {
+            } catch (UnresolvedHostnameException $e) {
                 return $this->hostname;
             }
         } else {
@@ -92,14 +91,14 @@ class Server implements ServerInterface
         if (isset($this->hostname)) {
             // gethostbyname renvoie le hostname s'il n'a pas pu être résolu
             $ip = gethostbyname($this->hostname);
-    
+
             if ($ip != $this->hostname) {
                 return $ip;
             } else {
                 throw new UnresolvedHostnameException($this->hostname);
             }
         }
-        
+
         return null;
     }
 

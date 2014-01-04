@@ -34,7 +34,7 @@ interface KeyStoreInterface
      *
      * @return string
      */
-    public function get($name);
+    public function retrieve($name);
 
     /**
      * Removes a key

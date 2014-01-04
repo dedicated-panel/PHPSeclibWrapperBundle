@@ -61,7 +61,7 @@ class KeyHelper
         $this->store->remove($keyName);
 
         if (!is_null($connection)) {
-            $connection->removeKey($this->store->get($keyName));
+            $connection->removeKey($this->store->retrieve($keyName));
         }
 
         return true;

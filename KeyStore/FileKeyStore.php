@@ -33,7 +33,7 @@ class FileKeyStore implements KeyStoreInterface
     /**
      * @{inheritDoc}
      */
-    public function get($name)
+    public function retrieve($name)
     {
         $filepath = $this->getFilepath($name);
 

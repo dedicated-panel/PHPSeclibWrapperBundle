@@ -281,8 +281,9 @@ class Connection implements ConnectionInterface
         $ret = $sftp->put($filepath, $data);
 
         $this->logger->debug(get_class($this) . '::upload - Uploading to {filtepath} on sftp server {server} (cid: {cid}) : {ret}.', array(
+            'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
-            'cmd' => $cmd,
+            'filepath' => $filepath,
             'ret' => ($ret == true ? 'successful' : 'failed'),
         ));
 
@@ -428,7 +429,7 @@ class Connection implements ConnectionInterface
         $this->chmod('~/.ssh', 0700);
 
         $authorized = $this->download('~/.ssh/authorized_keys');
-        $authorized .= $pair['publickey'] . "\n";
+        $authorized .= $key . "\n";
 
         return $this->upload('~/.ssh/authorized_keys', $authorized);
     }

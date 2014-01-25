@@ -10,38 +10,6 @@ namespace Dedipanel\PHPSeclibWrapperBundle\Server;
 interface ServerInterface
 {
     /**
-     * Sets the host IP
-     *
-     * @param int $ip IP address
-     *
-     * @return \Dedipanel\PHPSeclibWrapperBundle\Server\ServerInterface
-     */
-    public function setIP($ip);
-
-    /**
-     * Gets the host IP
-     *
-     * @return int
-     */
-    public function getIP();
-
-    /**
-     * Sets the hostname
-     *
-     * @param string $hostname Server hostname
-     *
-     * @return \Dedipanel\PHPSeclibWrapperBundle\Server\ServerInterface
-     */
-    public function setHostname($hostname);
-
-    /**
-     * Gets the hostname
-     *
-     * @return string
-     */
-    public function getHostname();
-
-    /**
      * Gets the server IP from $ip (if set) or from $host (resolved)
      * 
      * @throws \Dedipanel\PHPSeclibWrapperBundle\Server\Exception\UnresolvedHostnameException
@@ -50,15 +18,6 @@ interface ServerInterface
      * @return string
      */
     public function getServerIP();
-
-    /**
-     * Resolves the hostname
-     *
-     * @throws \Dedipanel\PHPSeclibWrapperBundle\Server\Exception\UnresolvedHostnameException
-     *
-     * @return string|null Return the hostname (resolved)
-     */
-    public function resolveHostname();
 
     /**
      * Sets the port

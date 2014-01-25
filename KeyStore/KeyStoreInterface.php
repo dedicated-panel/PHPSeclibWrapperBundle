@@ -2,7 +2,9 @@
 
 namespace Dedipanel\PHPSeclibWrapperBundle\KeyStore;
 
+use Dedipanel\PHPSeclibWrapperBundle\KeyStore\Exception\KeyStoreInitializationException;
 use Dedipanel\PHPSeclibWrapperBundle\KeyStore\Exception\KeyNotExistsException;
+use Dedipanel\PHPSeclibWrapperBundle\KeyStore\Exception\KeyAlreadyExistsException;
 
 /**
  * @author Albin Kerouanton
@@ -12,12 +14,29 @@ use Dedipanel\PHPSeclibWrapperBundle\KeyStore\Exception\KeyNotExistsException;
 interface KeyStoreInterface
 {
     /**
+     * Initialize the key store
+     * 
+     * @throws \Dedipanel\PHPSeclibWrapperBundle\KeyStore\Exception\KeyStoreInitializationException
+     * 
+     * @return KeyStoreInterface
+     */
+    public function initialize();
+    
+    /**
+     * Is the store initialized and ready to use ?
+     * 
+     * @return boolean
+     */
+    public function isInitialized();
+    
+    /**
      * Stores key content by its $name
-     *
-     * @api
      *
      * @param string $name    Key name
      * @param string $content Key content
+     * 
+     * @throws \Dedipanel\PHPSeclibWrapperBundle\KeyStore\Exception\KeyStoreNotInitializedException
+     * @throws \Dedipanel\PHPSeclibWrapperBundle\KeyStore\Exception\KeyAlreadyExistsException
      *
      * @return boolean
      */
@@ -26,11 +45,10 @@ interface KeyStoreInterface
     /**
      * Retrieves key content by its name
      *
-     * @api
-     *
      * @param string $name Key name
-     *
-     * @throws KeyNotExistsException
+     * 
+     * @throws \Dedipanel\PHPSeclibWrapperBundle\KeyStore\Exception\KeyStoreNotInitializedException
+     * @throws \Dedipanel\PHPSeclibWrapperBundle\KeyStore\Exception\KeyNotExistsException
      *
      * @return string
      */
@@ -39,11 +57,10 @@ interface KeyStoreInterface
     /**
      * Removes a key
      *
-     * @api
-     *
      * @param string $name Key name
-     *
-     * @throws KeyNotExistsException
+     * 
+     * @throws \Dedipanel\PHPSeclibWrapperBundle\KeyStore\Exception\KeyStoreNotInitializedException
+     * @throws \Dedipanel\PHPSeclibWrapperBundle\KeyStore\Exception\KeyNotExistsException
      *
      * @return boolean Return true if file has been successfully deleted
      *                 or if the file is already deleted

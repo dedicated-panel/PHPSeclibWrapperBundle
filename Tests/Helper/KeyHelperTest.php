@@ -88,9 +88,10 @@ class KeyHelperTest extends \PHPUnit_Framework_TestCase
         $helper = new KeyHelper($store);
         
         $publicKey = $helper->createKeyPair('test');
+        $keyParts  = explode(' ', $publicKey);
         
         $this->assertNotEmpty($publicKey);
-        $this->assertEquals('ssh-rsa', array_shift(explode(' ', $publicKey)));
+        $this->assertEquals('ssh-rsa', array_shift($keyParts));
         
         $this->assertTrue($helper->deleteKeyPair('test'));
     }
@@ -102,9 +103,10 @@ class KeyHelperTest extends \PHPUnit_Framework_TestCase
         $helper     = new KeyHelper($store);
         
         $publicKey = $helper->createKeyPair('test', $connection);
+        $keyParts  = explode(' ', $publicKey);
         
         $this->assertNotEmpty($publicKey);
-        $this->assertEquals('ssh-rsa', array_shift(explode(' ', $publicKey)));
+        $this->assertEquals('ssh-rsa', array_shift($keyParts));
         
         $this->assertTrue($helper->deleteKeyPair('test', $connection));
     }

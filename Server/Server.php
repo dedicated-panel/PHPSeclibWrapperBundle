@@ -67,13 +67,13 @@ class Server extends AbstractServer
      */
     public function getServerIP()
     {
-        if (!empty($this->ip)) {
-            return $this->ip;
-        } elseif (!empty($this->hostname)) {
+        if (!empty($this->hostname)) {
             return $this->resolveHostname();
         } else {
             throw new EmptyServerInfosException;
         }
+        
+        return $this->ip;
     }
 
     /**

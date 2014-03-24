@@ -139,7 +139,7 @@ class Connection implements ConnectionInterface
     public function getSSH()
     {
         if (!isset($this->ssh)) {
-            $hostname = $this->server->getHostname();
+            $hostname = $this->server->getServerIP();
             $port = $this->server->getPort();
 
             $ssh = new \Net_SSH2($hostname, $port);
@@ -195,7 +195,7 @@ class Connection implements ConnectionInterface
     public function getSFTP()
     {
         if (!isset($this->sftp)) {
-            $hostname = $this->server->getHostname();
+            $hostname = $this->server->getServerIP();
             $port = $this->server->getPort();
 
             $sftp = new \Net_SFTP($hostname, $port);
@@ -345,7 +345,7 @@ class Connection implements ConnectionInterface
 
             if (empty($echo) || $echo != 'test') {
                 $this->logger->notice(get_class($this) . '::connectionTest - Connection test to ssh server ({username}@{host}:{port}, cid: {cid}) failed.', array(
-                    'host' => $this->server->getHostname(),
+                    'host' => $this->server->getServerIP(),
                     'port' => $this->server->getPort(),
                     'username' => $this->server->getUsername(),
                     'cid' => $this->getConnectionId(),

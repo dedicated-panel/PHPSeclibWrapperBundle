@@ -200,6 +200,6 @@ class Server implements ServerInterface
             $host = $hostname;
         }
 
-        return $this->user . '@' . $host;
+        return $this->username . '@' . $host;
     }
 }

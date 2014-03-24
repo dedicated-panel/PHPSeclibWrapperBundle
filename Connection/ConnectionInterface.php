@@ -238,4 +238,11 @@ interface ConnectionInterface
      * @return string
      */
     public function getScreenContent($screenName);
+    
+    /**
+     * Gets the server nb core
+     * 
+     * @return string
+     */
+    public function retrieveNbCore();
 }

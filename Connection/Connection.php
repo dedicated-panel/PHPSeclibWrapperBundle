@@ -586,4 +586,9 @@ class Connection implements ConnectionInterface
 
         return $this->exec($cmd);
     }
+    
+    public function retrieveNbCore()
+    {
+        return $this->exec('nproc');
+    }
 }

@@ -39,13 +39,16 @@ class ServerTest extends \PHPUnit_Framework_TestCase
     public function testGetServerIPHierarchy()
     {
         $server = new Server();
+        $server->setUsername('dedipanel');
         $server->setIP('8.8.8.8');
-        $server->setHostname('www.google.fr');
+        $server->setHostname('google.fr');
         
         $this->assertEquals('8.8.8.8', $server->getServerIP());
+        $this->assertEquals('dedipanel@google.fr', strval($server));
         
         $server->setIP(null);
         $this->assertNotEquals('8.8.8.8', $server->getServerIP());
+        $this->assertNotEquals('dedipanel@google.fr', strval($server));
     }
     
     /**

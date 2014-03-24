@@ -1,5 +1,4 @@
-PHPSeclib Wrapper Bundle
-====
+# PHPSeclib Wrapper Bundle
 [![Build Status](https://travis-ci.org/NiR-/PHPSeclibWrapperBundle.png?branch=master)](https://travis-ci.org/NiR-/PHPSeclibWrapperBundle)
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/NiR-/PHPSeclibWrapperBundle/badges/quality-score.png?s=311420b59d0b3636eb346cd18573b864fc231d1f)](https://scrutinizer-ci.com/g/NiR-/PHPSeclibWrapperBundle/)
 
@@ -7,6 +6,11 @@ This bundle contains useful methods (connection managing, easy key storing, pack
 
 You can easily connect to ssh/sftp servers and do some basic operations (supports os-specific "basic" operations) via the API (upload, download, mkdir, touch, chmod, ...). You can also access directly the phpseclib API.
 The wrapper provide logging functionnality on base method (exec, upload, download, touch, mkdir, ...).
+
+## Install
+`composer require dedipanel/phpseclib-wrapper-bundle dev-master`
+
+## How to use
 
 You have also a base Server class provided by the bundle.
 

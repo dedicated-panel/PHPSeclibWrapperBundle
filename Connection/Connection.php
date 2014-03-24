@@ -524,4 +524,66 @@ class Connection implements ConnectionInterface
 
         return $ret;
     }
+
+    /**
+     * @{inheritDoc}
+     */
+    public function getHome()
+    {
+        return $this->exec('cd ~ && pwd');;
+    }
+
+    /**
+     * @{inheritDoc}
+     */
+    public function is64BitSystem()
+    {
+        return strlen($this->exec('uname -r | grep "\-64"')) > 0;
+    }
+
+    /**
+     * @{inheritDoc}
+     */
+    public function isInstalled($packet)
+    {
+        $ret = trim($this->exec('dpkg-query -W --showformat=\'${Status}\n\' ' . $packet . ' | grep \'install ok installed\''));
+
+        return $ret == 'install ok installed';
+    }
+
+    /**
+     * @{inheritDoc}
+     */
+    public function isJavaInstalled()
+    {
+        return strlen($this->exec('type java 2>/dev/null')) > 0;
+    }
+
+    /**
+     * @{inheritDoc}
+     */
+    public function hasCompatLib()
+    {
+        // On récupère la version du système debian utilisé
+        // puisque le paquet à vérifier diffère avec la debian wheezy
+        $os_version = floatval(trim($this->exec('cat /etc/debian_version')));
+
+        if ($os_version >= 7) {
+            return $this->isInstalled('libc6:i386');
+        } else {
+            return $this->isInstalled('ia32-libs');
+        }
+    }
+
+    /**
+     * @{inheritDoc}
+     */
+    public function getScreenContent($screenName)
+    {
+        $tmpFile = '/tmp/' . uniqid();
+        $cmd = 'screen -S "' . $screenName . '" -X hardcopy ' . $tmpFile . '; sleep 1s;';
+        $cmd .= 'if [ -e ' . $tmpFile . ' ]; then cat ' . $tmpFile . '; rm -f ' . $tmpFile . '; fi';
+
+        return $this->exec($cmd);
+    }
 }

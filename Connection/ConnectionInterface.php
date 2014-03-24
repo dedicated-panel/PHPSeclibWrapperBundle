@@ -182,4 +182,60 @@ interface ConnectionInterface
      * @return boolean
      */
     public function chmod($path, $chmod, $recursive = true);
+    
+    /**
+     * Gets the user home
+     *
+     * @api
+     *
+     * @return string
+     */
+    public function getHome();
+
+    /**
+     * Determine whether the os is a 64 bit system
+     *
+     * @api
+     *
+     * @return boolean
+     */
+    public function is64BitSystem();
+
+    /**
+     * Determine whether the $program is installed
+     *
+     * @api
+     *
+     * @return boolean
+     */
+    public function isInstalled($program);
+
+    /**
+     * Determine whether java is installed
+     *
+     * @api
+     *
+     * @return boolean
+     */
+    public function isJavaInstalled();
+
+    /**
+     * Determine whether if the 32/64 bits compatability library is installed (ia32-libs)
+     *
+     * @api
+     *
+     * @return boolean
+     */
+    public function hasCompatLib();
+
+    /**
+     * Gets the screen $screenName content
+     *
+     * @api
+     *
+     * @param $screenName string The screen name
+     *
+     * @return string
+     */
+    public function getScreenContent($screenName);
 }

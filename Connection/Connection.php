@@ -148,7 +148,14 @@ class Connection implements ConnectionInterface
             $password = $this->server->getPassword();
             $privateKey = $this->server->getPrivateKey();
 
-            if (!empty($privateKey)) {
+            if (!empty($password)) {
+                $this->logger->notice(get_class($this) . '::getSSH - Trying to connect to ssh server ({server}, cid: {cid}) using password.', array(
+                    'server' => strval($this->server),
+                    'cid' => $this->getConnectionId(),
+                ));
+
+                $login = $ssh->login($username, $password);
+            } if (!empty($privateKey)) {
                 $key = new \Crypt_RSA();
                 $key->loadKey($privateKey);
 
@@ -158,13 +165,6 @@ class Connection implements ConnectionInterface
                 ));
 
                 $login = $ssh->login($username, $key);
-            } elseif (!empty($password)) {
-                $this->logger->notice(get_class($this) . '::getSSH - Trying to connect to ssh server ({server}, cid: {cid}) using password.', array(
-                    'server' => strval($this->server),
-                    'cid' => $this->getConnectionId(),
-                ));
-
-                $login = $ssh->login($username, $password);
             } else {
                 $this->logger->warning(get_class($this) . '::getSSH - Can\'t connect to ssh server ({server}, cid: {cid}) because no private key and no password are set.', array(
                     'server' => strval($this->server),
@@ -204,20 +204,20 @@ class Connection implements ConnectionInterface
             $password = $this->server->getPassword();
             $privateKey = $this->server->getPrivateKey();
 
-            if (!empty($privateKey)) {
-                $this->logger->notice(get_class($this) . '::getSFTP - Trying to connect to sftp server ({server}, cid: {cid}) with private keyfile.', array(
-                    'server' => strval($this->server),
-                    'cid' => $this->getConnectionId(),
-                ));
-
-                $login = $sftp->login($username, $privateKey);
-            } elseif (!empty($password)) {
+            if (!empty($password)) {
                 $this->logger->notice(get_class($this) . '::getSFTP - Trying to connect to sftp server ({server}, cid: {cid}) with password.', array(
                     'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
 
                 $login = $sftp->login($username, $password);
+            } elseif (!empty($privateKey)) {
+                $this->logger->notice(get_class($this) . '::getSFTP - Trying to connect to sftp server ({server}, cid: {cid}) with private keyfile.', array(
+                    'server' => strval($this->server),
+                    'cid' => $this->getConnectionId(),
+                ));
+
+                $login = $sftp->login($username, $privateKey);
             } else {
                 $this->logger->warning(get_class($this) . '::getSFTP - Can\'t connect to sftp server ({server}, cid: {cid}) because no private key and no password are set.', array(
                     'server' => strval($this->server),

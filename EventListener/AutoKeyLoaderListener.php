@@ -2,6 +2,7 @@
 
 namespace Dedipanel\PHPSeclibWrapperBundle\EventListener;
 
+use Dedipanel\PHPSeclibWrapperBundle\KeyStore\Exception\BaseKeyStoreException;
 use Dedipanel\PHPSeclibWrapperBundle\KeyStore\KeyStoreInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Dedipanel\PHPSeclibWrapperBundle\Server\ServerInterface;
@@ -20,7 +21,10 @@ class AutoKeyLoaderListener
         $entity = $args->getEntity();
 
         if ($entity instanceof ServerInterface) {
-            $entity->setPrivateKey($this->store->retrieve($entity->getPrivateKeyName()));
+            try {
+                $entity->setPrivateKey($this->store->retrieve($entity->getPrivateKeyName()));
+            }
+            catch (BaseKeyStoreException $e) {}
         }
     }
 } 

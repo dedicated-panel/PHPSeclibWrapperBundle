@@ -2,6 +2,6 @@
 
 namespace Dedipanel\PHPSeclibWrapperBundle\KeyStore\Exception;
 
-class KeyStoreNotInitializedException extends \RuntimeException
+class KeyStoreNotInitializedException extends BaseKeyStoreException
 {
 }

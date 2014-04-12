@@ -7,6 +7,6 @@ namespace Dedipanel\PHPSeclibWrapperBundle\KeyStore\Exception;
  * @license http://opensource.org/licenses/MIT
  * @version 1.0
  */
-class KeyNotExistsException extends \RuntimeException
+class KeyNotExistsException extends BaseKeyStoreException
 {
 }

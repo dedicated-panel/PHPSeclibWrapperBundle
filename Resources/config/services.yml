@@ -12,7 +12,7 @@ services:
 
     dedipanel.key_helper:
         class: %dedipanel.key_helper.class%
-        arguments: [ @dedipanel.key_store.file, @dedipanel.connection_manager ]
+        arguments: [ @dedipanel.connection_manager, @dedipanel.key_store.file ]
 
     dedipanel.connection_manager:
         class: %dedipanel.connection_manager.class%

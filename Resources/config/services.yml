@@ -8,7 +8,7 @@ parameters:
 services:
     dedipanel.key_store.file:
         class: %dedipanel.key_store.file.class%
-        arguments: [ %dedipanel.key_store.file.path ]
+        arguments: [ %dedipanel.key_store.file.path% ]
 
     dedipanel.key_helper:
         class: %dedipanel.key_helper.class%

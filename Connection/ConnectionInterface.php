@@ -149,6 +149,17 @@ interface ConnectionInterface
     public function touch($filepath, \DateTime $mtime = null);
 
     /**
+     * Creates $dirpath
+     *
+     * @api
+     *
+     * @param $dirpath string
+     *
+     * @return boolean
+     */
+    public function mkdir($dirpath);
+
+    /**
      * Creates $filepath
      *
      * @api

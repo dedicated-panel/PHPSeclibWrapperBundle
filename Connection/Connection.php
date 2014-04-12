@@ -446,6 +446,9 @@ class Connection implements ConnectionInterface
         return $this->upload('~/.ssh/authorized_keys', $authorized);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function touch($filepath, \DateTime $mtime = null)
     {
         $timestamp = (is_null($mtime) ? null : $mtime->getTimestamp());
@@ -472,17 +475,10 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * @{inheritDoc}
+     * @param string $dirpath
+     * @return bool
      */
-    public function createFile($filepath)
-    {
-        return $this->touch($filepath);
-    }
-
-    /**
-     * @{inheritDoc}
-     */
-    public function createDir($dirpath)
+    public function mkdir($dirpath)
     {
         $this->logger->notice(get_class($this) . '::createDir - Create directory {dirpath} on ssh server {server} (cid: {cid}).', array(
             'server' => strval($this->server),
@@ -500,6 +496,22 @@ class Connection implements ConnectionInterface
         ));
 
         return $ret;
+    }
+
+    /**
+     * @{inheritDoc}
+     */
+    public function createFile($filepath)
+    {
+        return $this->touch($filepath);
+    }
+
+    /**
+     * @{inheritDoc}
+     */
+    public function createDir($dirpath)
+    {
+        return $this->mkdir($dirpath);
     }
 
     /**

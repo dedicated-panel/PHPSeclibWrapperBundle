@@ -19,7 +19,8 @@ services:
         arguments: [ @logger, %dedipanel.connection_manager.debug% ]
 
     dedipanel.listener.auto_load_key:
-        class: Dedipanel\PHPSeclibWrapperBundle\EventListenner\AutoKeyLoaderListener
+        class: Dedipanel\PHPSeclibWrapperBundle\EventListener\AutoKeyLoaderListener
         arguments: [ @dedipanel.key_store.file ]
         tags:
           - { name: doctrine.event_listener, event: postLoad, method: postLoad }
+

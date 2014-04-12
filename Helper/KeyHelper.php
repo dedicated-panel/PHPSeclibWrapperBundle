@@ -2,8 +2,9 @@
 
 namespace Dedipanel\PHPSeclibWrapperBundle\Helper;
 
-use Dedipanel\PHPSeclibWrapperBundle\Connection\ConnectionInterface;
 use Dedipanel\PHPSeclibWrapperBundle\KeyStore\KeyStoreInterface;
+use Dedipanel\PHPSeclibWrapperBundle\Connection\ConnectionManagerInterface;
+use Dedipanel\PHPSeclibWrapperBundle\Server\ServerInterface;
 
 /**
  * @author Albin Kerouanton
@@ -12,14 +13,19 @@ use Dedipanel\PHPSeclibWrapperBundle\KeyStore\KeyStoreInterface;
  */
 class KeyHelper
 {
-    /** @var \Dedipanel\PHPSeclibWrapperBundle\KeyStore\KeyStoreInterface $store **/
+    /** @var \Dedipanel\PHPSeclibWrapperBundle\KeyStore\KeyStoreInterface $store */
     private $store;
 
+    /** @var \Dedipanel\PHPSeclibWrapperBundle\Connection\ConnectionManagerInterface  */
+    private $manager;
+
     /**
-     * @param \Dedipanel\PHPSeclibWrapperBundle\KeyStore\KeyStoreInterface $store
+     * @param ConnectionManagerInterface $manager
+     * @param KeyStoreInterface $store
      */
-    public function __construct(KeyStoreInterface $store)
+    public function __construct(ConnectionManagerInterface $manager, KeyStoreInterface $store)
     {
+        $this->manager = $manager;
         $this->store = $store;
         
         if (!$store->isInitialized()) {
@@ -28,48 +34,56 @@ class KeyHelper
     }
 
     /**
-     * Creates key pair using the $connection on the underlying server
-     * 
-     * @param string $keyName Public/Private key name
-     * @param \Dedipanel\PHPSeclibWrapperBundle\Connection\ConnectionInterface
-     *        $connection Opened connecton to the server for
-     *        which we want to create a key
-     * 
-     * @return string Public key
+     * Create a key pair and upload the public key on the $server
+     *
+     * @param ServerInterface $server
+     * @param integer         $bits
      */
-    public function createKeyPair($keyName, ConnectionInterface $connection = null)
+    public function createKeyPair(ServerInterface $server, $bits = 1024)
     {
+        // Generates a key pair
         $rsa = new \Crypt_RSA();
         $rsa->setPublicKeyFormat(CRYPT_RSA_PUBLIC_FORMAT_OPENSSH);
-        $pair = $rsa->createKey();
+        $pair = $rsa->createKey($bits);
 
-        $this->store->store($keyName, $pair['privatekey']);
+        // Stores the private key
+        $name = uniqid('', true);
+        $this->store->store($name, $pair['privatekey']);
+        $server->setPrivateKeyName($name);
 
-        if (!is_null($connection)) {
-            $connection->addKey($pair['publickey']);
-        }
-
-        return $pair['publickey'];
+        // Finally upload the public key
+        $conn = $this->manager->getConnectionFromServer($server);
+        $conn->addKey($pair['publickey']);
     }
 
     /**
-     * Deletes key pair using the $connection on the underlying server
-     * 
-     * @param string $keyName Public/Private key name
-     * @param \Dedipanel\PHPSeclibWrapperBundle\Connection\ConnectionInterface
-     *        $connection Opened connecton to the server for
-     *        which we want to delete the key
-     * 
-     * @return boolean
+     * Delete private key file and remove the public key on the $server
+     *
+     * @param ServerInterface $server
      */
-    public function deleteKeyPair($keyName, ConnectionInterface $connection = null)
+    public function deleteKeyPair(ServerInterface $server)
     {
-        $removed = $this->store->remove($keyName);
+        // Recreate the public key from the private key
+        $rsa = $this->loadRSA($server);
+        $pubkey = $rsa->getPublicKey(CRYPT_RSA_PUBLIC_FORMAT_OPENSSH);
 
-        if ($removed && !is_null($connection)) {
-            $connection->removeKey($this->store->retrieve($keyName));
-        }
+        $conn = $this->manager->getConnectionFromServer($server);
+        $conn->removeKey($pubkey);
 
-        return $removed;
+        // Finally removes the private key from the store
+        $this->store->remove($server->getPrivateKeyName());
+        $server->setPrivateKeyName(null);
+    }
+
+    /**
+     * @param ServerInterface $server
+     * @return \Crypt_RSA
+     */
+    protected function loadRSA(ServerInterface $server)
+    {
+        $rsa = new \Crypt_RSA();
+        $rsa->loadKey($this->store->retrieve($server->getPrivateKeyName()));
+
+        return $rsa;
     }
 }

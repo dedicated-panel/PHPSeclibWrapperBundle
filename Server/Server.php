@@ -20,6 +20,7 @@ class Server implements ServerInterface
     protected $home;
     protected $password;
     protected $privateKey;
+    protected $privateKeyName;
     
     
     /**
@@ -186,6 +187,24 @@ class Server implements ServerInterface
     public function getPrivateKey()
     {
         return $this->privateKey;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setPrivateKeyName($privateKeyName = null)
+    {
+        $this->privateKeyName = $privateKeyName;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPrivateKeyName()
+    {
+        return $this->privateKeyName;
     }
 
     /**

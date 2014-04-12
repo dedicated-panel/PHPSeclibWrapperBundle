@@ -84,11 +84,10 @@ interface ServerInterface
       public function getPassword();
 
       /**
-       * Sets the private key for SSH authent
+       * Sets the private key for SSH authentication
        *
        * @param string $privateKey Private key used for ssh/sftp connections
-       *
-       * @return \Dedipanel\PHPSeclibWrapperBundle\Server\ServerInterface
+       * @return ServerInterface
        */
       public function setPrivateKey($privateKey);
 
@@ -98,6 +97,21 @@ interface ServerInterface
        * @return string
        */
       public function getPrivateKey();
+
+    /**
+     * Sets the private key name used in the store
+     *
+     * @param string|null $privateKeyName
+     * @return ServerInterface
+     */
+    public function setPrivateKeyName($privateKeyName = null);
+
+    /**
+     * Gets the private key name in the store
+     *
+     * @return string
+     */
+    public function getPrivateKeyName();
 
       /**
        * Gets the server string representation

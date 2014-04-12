@@ -156,15 +156,12 @@ class Connection implements ConnectionInterface
 
                 $login = $ssh->login($username, $password);
             } if (!empty($privateKey)) {
-                $key = new \Crypt_RSA();
-                $key->loadKey($privateKey);
-
                 $this->logger->notice(get_class($this) . '::getSSH - Trying to connect to ssh server ({server}, cid: {cid}) using private keyfile.', array(
                     'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
 
-                $login = $ssh->login($username, $key);
+                $login = $ssh->login($username, $privateKey);
             } else {
                 $this->logger->warning(get_class($this) . '::getSSH - Can\'t connect to ssh server ({server}, cid: {cid}) because no private key and no password are set.', array(
                     'server' => strval($this->server),

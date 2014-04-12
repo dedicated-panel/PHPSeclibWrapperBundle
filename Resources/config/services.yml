@@ -12,8 +12,14 @@ services:
 
     dedipanel.key_helper:
         class: %dedipanel.key_helper.class%
-        arguments: [ @dedipanel.key_store.file ]
+        arguments: [ @dedipanel.key_store.file, @dedipanel.connection_manager ]
 
     dedipanel.connection_manager:
         class: %dedipanel.connection_manager.class%
         arguments: [ @logger, %dedipanel.connection_manager.debug% ]
+
+    dedipanel.listener.auto_load_key:
+        class: Dedipanel\PHPSeclibWrapperBundle\EventListenner\AutoKeyLoaderListener
+        arguments: [ @dedipanel.key_store.file ]
+        tags:
+          - { name: doctrine.event_listener, event: postLoad, method: postLoad }

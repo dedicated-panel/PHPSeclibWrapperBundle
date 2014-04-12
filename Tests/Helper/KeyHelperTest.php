@@ -7,6 +7,11 @@ use Dedipanel\PHPSeclibWrapperBundle\KeyStore\Exception\KeyStoreInitializationEx
 
 class KeyHelperTest extends \PHPUnit_Framework_TestCase
 {
+    public function mockManager()
+    {
+        return $this->getMock('Dedipanel\PHPSeclibWrapperBundle\Connection\ConnectionManagerInterface');
+    }
+
     private function mockStore($fake = false, $acting = false)
     {
         $mock = $this->getMock('Dedipanel\PHPSeclibWrapperBundle\KeyStore\KeyStoreInterface');
@@ -47,29 +52,13 @@ class KeyHelperTest extends \PHPUnit_Framework_TestCase
         
         return $mock;
     }
-    
-    private function mockConnection()
-    {
-        $mock = $this->getMock('Dedipanel\PHPSeclibWrapperBundle\Connection\ConnectionInterface');
-        
-        $mock
-            ->expects($this->once())
-            ->method('addKey')
-        ;
-        
-        $mock
-            ->expects($this->once())
-            ->method('removeKey')
-        ;
-        
-        return $mock;
-    }
-    
+
     public function testConstructsWithCorrectStore()
     {
-        $store  = $this->mockStore();
-        $helper = new KeyHelper($store);
-        
+        $manager = $this->mockManager();
+        $store   = $this->mockStore();
+        $helper  = new KeyHelper($manager, $store);
+
         $this->assertInstanceOf('Dedipanel\PHPSeclibWrapperBundle\Helper\KeyHelper', $helper);
     }
     
@@ -78,36 +67,9 @@ class KeyHelperTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructsWithIncorrectStore()
     {
-        $store  = $this->mockStore(true);
-        $helper = new KeyHelper($store);
-    }
-    
-    public function testCreateAndRemoveKeyPairWithCorrectStore()
-    {
-        $store  = $this->mockStore(false, true);
-        $helper = new KeyHelper($store);
-        
-        $publicKey = $helper->createKeyPair('test');
-        $keyParts  = explode(' ', $publicKey);
-        
-        $this->assertNotEmpty($publicKey);
-        $this->assertEquals('ssh-rsa', array_shift($keyParts));
-        
-        $this->assertTrue($helper->deleteKeyPair('test'));
-    }
-    
-    public function testCreateAndRemoveKeyPairWithCorrectStoreAndCorrectConnection()
-    {
-        $store      = $this->mockStore(false, true);
-        $connection = $this->mockConnection();
-        $helper     = new KeyHelper($store);
-        
-        $publicKey = $helper->createKeyPair('test', $connection);
-        $keyParts  = explode(' ', $publicKey);
-        
-        $this->assertNotEmpty($publicKey);
-        $this->assertEquals('ssh-rsa', array_shift($keyParts));
-        
-        $this->assertTrue($helper->deleteKeyPair('test', $connection));
+        $manager = $this->mockManager();
+        $store   = $this->mockStore(true);
+
+        $helper  = new KeyHelper($manager, $store);
     }
 }

@@ -17,6 +17,8 @@ services:
     dedipanel.connection_manager:
         class: %dedipanel.connection_manager.class%
         arguments: [ @logger, %dedipanel.connection_manager.debug% ]
+        tags:
+            - { name: monolog.logger, channel: phpseclib }
 
     dedipanel.listener.auto_load_key:
         class: Dedipanel\PHPSeclibWrapperBundle\EventListener\AutoKeyLoaderListener

@@ -155,7 +155,7 @@ class Connection implements ConnectionInterface
                 ));
 
                 $login = $ssh->login($username, $password);
-            } if (!empty($privateKey)) {
+            } elseif (!empty($privateKey)) {
                 $this->logger->notice(get_class($this) . '::getSSH - Trying to connect to ssh server ({server}, cid: {cid}) using private keyfile.', array(
                     'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),

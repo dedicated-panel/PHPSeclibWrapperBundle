@@ -2,6 +2,7 @@
 
 namespace Dedipanel\PHPSeclibWrapperBundle\Helper;
 
+use Dedipanel\PHPSeclibWrapperBundle\KeyStore\Exception\KeyNotExistsException;
 use Dedipanel\PHPSeclibWrapperBundle\KeyStore\KeyStoreInterface;
 use Dedipanel\PHPSeclibWrapperBundle\Connection\ConnectionManagerInterface;
 use Dedipanel\PHPSeclibWrapperBundle\Server\ServerInterface;
@@ -63,16 +64,21 @@ class KeyHelper
      */
     public function deleteKeyPair(ServerInterface $server)
     {
-        // Recreate the public key from the private key
-        $rsa = $this->loadRSA($server);
-        $pubkey = $rsa->getPublicKey(CRYPT_RSA_PUBLIC_FORMAT_OPENSSH);
+        try {
+            // Recreate the public key from the private key
+            $rsa = $this->loadRSA($server);
+            $pubkey = $rsa->getPublicKey(CRYPT_RSA_PUBLIC_FORMAT_OPENSSH);
 
-        $conn = $this->manager->getConnectionFromServer($server);
-        $conn->removeKey($pubkey);
+            $conn = $this->manager->getConnectionFromServer($server);
+            $conn->removeKey($pubkey);
 
-        // Finally removes the private key from the store
-        $this->store->remove($server->getPrivateKeyName());
-        $server->setPrivateKeyName(null);
+            // Finally removes the private key from the store
+            $this->store->remove($server->getPrivateKeyName());
+            $server->setPrivateKeyName(null);
+        }
+        catch (KeyNotExistsException $e) {
+            $server->setPrivateKeyName(null);
+        }
     }
 
     /**

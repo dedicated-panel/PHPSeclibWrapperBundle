@@ -448,20 +448,23 @@ class Connection implements ConnectionInterface
 
     public function touch($filepath, \DateTime $mtime = null)
     {
+        $timestamp = (is_null($mtime) ? null : $mtime->getTimestamp());
+        $mtime = (is_null($mtime) ? null : $mtime->format('d/m/y H:i:s'));
+
         $this->logger->notice(get_class($this) . '::touch - Touch file {filepath} on {mtime} on ssh server {server} (cid: {cid}).', array(
             'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
             'filepath' => $filepath,
-            'mtime' => $mtime->format('d/m/y H:i:s'),
+            'mtime' => $mtime,
         ));
 
-        $ret = $this->getSFTP()->touch($filepath, $mtime->getTimestamp());
+        $ret = $this->getSFTP()->touch($filepath, $timestamp);
 
         $this->logger->notice(get_class($this) . '::touch - Touching file {filepath} on ssh server {server} (cid: {cid}) : {ret}.', array(
             'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
             'filepath' => $filepath,
-            'mtime' => $mtime->format('d/m/y H:i:s'),
+            'mtime' => $mtime,
             'ret' => ($ret == true ? 'successfully' : 'failed'),
         ));
 

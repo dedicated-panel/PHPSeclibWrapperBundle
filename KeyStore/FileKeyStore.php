@@ -26,6 +26,8 @@ class FileKeyStore implements KeyStoreInterface
     {
         $this->storePath = rtrim($storePath, '/');
         $this->initialized = false;
+
+        $this->initialize();
     }
     
     /**
@@ -41,7 +43,7 @@ class FileKeyStore implements KeyStoreInterface
         
         return $this;
     }
-    
+
     /**
      * {@inheritdoc}
      */

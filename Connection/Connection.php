@@ -2,6 +2,7 @@
 
 namespace Dedipanel\PHPSeclibWrapperBundle\Connection;
 
+use Dedipanel\PHPSeclibWrapperBundle\Server\ServerInterface;
 use Dedipanel\PHPSeclibWrapperBundle\Connection\Exception\IncompleteLoginCredentialsException;
 use Dedipanel\PHPSeclibWrapperBundle\Connection\Exception\ConnectionErrorException;
 use Dedipanel\PHPSeclibWrapperBundle\Connection\ConnectionInterface;

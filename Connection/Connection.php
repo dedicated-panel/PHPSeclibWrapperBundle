@@ -148,21 +148,21 @@ class Connection implements ConnectionInterface
             $privateKey = $this->server->getPrivateKey();
 
             if (!empty($password)) {
-                $this->logger->notice(get_class($this) . '::getSSH - Trying to connect to ssh server "{server}" (cid: {cid}) using password.', array(
+                $this->logger->info(get_class($this) . '::getSSH - Trying to connect to ssh server "{server}" (cid: {cid}) using password.', array(
                     'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
 
                 $login = $ssh->login($username, $password);
             } elseif (!empty($privateKey)) {
-                $this->logger->notice(get_class($this) . '::getSSH - Trying to connect to ssh server "{server}" (cid: {cid}) using privatekey.', array(
+                $this->logger->info(get_class($this) . '::getSSH - Trying to connect to ssh server "{server}" (cid: {cid}) using privatekey.', array(
                     'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
 
                 $login = $ssh->login($username, $privateKey);
             } else {
-                $this->logger->warning(get_class($this) . '::getSSH - Can\'t connect to ssh server "{server}" (cid: {cid}) because no password and no private key are set.', array(
+                $this->logger->error(get_class($this) . '::getSSH - Can\'t connect to ssh server "{server}" (cid: {cid}) because no password and no private key are set.', array(
                     'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
@@ -171,15 +171,16 @@ class Connection implements ConnectionInterface
             }
 
             if ($login === false) {
-                $this->logger->warning(get_class($this) . '::getSSH - Connection to ssh server "{server}" (cid: {cid}) failed.', array(
+                $this->logger->error(get_class($this) . '::getSSH - Connection to ssh server "{server}" (cid: {cid}) failed.', array(
                     'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
+                $this->logger->debug(get_class($this) . '::getSSH', array('phpseclib_logs' => $this->getSSH()->getLog()));
 
                 throw new ConnectionErrorException($this->server);
             }
 
-            $this->logger->warning(get_class($this) . '::getSSH - Connection to ssh server "{server}" (cid: {cid}) succeeded.', array(
+            $this->logger->info(get_class($this) . '::getSSH - Connection to ssh server "{server}" (cid: {cid}) succeeded.', array(
                 'server' => strval($this->server),
                 'cid' => $this->getConnectionId(),
             ));
@@ -206,21 +207,21 @@ class Connection implements ConnectionInterface
             $privateKey = $this->server->getPrivateKey();
 
             if (!empty($password)) {
-                $this->logger->notice(get_class($this) . '::getSFTP - Trying to connect to sftp server "{server}" (cid: {cid}) with password.', array(
+                $this->logger->info(get_class($this) . '::getSFTP - Trying to connect to sftp server "{server}" (cid: {cid}) with password.', array(
                     'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
 
                 $login = $sftp->login($username, $password);
             } elseif (!empty($privateKey)) {
-                $this->logger->notice(get_class($this) . '::getSFTP - Trying to connect to sftp server "{server}" (cid: {cid}) with private keyfile.', array(
+                $this->logger->info(get_class($this) . '::getSFTP - Trying to connect to sftp server "{server}" (cid: {cid}) with private keyfile.', array(
                     'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
 
                 $login = $sftp->login($username, $privateKey);
             } else {
-                $this->logger->warning(get_class($this) . '::getSFTP - Can\'t connect to sftp server "{server}" (cid: {cid}) because no private key and no password are set.', array(
+                $this->logger->error(get_class($this) . '::getSFTP - Can\'t connect to sftp server "{server}" (cid: {cid}) because no private key and no password are set.', array(
                     'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
@@ -229,15 +230,16 @@ class Connection implements ConnectionInterface
             }
 
             if ($login === false) {
-                $this->logger->warning(get_class($this) . '::getSFTP - Connection to sftp server "{server}" (cid: {cid}) failed.', array(
+                $this->logger->error(get_class($this) . '::getSFTP - Connection to sftp server "{server}" (cid: {cid}) failed.', array(
                     'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
+                $this->logger->debug(get_class($this) . '::getSFTP', array('phpseclib_logs' => $this->getSFTP()->getSFTPLog()));
 
                 throw new ConnectionErrorException($this->server);
             }
 
-            $this->logger->warning(get_class($this) . '::getSFTP - Connection to sftp server "{server}" (cid: {cid}) succeeded.', array(
+            $this->logger->info(get_class($this) . '::getSFTP - Connection to sftp server "{server}" (cid: {cid}) succeeded.', array(
                 'server' => strval($this->server),
                 'cid' => $this->getConnectionId(),
             ));
@@ -253,7 +255,7 @@ class Connection implements ConnectionInterface
      */
     public function exec($cmd)
     {
-        $this->logger->notice(get_class($this) . '::exec - Execute cmd on ssh server "{server}" (cid: {cid}).', array(
+        $this->logger->info(get_class($this) . '::exec - Execute cmd on ssh server "{server}" (cid: {cid}).', array(
             'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
             'cmd' => $cmd,
@@ -262,23 +264,25 @@ class Connection implements ConnectionInterface
         $ret = $this->getSSH()->exec($cmd);
         $ret = trim($ret);
 
-        $this->logger->debug(get_class($this) . '::exec - Return of the command executed on "{server}" (cid: {cid}) : "{ret}".', array(
+        $this->broadcastLog
+        $this->logger->info(get_class($this) . '::exec - Return of the command executed on "{server}" (cid: {cid}) : "{ret}".', array(
             'cid' => $this->getConnectionId(),
             'cmd' => $cmd,
             'ret' => $ret,
         ));
+        $this->logger->debug(get_class($this) . '::exec', array('phpseclib_logs' => $this->getSSH()->getLog()));
 
         return $ret;
     }
 
     /**
-     * @{inheritDoc}
+     * @{inheritdoc}
      */
     public function upload($filepath, $data, $chmod = 0750)
     {
         $filepath = $this->resolvePth($filepath);
 
-        $this->logger->notice(get_class($this) . '::upload - Upload {bytes} bytes to "{filepath}" on sftp server "{server}" (cid: {cid}).', array(
+        $this->logger->info(get_class($this) . '::upload - Upload {bytes} bytes to "{filepath}" on sftp server "{server}" (cid: {cid}).', array(
             'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
             'bytes' => strlen($data),
@@ -288,15 +292,16 @@ class Connection implements ConnectionInterface
         $sftp = $this->getSFTP();
         $ret = $sftp->put($filepath, $data);
 
-        $this->logger->debug(get_class($this) . '::upload - Uploading to {filtepath} on sftp server "{server}" (cid: {cid}) {ret}.', array(
+        $this->logger->info(get_class($this) . '::upload - Uploading to {filtepath} on sftp server "{server}" (cid: {cid}) {ret}.', array(
             'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
             'filepath' => $filepath,
             'ret' => ($ret == true ? 'succeeded' : 'failed'),
         ));
+        $this->logger->debug(get_class($this) . '::upload', array('phpseclib_logs' => $this->getSFTP()->getSFTPLog()));
 
         if ($chmod !== false) {
-            $this->logger->notice(get_class($this) . '::upload - Chmod "{filepath}" to {chmod} on sftp server "{server}" (cid: {cid}).', array(
+            $this->logger->info(get_class($this) . '::upload - Chmod "{filepath}" to {chmod} on sftp server "{server}" (cid: {cid}).', array(
                 'server' => strval($this->server),
                 'cid' => $this->getConnectionId(),
                 'filepath' => $filepath,
@@ -305,26 +310,27 @@ class Connection implements ConnectionInterface
 
             $sftp->chmod($chmod, $filepath);
 
-            $this->logger->debug(get_class($this) . '::upload - Chmoding "{filepath}" to {chmod} on sftp server "{server}" (cid: {cid}) {ret}.', array(
+            $this->logger->info(get_class($this) . '::upload - Chmoding "{filepath}" to {chmod} on sftp server "{server}" (cid: {cid}) {ret}.', array(
                 'server' => strval($this->server),
                 'cid' => $this->getConnectionId(),
                 'filepath' => $filepath,
                 'chmod' => $chmod,
                 'ret' => ($ret == true ? 'succeeded' : 'failed'),
             ));
+            $this->logger->debug(get_class($this) . '::upload - Chmoding', array('phpseclib_logs' => $this->getSFTP()->getSFTPLog()));
         }
 
         return $ret;
     }
 
     /**
-     * @{inheritDoc}
+     * @{inheritdoc}
      */
     public function download($filepath)
     {
         $filepath = $this->resolvePath($filepath);
 
-        $this->logger->notice(get_class($this) . '::download - Download "{filepath}" on sftp server "{server}" (cid: {cid}).', array(
+        $this->logger->info(get_class($this) . '::download - Download "{filepath}" on sftp server "{server}" (cid: {cid}).', array(
             'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
             'filepath' => $filepath,
@@ -332,22 +338,23 @@ class Connection implements ConnectionInterface
 
         $content = $this->getSFTP()->get($filepath);
 
-        $this->logger->debug(get_class($this) . '::download - Downloading {size} bytes from "{filepath}" on sftp server "{server}" (cid: {cid}).', array(
+        $this->logger->info(get_class($this) . '::download - Downloading {size} bytes from "{filepath}" on sftp server "{server}" (cid: {cid}).', array(
             'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
             'size' => strlen($content),
             'filepath' => $filepath,
         ));
+        $this->logger->debug(get_class($this) . '::download', array('phpseclib_logs' => $this->getSFTP()->getSFTPLog()));
 
         return $content;
     }
 
     /**
-     * @{inheritDoc}
+     * @{inheritdoc}
      */
     public function connectionTest()
     {
-        $this->logger->notice(get_class($this) . '::connectionTest - Test connection to ssh server "{server}" (cid: {cid}).', array(
+        $this->logger->info(get_class($this) . '::connectionTest - Test connection to ssh server "{server}" (cid: {cid}).', array(
             'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
         ));
@@ -356,23 +363,25 @@ class Connection implements ConnectionInterface
             $echo = $this->exec('echo test');
 
             if (empty($echo) || $echo != 'test') {
-                $this->logger->notice(get_class($this) . '::connectionTest - Connection test to ssh server "{server}" (cid: {cid}) failed.', array(
+                $this->logger->error(get_class($this) . '::connectionTest - Connection test to ssh server "{server}" (cid: {cid}) failed.', array(
                     'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
+                $this->logger->debug(get_class($this) . '::connectionTest', array('phpseclib_logs' => $this->getSSH()->getLog()));
 
                 return false;
             }
         } catch (\Exception $e) {
-            $this->logger->notice(get_class($this) . '::connectionTest - Connection test to ssh server "{server}" (cid: {cid}) failed.', array(
+            $this->logger->error(get_class($this) . '::connectionTest - Connection test to ssh server "{server}" (cid: {cid}) failed.', array(
                 'server' => strval($this->server),
                 'cid' => $this->getConnectionId(),
             ));
+            $this->logger->debug(get_class($this) . '::connectionTest', array('phpseclib_logs' => $this->getSSH()->getLog()));
 
             return false;
         }
 
-        $this->logger->notice(get_class($this) . '::connectionTest - Connection test to ssh server "{server}" (cid: {cid}) succeeded.', array(
+        $this->logger->info(get_class($this) . '::connectionTest - Connection test to ssh server "{server}" (cid: {cid}) succeeded.', array(
             'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
         ));
@@ -381,7 +390,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * @{inheritDoc}
+     * @{inheritdoc}
      */
     public function fileExists($filepath)
     {
@@ -391,7 +400,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * @{inheritDoc}
+     * @{inheritdoc}
      */
     public function dirExists($dirpath)
     {
@@ -401,13 +410,13 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * @{inheritDoc}
+     * @{inheritdoc}
      */
     public function remove($path)
     {
         $path = $this->resolvePath($path);
 
-        $this->logger->notice(get_class($this) . '::remove - Remove "{path}" from ssh server "{server}" (cid: {cid}).', array(
+        $this->logger->info(get_class($this) . '::remove - Remove "{path}" from ssh server "{server}" (cid: {cid}).', array(
             'server' => strval($this->server),
             'cid'    => $this->getConnectionId(),
             'path'   => $path,
@@ -415,18 +424,19 @@ class Connection implements ConnectionInterface
 
         $ret = $this->getSFTP()->delete($path, true);
 
-        $this->logger->notice(get_class($this) . '::remove - Removing "{path}" from ssh server "{server}" (cid: {cid}) {ret}.', array(
+        $this->logger->info(get_class($this) . '::remove - Removing "{path}" from ssh server "{server}" (cid: {cid}) {ret}.', array(
             'server' => strval($this->server),
             'cid'    => $this->getConnectionId(),
             'path'   => $path,
             'ret'    => ($ret == true ? 'successfull' : 'failed'),
         ));
+        $this->logger->debug(get_class($this) . '::remove', array('phpseclib_logs' => $this->getSFTP()->getSFTPLog()));
 
         return $ret;
     }
 
     /**
-     * @{inheritDoc}
+     * @{inheritdoc}
      */
     public function addKey($key)
     {
@@ -447,7 +457,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * @{inheritDoc}
+     * @{inheritdoc}
      */
     public function removeKey($key)
     {
@@ -470,7 +480,7 @@ class Connection implements ConnectionInterface
         $timestamp = (is_null($mtime) ? null : $mtime->getTimestamp());
         $mtime = (is_null($mtime) ? null : $mtime->format('d/m/y H:i:s'));
 
-        $this->logger->notice(get_class($this) . '::touch - Touch file "{filepath}" on {mtime} on sftp server "{server}" (cid: {cid}).', array(
+        $this->logger->info(get_class($this) . '::touch - Touch file "{filepath}" on {mtime} on sftp server "{server}" (cid: {cid}).', array(
             'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
             'filepath' => $filepath,
@@ -479,12 +489,13 @@ class Connection implements ConnectionInterface
 
         $ret = $this->getSFTP()->touch($filepath, $timestamp);
 
-        $this->logger->notice(get_class($this) . '::touch - Touching file "{filepath}" on sftp server "{server}" (cid: {cid}) {ret}.', array(
+        $this->logger->info(get_class($this) . '::touch - Touching file "{filepath}" on sftp server "{server}" (cid: {cid}) {ret}.', array(
             'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
             'filepath' => $filepath,
             'ret' => ($ret == true ? 'succeeded' : 'failed'),
         ));
+        $this->logger->debug(get_class($this) . '::touch', array('phpseclib_logs' => $this->getSFTP()->getSFTPLog()));
 
         return $ret;
     }
@@ -497,7 +508,7 @@ class Connection implements ConnectionInterface
     {
         $dirpath = $this->resolvePath($dirpath);
 
-        $this->logger->notice(get_class($this) . '::createDir - Create directory "{dirpath}" on sftp server "{server}" (cid: {cid}).', array(
+        $this->logger->info(get_class($this) . '::mkdir - Create directory "{dirpath}" on sftp server "{server}" (cid: {cid}).', array(
             'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
             'dirpath' => $dirpath,
@@ -505,18 +516,19 @@ class Connection implements ConnectionInterface
 
         $ret = $this->getSFTP()->mkdir($dirpath);
 
-        $this->logger->notice(get_class($this) . '::createDir - Creating directory "{dirpath}" on sftp server "{server}" (cid: {cid}) {ret}.', array(
+        $this->logger->info(get_class($this) . '::mkdir - Creating directory "{dirpath}" on sftp server "{server}" (cid: {cid}) {ret}.', array(
             'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
             'dirpath' => $dirpath,
             'ret' => ($ret == true ? 'succeeded' : 'failed'),
         ));
+        $this->logger->debug(get_class($this) . '::mkdir', array('phpseclib_logs' => $this->getSFTP()->getSFTPLog()));
 
         return $ret;
     }
 
     /**
-     * @{inheritDoc}
+     * {@inheritdoc}
      */
     public function createFile($filepath)
     {
@@ -524,7 +536,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * @{inheritDoc}
+     * {@inheritdoc}
      */
     public function createDir($dirpath)
     {
@@ -532,13 +544,13 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * @{inheritDoc}
+     * {@inheritdoc}
      */
     public function chmod($path, $chmod, $recursive = true)
     {
         $path = $this->resolvePath($path);
 
-        $this->logger->notice(get_class($this) . '::chmod - Chmod {chmod} on "{path}" on sftp server "{server}" (cid: {cid}).', array(
+        $this->logger->info(get_class($this) . '::chmod - Chmod {chmod} on "{path}" on sftp server "{server}" (cid: {cid}).', array(
             'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
             'path' => $path,
@@ -547,27 +559,28 @@ class Connection implements ConnectionInterface
 
         $ret = $this->getSFTP()->chmod($path, $chmod);
 
-        $this->logger->notice(get_class($this) . '::chmod - Chmoding {chmod} on "{path}" on sftp server "{server}" (cid: {cid}) {ret}.', array(
+        $this->logger->info(get_class($this) . '::chmod - Chmoding {chmod} on "{path}" on sftp server "{server}" (cid: {cid}) {ret}.', array(
             'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
             'path' => $path,
             'chmod' => $chmod,
             'ret' => ($ret == true ? 'succeeded' : 'failed'),
         ));
+        $this->logger->debug(get_class($this) . '::chmod', array('phpseclib_logs' => $this->getSFTP()->getSFTPLog()));
 
         return $ret;
     }
 
     /**
-     * @{inheritDoc}
+     * {@inheritdoc}
      */
     public function getHome()
     {
-        return $this->exec('cd ~ && pwd');;
+        return $this->exec('cd ~ && pwd');
     }
 
     /**
-     * @{inheritDoc}
+     * {@inheritdoc}
      */
     public function is64BitSystem()
     {
@@ -575,7 +588,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * @{inheritDoc}
+     * {@inheritdoc}
      */
     public function isInstalled($packet)
     {
@@ -585,7 +598,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * @{inheritDoc}
+     * {@inheritdoc}
      */
     public function isJavaInstalled()
     {
@@ -593,7 +606,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * @{inheritDoc}
+     * {@inheritdoc}
      */
     public function hasCompatLib()
     {

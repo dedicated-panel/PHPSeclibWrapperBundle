@@ -195,7 +195,7 @@ interface ConnectionInterface
     public function chmod($path, $chmod, $recursive = true);
     
     /**
-     * Gets the user home
+     * Gets the user home (without trailing slash)
      *
      * @api
      *

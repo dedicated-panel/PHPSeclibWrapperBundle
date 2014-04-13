@@ -280,7 +280,7 @@ class Connection implements ConnectionInterface
      */
     public function upload($filepath, $data, $chmod = 0750)
     {
-        $filepath = $this->resolvePth($filepath);
+        $filepath = $this->resolvePath($filepath);
 
         $this->logger->info(get_class($this) . '::upload - Upload {bytes} bytes to "{filepath}" on sftp server "{server}" (cid: {cid}).', array(
             'server' => strval($this->server),
@@ -646,6 +646,6 @@ class Connection implements ConnectionInterface
      */
     public function resolvePath($path)
     {
-        return str_replace('~/', $this->getHome(), $path);
+        return str_replace('~/', $this->getHome() . '/', $path);
     }
 }

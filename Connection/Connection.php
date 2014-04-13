@@ -149,21 +149,21 @@ class Connection implements ConnectionInterface
             $privateKey = $this->server->getPrivateKey();
 
             if (!empty($password)) {
-                $this->logger->notice(get_class($this) . '::getSSH - Trying to connect to ssh server ("{server}", cid: {cid}) using password.', array(
+                $this->logger->notice(get_class($this) . '::getSSH - Trying to connect to ssh server "{server}" (cid: {cid}) using password.', array(
                     'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
 
                 $login = $ssh->login($username, $password);
             } elseif (!empty($privateKey)) {
-                $this->logger->notice(get_class($this) . '::getSSH - Trying to connect to ssh server ("{server}", cid: {cid}) using private keyfile.', array(
+                $this->logger->notice(get_class($this) . '::getSSH - Trying to connect to ssh server "{server}" (cid: {cid}) using private keyfile.', array(
                     'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
 
                 $login = $ssh->login($username, $privateKey);
             } else {
-                $this->logger->warning(get_class($this) . '::getSSH - Can\'t connect to ssh server ("{server}", cid: {cid}) because no private key and no password are set.', array(
+                $this->logger->warning(get_class($this) . '::getSSH - Can\'t connect to ssh server "{server}" (cid: {cid}) because no private key and no password are set.', array(
                     'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
@@ -172,7 +172,7 @@ class Connection implements ConnectionInterface
             }
 
             if ($login === false) {
-                $this->logger->warning(get_class($this) . '::getSSH - Connection to ssh server ("{server}", cid: {cid}) failed.', array(
+                $this->logger->warning(get_class($this) . '::getSSH - Connection to ssh server "{server}" (cid: {cid}) failed.', array(
                     'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
@@ -180,7 +180,7 @@ class Connection implements ConnectionInterface
                 throw new ConnectionErrorException($this->server);
             }
 
-            $this->logger->warning(get_class($this) . '::getSSH - Connection to ssh server ("{server}", cid: {cid}) succeed.', array(
+            $this->logger->warning(get_class($this) . '::getSSH - Connection to ssh server "{server}" (cid: {cid}) succeed.', array(
                 'server' => strval($this->server),
                 'cid' => $this->getConnectionId(),
             ));
@@ -207,21 +207,21 @@ class Connection implements ConnectionInterface
             $privateKey = $this->server->getPrivateKey();
 
             if (!empty($password)) {
-                $this->logger->notice(get_class($this) . '::getSFTP - Trying to connect to sftp server ("{server}", cid: {cid}) with password.', array(
+                $this->logger->notice(get_class($this) . '::getSFTP - Trying to connect to sftp server "{server}" (cid: {cid}) with password.', array(
                     'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
 
                 $login = $sftp->login($username, $password);
             } elseif (!empty($privateKey)) {
-                $this->logger->notice(get_class($this) . '::getSFTP - Trying to connect to sftp server ("{server}", cid: {cid}) with private keyfile.', array(
+                $this->logger->notice(get_class($this) . '::getSFTP - Trying to connect to sftp server "{server}" (cid: {cid}) with private keyfile.', array(
                     'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
 
                 $login = $sftp->login($username, $privateKey);
             } else {
-                $this->logger->warning(get_class($this) . '::getSFTP - Can\'t connect to sftp server ("{server}", cid: {cid}) because no private key and no password are set.', array(
+                $this->logger->warning(get_class($this) . '::getSFTP - Can\'t connect to sftp server "{server}" (cid: {cid}) because no private key and no password are set.', array(
                     'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
@@ -230,7 +230,7 @@ class Connection implements ConnectionInterface
             }
 
             if ($login === false) {
-                $this->logger->warning(get_class($this) . '::getSFTP - Connection to sftp server ("{server}", cid: {cid}) failed.', array(
+                $this->logger->warning(get_class($this) . '::getSFTP - Connection to sftp server "{server}" (cid: {cid}) failed.', array(
                     'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
@@ -238,7 +238,7 @@ class Connection implements ConnectionInterface
                 throw new ConnectionErrorException($this->server);
             }
 
-            $this->logger->warning(get_class($this) . '::getSFTP - Connection to sftp server ("{server}", cid: {cid}) succeed.', array(
+            $this->logger->warning(get_class($this) . '::getSFTP - Connection to sftp server "{server}" (cid: {cid}) succeed.', array(
                 'server' => strval($this->server),
                 'cid' => $this->getConnectionId(),
             ));
@@ -254,7 +254,7 @@ class Connection implements ConnectionInterface
      */
     public function exec($cmd)
     {
-        $this->logger->notice(get_class($this) . '::exec - Execute cmd on ssh server ("{server}", cid: {cid}).', array(
+        $this->logger->notice(get_class($this) . '::exec - Execute cmd on ssh server "{server}" (cid: {cid}).', array(
             'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
             'cmd' => $cmd,
@@ -263,7 +263,7 @@ class Connection implements ConnectionInterface
         $ret = $this->getSSH()->exec($cmd);
         $ret = trim($ret);
 
-        $this->logger->debug(get_class($this) . '::exec - Return of the command executed on cid {cid}..', array(
+        $this->logger->debug(get_class($this) . '::exec - Return of the command executed on "{server}" (cid: {cid}).', array(
             'cid' => $this->getConnectionId(),
             'cmd' => $cmd,
             'ret' => $ret,
@@ -279,7 +279,7 @@ class Connection implements ConnectionInterface
     {
         $filepath = $this->resolvePth($filepath);
 
-        $this->logger->notice(get_class($this) . '::upload - Upload {bytes} bytes to "{filepath}" on sftp server ("{server}", cid: {cid}).', array(
+        $this->logger->notice(get_class($this) . '::upload - Upload {bytes} bytes to "{filepath}" on sftp server "{server}" (cid: {cid}).', array(
             'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
             'bytes' => strlen($data),
@@ -346,7 +346,7 @@ class Connection implements ConnectionInterface
      */
     public function connectionTest()
     {
-        $this->logger->notice(get_class($this) . '::connectionTest - Test connection to ssh server ("{server}", cid: {cid}).', array(
+        $this->logger->notice(get_class($this) . '::connectionTest - Test connection to ssh server "{server}" (cid: {cid}).', array(
             'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
         ));
@@ -355,7 +355,7 @@ class Connection implements ConnectionInterface
             $echo = $this->exec('echo test');
 
             if (empty($echo) || $echo != 'test') {
-                $this->logger->notice(get_class($this) . '::connectionTest - Connection test to ssh server ("{server}", cid: {cid}) failed.', array(
+                $this->logger->notice(get_class($this) . '::connectionTest - Connection test to ssh server "{server}" (cid: {cid}) failed.', array(
                     'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
@@ -363,7 +363,7 @@ class Connection implements ConnectionInterface
                 return false;
             }
         } catch (\Exception $e) {
-            $this->logger->notice(get_class($this) . '::connectionTest - Connection test to ssh server ("{server}", cid: {cid}) failed.', array(
+            $this->logger->notice(get_class($this) . '::connectionTest - Connection test to ssh server "{server}" (cid: {cid}) failed.', array(
                 'server' => strval($this->server),
                 'cid' => $this->getConnectionId(),
             ));
@@ -371,7 +371,7 @@ class Connection implements ConnectionInterface
             return false;
         }
 
-        $this->logger->notice(get_class($this) . '::connectionTest - Connection test to ssh server ("{server}", cid: {cid}) succeeded.', array(
+        $this->logger->notice(get_class($this) . '::connectionTest - Connection test to ssh server "{server}" (cid: {cid}) succeeded.', array(
             'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
         ));

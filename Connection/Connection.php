@@ -264,7 +264,6 @@ class Connection implements ConnectionInterface
         $ret = $this->getSSH()->exec($cmd);
         $ret = trim($ret);
 
-        $this->broadcastLog
         $this->logger->info(get_class($this) . '::exec - Return of the command executed on "{server}" (cid: {cid}) : "{ret}".', array(
             'cid' => $this->getConnectionId(),
             'cmd' => $cmd,

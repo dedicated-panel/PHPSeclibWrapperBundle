@@ -277,6 +277,8 @@ class Connection implements ConnectionInterface
      */
     public function upload($filepath, $data, $chmod = 0750)
     {
+        $filepath = $this->resolvePth($filepath);
+
         $this->logger->notice(get_class($this) . '::upload - Upload {bytes} bytes to "{filepath}" on sftp server ("{server}", cid: {cid}).', array(
             'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
@@ -319,6 +321,8 @@ class Connection implements ConnectionInterface
      */
     public function download($filepath)
     {
+        $filepath = $this->resolvePath($filepath);
+
         $this->logger->notice(get_class($this) . '::download - Download "{filepath}" on sftp server "{server}" (cid: {cid}).', array(
             'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
@@ -400,6 +404,8 @@ class Connection implements ConnectionInterface
      */
     public function remove($path)
     {
+        $path = $this->resolvePath($path);
+
         $this->logger->notice(get_class($this) . '::remove - Remove "{path}" from ssh server "{server}" (cid: {cid}).', array(
             'server' => strval($this->server),
             'cid'    => $this->getConnectionId(),
@@ -459,6 +465,7 @@ class Connection implements ConnectionInterface
      */
     public function touch($filepath, \DateTime $mtime = null)
     {
+        $filepath = $this->resolvePath($filepath);
         $timestamp = (is_null($mtime) ? null : $mtime->getTimestamp());
         $mtime = (is_null($mtime) ? null : $mtime->format('d/m/y H:i:s'));
 
@@ -488,6 +495,8 @@ class Connection implements ConnectionInterface
      */
     public function mkdir($dirpath)
     {
+        $dirpath = $this->resolvePath($dirpath);
+
         $this->logger->notice(get_class($this) . '::createDir - Create directory "{dirpath}" on ssh server "{server}" (cid: {cid}).', array(
             'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
@@ -527,6 +536,8 @@ class Connection implements ConnectionInterface
      */
     public function chmod($path, $chmod, $recursive = true)
     {
+        $path = $this->resolvePath($path);
+
         $this->logger->notice(get_class($this) . '::chmod - Chmod {chmod} on "{path}" on ssh server "{server}" (cid: {cid}).', array(
             'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
@@ -596,7 +607,7 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * @{inheritDoc}
+     * @{inheritdoc}
      */
     public function getScreenContent($screenName)
     {
@@ -606,9 +617,20 @@ class Connection implements ConnectionInterface
 
         return $this->exec($cmd);
     }
-    
+
+    /**
+     * @{inheritdoc}
+     */
     public function retrieveNbCore()
     {
         return $this->exec('nproc');
+    }
+
+    /**
+     * @{inheritdoc}
+     */
+    public function resolvePath($path)
+    {
+        return str_replace('~/', $this->getHome(), $path);
     }
 }

@@ -256,4 +256,12 @@ interface ConnectionInterface
      * @return string
      */
     public function retrieveNbCore();
+
+    /**
+     * Resolve a given path (useful for ~/)
+     *
+     * @param $path string
+     * @return string
+     */
+    public function resolvePath($path);
 }

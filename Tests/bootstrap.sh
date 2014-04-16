@@ -7,6 +7,10 @@ EXISTS=`id $USERNAME 2>/dev/null | grep uid | wc -l`
 if [ "$1" = "install" ]; then
     sudo apt-get update
     sudo apt-get install -y sshpass
+
+    cd ../
+    composer self-udpate
+    composer install --prefer-dist
 elif [ "$1" = "configure" ]; then
     [ ! $EXISTS ] && sudo useradd -p `openssl passwd -1 $PASSWORD` $USERNAME;
 

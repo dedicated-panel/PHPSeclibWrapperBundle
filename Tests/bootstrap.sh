@@ -9,7 +9,7 @@ if [ "$1" = "install" ]; then
     sudo apt-get install -y sshpass
 
     cd ../
-    composer self-udpate
+    composer self-update
     composer install --prefer-dist
 elif [ "$1" = "configure" ]; then
     [ ! $EXISTS ] && sudo useradd -p `openssl passwd -1 $PASSWORD` $USERNAME;

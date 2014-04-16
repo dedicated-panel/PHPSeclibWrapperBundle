@@ -4,3 +4,5 @@
 /.project
 /.settings/
 /.idea/
+/Tests/id_rsa
+/Tests/id_rsa.pub

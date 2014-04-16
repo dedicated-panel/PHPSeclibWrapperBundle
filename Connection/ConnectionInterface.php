@@ -73,13 +73,22 @@ interface ConnectionInterface
     public function download($filepath);
 
     /**
-     * Verify that we can access the server with server credentials
+     * Verify that we can access the server with server credentials (in ssh)
      *
      * @api
      *
      * @return boolean Can we connect ?
      */
-    public function connectionTest();
+    public function testSSHConnection();
+
+    /**
+     * Verify that we can access the server with server credentials (in sftp)
+     *
+     * @api
+     *
+     * @return boolean Can we connect ?
+     */
+    public function testSFTPConnection();
 
     /**
      * Verify if the file $filepath exists

@@ -143,6 +143,7 @@ class Connection implements ConnectionInterface
             $port = $this->server->getPort();
 
             $ssh = new \Net_SSH2($hostname, $port);
+            $login = false;
 
             $username = $this->server->getUsername();
             $password = $this->server->getPassword();
@@ -176,7 +177,7 @@ class Connection implements ConnectionInterface
                     'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
-                $this->logger->debug(get_class($this) . '::getSSH', array('phpseclib_logs' => $this->getSSH()->getLog()));
+                $this->logger->debug(get_class($this) . '::getSSH', array('phpseclib_logs' => $ssh->getLog()));
 
                 throw new ConnectionErrorException($this->server);
             }
@@ -235,7 +236,7 @@ class Connection implements ConnectionInterface
                     'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
                 ));
-                $this->logger->debug(get_class($this) . '::getSFTP', array('phpseclib_logs' => $this->getSFTP()->getSFTPLog()));
+                $this->logger->debug(get_class($this) . '::getSFTP', array('phpseclib_logs' => $sftp->getSFTPLog()));
 
                 throw new ConnectionErrorException($this->server);
             }
@@ -352,9 +353,9 @@ class Connection implements ConnectionInterface
     /**
      * @{inheritdoc}
      */
-    public function connectionTest()
+    public function testSSHConnection()
     {
-        $this->logger->info(get_class($this) . '::connectionTest - Test connection to ssh server "{server}" (cid: {cid}).', array(
+        $this->logger->info(get_class($this) . '::testSSHConnection - Test connection to ssh server "{server}" (cid: {cid}).', array(
             'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
         ));
@@ -363,25 +364,64 @@ class Connection implements ConnectionInterface
             $echo = $this->exec('echo test');
 
             if (empty($echo) || $echo != 'test') {
-                $this->logger->error(get_class($this) . '::connectionTest - Connection test to ssh server "{server}" (cid: {cid}) failed.', array(
+                $this->logger->error(get_class($this) . '::testSSHConnection - Connection test to ssh server "{server}" (cid: {cid}) failed (return: {echo}).', array(
                     'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
+                    'echo' => $echo,
                 ));
-                $this->logger->debug(get_class($this) . '::connectionTest', array('phpseclib_logs' => $this->getSSH()->getLog()));
+                $this->logger->debug(get_class($this) . '::testSSHConnection', array('phpseclib_logs' => $this->getSSH()->getLog()));
 
                 return false;
             }
         } catch (\Exception $e) {
-            $this->logger->error(get_class($this) . '::connectionTest - Connection test to ssh server "{server}" (cid: {cid}) failed.', array(
+            $this->logger->error(get_class($this) . '::testSSHConnection - Connection test to ssh server "{server}" (cid: {cid}) failed.', array(
                 'server' => strval($this->server),
                 'cid' => $this->getConnectionId(),
             ));
-            $this->logger->debug(get_class($this) . '::connectionTest', array('phpseclib_logs' => $this->getSSH()->getLog()));
 
             return false;
         }
 
-        $this->logger->info(get_class($this) . '::connectionTest - Connection test to ssh server "{server}" (cid: {cid}) succeeded.', array(
+        $this->logger->info(get_class($this) . '::testSSHConnection - Connection test to ssh server "{server}" (cid: {cid}) succeeded.', array(
+            'server' => strval($this->server),
+            'cid' => $this->getConnectionId(),
+        ));
+
+        return true;
+    }
+
+    /**
+     * @{inheritdoc}
+     */
+    public function testSFTPConnection()
+    {
+        $this->logger->info(get_class($this) . '::testSFTPConnection - Test connection to ssh server "{server}" (cid: {cid}).', array(
+            'server' => strval($this->server),
+            'cid' => $this->getConnectionId(),
+        ));
+
+        try {
+            $pwd = $this->getSFTP()->pwd();
+
+            if (empty($pwd)) {
+                $this->logger->error(get_class($this) . '::testSFTPConnection - Connection test to ssh server "{server}" (cid: {cid}) failed.', array(
+                    'server' => strval($this->server),
+                    'cid' => $this->getConnectionId(),
+                ));
+                $this->logger->debug(get_class($this) . '::testSFTPConnection', array('phpseclib_logs' => $this->getSFTP()->getSFTPLog()));
+
+                return false;
+            }
+        } catch (\Exception $e) {
+            $this->logger->error(get_class($this) . '::testSFTPConnection - Connection test to ssh server "{server}" (cid: {cid}) failed.', array(
+                'server' => strval($this->server),
+                'cid' => $this->getConnectionId(),
+            ));
+
+            return false;
+        }
+
+        $this->logger->info(get_class($this) . '::testSFTPConnection - Connection test to ssh server "{server}" (cid: {cid}) succeeded.', array(
             'server' => strval($this->server),
             'cid' => $this->getConnectionId(),
         ));

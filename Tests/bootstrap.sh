@@ -28,6 +28,7 @@ case "$1" in
         chmod 600 $DIR/id_rsa $DIR/id_rsa.pub
         ssh -o PasswordAuthentication=no -o KbdInteractiveAuthentication=no \
             -o ChallengeResponseAuthentication=no \
+            -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
             -i $DIR/id_rsa 2>/dev/null \
             $USER@localhost "echo '[OK]'" || sh -c "echo '[KO]' && exit 1"
     ;;

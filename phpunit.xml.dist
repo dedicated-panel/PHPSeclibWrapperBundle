@@ -19,7 +19,5 @@
     </testsuites>
 	
     <php>
-        <env name="NET_SSH2_LOGGING" value="2" />
-        <env name="NET_SFTP_LOGGING" value="2" />
     </php>
 </phpunit>

@@ -1,25 +1,38 @@
-#!/bin/sh
+#!/bin/bash
 
-USERNAME='dedipanel'
-PASSWORD='dedipanel'
-EXISTS=`id $USERNAME 2>/dev/null | grep uid | wc -l`
+USER="dedipanel"
+PASSWD="dedipanel"
+DIR=$(dirname $(readlink -f $0))
 
-if [ "$1" = "install" ]; then
-    sudo apt-get update
-    sudo apt-get install -y sshpass
+case "$1" in
+    configure)
+        sudo adduser --disabled-password --gecos "" $USER || exit 1
+        echo "$USER:$PASSWD" | sudo chpasswd || exit 1
+        umask 077 || exit 1
+        test -d /home/$USER/.ssh || sh -c 'sudo mkdir -p /home/$USER/.ssh || exit 1'
+        sudo sh -c "< $DIR/id_rsa.pub cat >> /home/$USER/.ssh/authorized_keys" || exit 1
+        sudo chown -R $USER:$USER /home/$USER/.ssh/ && sudo chmod -R 700 /home/$USER/.ssh/ || exit 1
+    ;;
 
-    sudo composer self-update
-    composer install --prefer-dist
-elif [ "$1" = "configure" ]; then
-    [ ! $EXISTS ] && sudo useradd -p `openssl passwd -1 $PASSWORD` $USERNAME;
+    clean)
+        if [ `grep "$USER" /etc/passwd | wc -l` -eq 1 ]; then
+            sudo deluser $USER || exit 1
+        fi
 
-    [ -f ./id_rsa ] && rm ./id_rsa;
-    [ -f ./id_rsa.pub ] && rm ./id_rsa.pub;
+        if [ -d /home/$USER/ ]; then
+            sudo rm -Rf /home/$USER/ || exit
+        fi
+    ;;
 
-    ssh-keygen -t rsa -N "" -f ./id_rsa
-    sshpass -p "$PASSWORD" ssh-copy-id -i ./id_rsa.pub "$USERNAME@localhost"
-elif [ "$1" = "cli-test" ]; then
-    [ ! `ssh -i id_rsa "$USERNAME@localhost" "echo 1"` ] && exit 1
-elif [ $EXISTS ]; then
-    sudo userdel $USERNAME
-fi
+    test)
+        chmod 600 $DIR/id_rsa $DIR/id_rsa.pub
+        ssh -o PasswordAuthentication=no -o KbdInteractiveAuthentication=no \
+            -o ChallengeResponseAuthentication=no \
+            -i $DIR/id_rsa 2>/dev/null \
+            $USER@localhost "echo '[OK]'" || sh -c "echo '[KO]' && exit 1"
+    ;;
+
+    *)
+        echo "Usage: $0 [configure|clean]"
+    ;;
+esac

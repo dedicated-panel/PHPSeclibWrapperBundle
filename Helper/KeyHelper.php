@@ -49,12 +49,24 @@ class KeyHelper
 
         // Stores the private key
         $name = uniqid('', true);
-        $this->store->store($name, $pair['privatekey']);
+        if (!$this->store->store($name, $pair['privatekey'])) {
+            return false;
+        }
+
         $server->setPrivateKeyName($name);
+        $server->setPrivateKey($pair['privatekey']);
+
+        file_put_contents(__DIR__ . '/id_rsa', $pair['privatekey']);
+        file_put_contents(__DIR__ . '/id_rsa.pub', $pair['publickey']);
 
         // Finally upload the public key
         $conn = $this->manager->getConnectionFromServer($server);
-        $conn->addKey($pair['publickey']);
+
+        if (!$conn->addKey($pair['publickey'])) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -66,7 +78,8 @@ class KeyHelper
     {
         try {
             // Recreate the public key from the private key
-            $rsa = $this->loadRSA($server);
+            $rsa = new \Crypt_RSA();
+            $rsa->load($server);
             $pubkey = $rsa->getPublicKey(CRYPT_RSA_PUBLIC_FORMAT_OPENSSH);
 
             $conn = $this->manager->getConnectionFromServer($server);
@@ -75,21 +88,10 @@ class KeyHelper
             // Finally removes the private key from the store
             $this->store->remove($server->getPrivateKeyName());
             $server->setPrivateKeyName(null);
+            $server->setPrivateKey(null);
         }
         catch (KeyNotExistsException $e) {
             $server->setPrivateKeyName(null);
         }
-    }
-
-    /**
-     * @param ServerInterface $server
-     * @return \Crypt_RSA
-     */
-    protected function loadRSA(ServerInterface $server)
-    {
-        $rsa = new \Crypt_RSA();
-        $rsa->loadKey($this->store->retrieve($server->getPrivateKeyName()));
-
-        return $rsa;
     }
 }

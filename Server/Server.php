@@ -176,6 +176,10 @@ class Server implements ServerInterface
      */
     public function setPrivateKey($privateKey)
     {
+        if (is_string($privateKey)) {
+            $privateKey = (new \Crypt_RSA())->loadKey($privateKey);
+        }
+
         $this->privateKey = $privateKey;
 
         return $this;

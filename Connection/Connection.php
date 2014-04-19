@@ -156,7 +156,7 @@ class Connection implements ConnectionInterface
                 ));
 
                 $login = $ssh->login($username, $password);
-            } elseif (!empty($privateKey)) {
+            } elseif ($privateKey instanceof \Crypt_RSA) {
                 $this->logger->info(get_class($this) . '::getSSH - Trying to connect to ssh server "{server}" (cid: {cid}) using privatekey.', array(
                     'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),

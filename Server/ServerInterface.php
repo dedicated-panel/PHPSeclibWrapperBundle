@@ -86,7 +86,7 @@ interface ServerInterface
       /**
        * Sets the private key for SSH authentication
        *
-       * @param string $privateKey Private key used for ssh/sftp connections
+       * @param \Crypt_RSA|string|null $privateKey Private key used for ssh/sftp connections
        * @return ServerInterface
        */
       public function setPrivateKey($privateKey);
@@ -94,7 +94,7 @@ interface ServerInterface
       /**
        * Gets the private key
        *
-       * @return string
+       * @return \Crypt_RSA
        */
       public function getPrivateKey();
 

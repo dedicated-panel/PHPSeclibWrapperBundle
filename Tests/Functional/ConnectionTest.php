@@ -1,6 +1,6 @@
 <?php
 
-namespace Dedipanel\PHPSeclibWrapperBundle\Tests\Functional\Connection;
+namespace Dedipanel\PHPSeclibWrapperBundle\Tests\Functional;
 
 use Dedipanel\PHPSeclibWrapperBundle\Connection\Connection;
 

@@ -6,8 +6,11 @@ php:
   - 5.5
 
 before_script:
-  - Tests/bootstrap.sh install
+  - chmod +x Tests/bootstrap.sh
   - Tests/bootstrap.sh configure
-  - Tests/bootstrap.sh cli-test
+  - Tests/bootstrap.sh test
 
 script: phpunit
+
+after_script:
+  - Tests/bootstrap.sh clean

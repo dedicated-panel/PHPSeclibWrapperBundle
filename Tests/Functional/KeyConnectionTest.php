@@ -37,7 +37,7 @@ EOF;
 
         if (!$key) {
             $mock
-                ->expects($this->once())
+                ->expects($this->any())
                 ->method('setPrivateKeyName')
             ;
         }
@@ -60,23 +60,22 @@ EOF;
             ->will($this->returnValue(self::USERNAME))
         ;
 
-        if ($key) {
-            $pkey = new \Crypt_RSA();
-            $pkey->loadKey(self::PRIVATE_KEY);
-
-            $mock
-                ->expects($this->once())
-                ->method('getPrivateKey')
-                ->will($this->returnValue($pkey))
-            ;
-        }
-        else {
+        if (!$key) {
             $mock
                 ->expects($this->any())
                 ->method('getPassword')
                 ->will($this->returnValue(self::PASSWORD))
             ;
         }
+
+        $pkey = new \Crypt_RSA();
+        $pkey->loadKey(self::PRIVATE_KEY);
+
+        $mock
+            ->expects($this->any())
+            ->method('getPrivateKey')
+            ->will($this->returnValue($pkey))
+        ;
 
         return $mock;
     }
@@ -105,7 +104,7 @@ EOF;
         return $this->getMock('Psr\Log\NullLogger');
     }
 
-    public function testCreateKeyPair()
+    public function testCreateAndDeleteKeyPair()
     {
         $server = $this->mockServer();
         $store  = $this->mockStore();
@@ -115,6 +114,7 @@ EOF;
         $helper = new KeyHelper($manager, $store);
 
         $this->assertTrue($helper->createKeyPair($server));
+        $this->assertTrue($helper->deleteKeyPair($server));
     }
 
     public function testConnectionWithKey()

@@ -56,9 +56,6 @@ class KeyHelper
         $server->setPrivateKeyName($name);
         $server->setPrivateKey($pair['privatekey']);
 
-        file_put_contents(__DIR__ . '/id_rsa', $pair['privatekey']);
-        file_put_contents(__DIR__ . '/id_rsa.pub', $pair['publickey']);
-
         // Finally upload the public key
         $conn = $this->manager->getConnectionFromServer($server);
 
@@ -77,10 +74,7 @@ class KeyHelper
     public function deleteKeyPair(ServerInterface $server)
     {
         try {
-            // Recreate the public key from the private key
-            $rsa = new \Crypt_RSA();
-            $rsa->load($server);
-            $pubkey = $rsa->getPublicKey(CRYPT_RSA_PUBLIC_FORMAT_OPENSSH);
+            $pubkey = $server->getPrivateKey()->getPublicKey(CRYPT_RSA_PUBLIC_FORMAT_OPENSSH);
 
             $conn = $this->manager->getConnectionFromServer($server);
             $conn->removeKey($pubkey);
@@ -93,5 +87,7 @@ class KeyHelper
         catch (KeyNotExistsException $e) {
             $server->setPrivateKeyName(null);
         }
+
+        return true;
     }
 }

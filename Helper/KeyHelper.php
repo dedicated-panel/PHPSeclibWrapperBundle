@@ -74,10 +74,12 @@ class KeyHelper
     public function deleteKeyPair(ServerInterface $server)
     {
         try {
-            $pubkey = $server->getPrivateKey()->getPublicKey(CRYPT_RSA_PUBLIC_FORMAT_OPENSSH);
+            if ($server->getPrivateKey() instanceof \Crypt_RSA) {
+                $pubkey = $server->getPrivateKey()->getPublicKey(CRYPT_RSA_PUBLIC_FORMAT_OPENSSH);
 
-            $conn = $this->manager->getConnectionFromServer($server);
-            $conn->removeKey($pubkey);
+                $conn = $this->manager->getConnectionFromServer($server);
+                $conn->removeKey($pubkey);
+            }
 
             // Finally removes the private key from the store
             $this->store->remove($server->getPrivateKeyName());
@@ -86,6 +88,7 @@ class KeyHelper
         }
         catch (KeyNotExistsException $e) {
             $server->setPrivateKeyName(null);
+            $server->setPrivateKey(null);
         }
 
         return true;

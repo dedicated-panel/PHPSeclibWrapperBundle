@@ -6,7 +6,7 @@ DIR=$(dirname $(readlink -f $0))
 
 case "$1" in
     configure)
-        sudo adduser --disabled-password --gecos "" $USER || exit 1
+        sudo adduser --disabled-password --gecos "" --home /home/$USER $USER || exit 1
         echo "$USER:$PASSWD" | sudo chpasswd || exit 1
         umask 077 || exit 1
         test -d /home/$USER/.ssh || sh -c 'sudo mkdir -p /home/$USER/.ssh || exit 1'
@@ -35,7 +35,7 @@ case "$1" in
             -o ChallengeResponseAuthentication=no \
             -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
             -i $DIR/id_rsa 2>/dev/null \
-            $USER@localhost "echo '[OK]'" || sh -c "echo '[KO]' && exit 1"
+            $USER@localhost "ls /home/$USER 1>/dev/null 2>&1 && echo '[OK]'" || sh -c "echo '[KO]' && exit 1"
     ;;
 
     *)

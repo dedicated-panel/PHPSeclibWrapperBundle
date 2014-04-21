@@ -52,43 +52,62 @@ class PasswordConnectionTest extends \PHPUnit_Framework_TestCase
         return $this->getMock('Psr\Log\NullLogger');
     }
 
-    public function testSSHConnectionWithCorrectPassword()
+    public function getConnection($fake = false)
     {
-        $server = $this->mockServer();
+        $server = $this->mockServer($fake);
         $logger = $this->mockLogger();
 
-        $connection = new Connection($server, $logger);
+        return new Connection($server, $logger);
+    }
 
-        $this->assertTrue($connection->testSSHConnection());
+    public function testSSHConnectionWithCorrectPassword()
+    {
+        $conn = $this->getConnection();
+
+        $this->assertTrue($conn->testSSHConnection());
     }
 
     public function testSSHConnectionWithIncorrectPassword()
     {
-        $server = $this->mockServer(true);
-        $logger = $this->mockLogger();
+        $conn = $this->getConnection(true);
 
-        $connection = new Connection($server, $logger);
-
-        $this->assertFalse($connection->testSSHConnection());
+        $this->assertFalse($conn->testSSHConnection());
     }
 
     public function testSFTPConnectionWithCorrectPassword()
     {
-        $server = $this->mockServer();
-        $logger = $this->mockLogger();
+        $conn = $this->getConnection();
 
-        $connection = new Connection($server, $logger);
-
-        $this->assertTrue($connection->testSFTPConnection());
+        $this->assertTrue($conn->testSFTPConnection());
     }
 
     public function testSFTPConnectionWithIncorrectPassword()
     {
-        $server = $this->mockServer(true);
-        $logger = $this->mockLogger();
+        $conn = $this->getConnection(true);
 
-        $connection = new Connection($server, $logger);
+        $this->assertFalse($conn->testSFTPConnection());
+    }
 
-        $this->assertFalse($connection->testSFTPConnection());
+    public function testPacketStatus()
+    {
+        $conn = $this->getConnection();
+
+        $this->assertTrue($conn->isInstalled('ifupdown'));
+        $this->assertFalse($conn->isInstalled('test'));
+    }
+
+    public function testGetHome()
+    {
+        $conn = $this->getConnection();
+
+        $this->assertEquals('/home/' . self::USERNAME, $conn->getHome());
+    }
+
+    public function testResolvePath()
+    {
+        $conn = $this->getConnection();
+
+        $expected = '/home/' . self::USERNAME . '/test.sh';
+        $this->assertEquals($expected, $conn->resolvePath('~/test.sh'));
     }
 }

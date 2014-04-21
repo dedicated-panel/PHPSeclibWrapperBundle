@@ -24,7 +24,9 @@ class AutoKeyLoaderListener
             try {
                 $entity->setPrivateKey($this->store->retrieve($entity->getPrivateKeyName()));
             }
+            // Ignore the loading for this server
+            // if any exception from the key store is thrown
             catch (BaseKeyStoreException $e) {}
         }
     }
-} 
+}

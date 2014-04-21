@@ -624,7 +624,7 @@ class Connection implements ConnectionInterface
      */
     public function is64BitSystem()
     {
-        return strlen($this->exec('uname -r | grep "\-64"')) > 0;
+        return strlen($this->exec('file /sbin/init | grep "ELF 64\-bit"')) > 0;
     }
 
     /**

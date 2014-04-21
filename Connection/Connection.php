@@ -5,8 +5,8 @@ namespace Dedipanel\PHPSeclibWrapperBundle\Connection;
 use Dedipanel\PHPSeclibWrapperBundle\Server\ServerInterface;
 use Dedipanel\PHPSeclibWrapperBundle\Connection\Exception\IncompleteLoginCredentialsException;
 use Dedipanel\PHPSeclibWrapperBundle\Connection\Exception\ConnectionErrorException;
-use Dedipanel\PHPSeclibWrapperBundle\Connection\ConnectionInterface;
 use Psr\Log\LoggerInterface;
+use Dedipanel\PHPSeclibWrapperBundle\Connection\Exception\ScreenNotExistException;
 
 /**
  * @author Albin Kerouanton
@@ -675,7 +675,7 @@ EOF;
         $ret = $this->exec($cmd);
 
         if (strpos($ret, 'screen not found.') === 0) {
-            throw new ScreenNotFoundException();
+            throw new ScreenNotExistException();
         }
         elseif (strpos($ret, 'temp file does not exists.') === 0) {
             return false;

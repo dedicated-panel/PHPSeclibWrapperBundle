@@ -7,6 +7,6 @@ namespace Dedipanel\PHPSeclibWrapperBundle\Connection\Exception;
  * @license http://opensource.org/licenses/MIT
  * @version 1.0
  */
-class ScreenNotFoundException extends \RuntimeException
+class ScreenNotExistException extends \RuntimeException
 {
 }

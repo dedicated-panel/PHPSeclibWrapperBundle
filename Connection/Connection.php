@@ -21,7 +21,7 @@ class Connection implements ConnectionInterface
     protected $connectionId;
 
     /** @var boolean **/
-    protected $debug;
+    protected $debugMode;
     /** @var LoggerInterface **/
     protected $logger;
 
@@ -37,11 +37,11 @@ class Connection implements ConnectionInterface
      *
      * @return Connection Current instance, for method chaining
      */
-    public function __construct(ServerInterface $server, LoggerInterface $logger, $debug = false)
+    public function __construct(ServerInterface $server, LoggerInterface $logger, $debugMode = false)
     {
-        $this->server = $server;
-        $this->logger = $logger;
-        $this->debug = $debug;
+        $this->server    = $server;
+        $this->logger    = $logger;
+        $this->debugMode = $debugMode;
 
         return $this;
     }
@@ -78,25 +78,25 @@ class Connection implements ConnectionInterface
     /**
      * Sets the debug mode
      *
-     * @param boolean $debug Indicates whether connection need to be in debug mode
+     * @param boolean $debugMode Indicates whether connection need to be in debug mode
      *
      * @return Connection Current instance, for method chaining
      */
-    public function setDebug($debug)
+    public function setDebugMode($debugMode)
     {
-        $this->debug = $debug;
+        $this->debugMode = $debugMode;
 
         return $this;
     }
 
     /**
-     * Gets the debug mode
+     * Is in debug mode ?
      *
      * @return boolean Current debug mode for ssh/sftp connections
      */
-    public function getDebug()
+    public function isDebugMode()
     {
-        return $this->debug;
+        return $this->debugMode;
     }
 
     /**

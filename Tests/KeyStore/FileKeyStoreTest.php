@@ -15,7 +15,6 @@ use Dedipanel\PHPSeclibWrapperBundle\KeyStore\Exception\KeyAlreadyExistsExceptio
 class FileKeyStoreTest extends \PHPUnit_Framework_TestCase
 {
     private $store;
-    private $fakeStore;
     
     public function setUp()
     {

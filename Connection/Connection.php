@@ -667,17 +667,21 @@ class Connection implements ConnectionInterface
     public function getScreenContent($screenName)
     {
         $tmpFile = '/tmp/' . uniqid();
+
+        if ($this->exec("screen -list | grep $screenName | wc -l") == 0) {
+            throw new ScreenNotExistException();
+        }
+
+        // Need sleep, because of "screen -X" as it acts asynchronously
         $cmd = <<<EOF
-screen -list | grep -q "${screenName}" && screen -S "${screenName}" -X hardcopy {$tmpFile} && sleep 1s || echo "screen not found.";
-[ -e ${tmpFile} ] && cat ${tmpFile} && rm -Rf ${tmpFile} || echo "temp file does not exists.";
+screen -S "${screenName}" -p 0 -X hardcopy -h {$tmpFile} && sleep 1s && \
+[ -e ${tmpFile} ] && cat ${tmpFile} && rm -Rf ${tmpFile} || \
+echo "temp file does not exists.";
 EOF;
 
         $ret = $this->exec($cmd);
 
-        if (strpos($ret, 'screen not found.') === 0) {
-            throw new ScreenNotExistException();
-        }
-        elseif (strpos($ret, 'temp file does not exists.') === 0) {
+        if (strpos($ret, 'temp file does not exists.') === 0) {
             return false;
         }
 

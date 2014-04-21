@@ -15,12 +15,17 @@ case "$1" in
     ;;
 
     clean)
+        # The crontab needs to be clean manually before the user is deleted
+        if [ `sudo crontab -u $USER -l 2>/dev/null | wc -l` -gt 0 ]; then
+            sudo crontab -u $USER -r || exit 1
+        fi
+
         if [ `grep "$USER" /etc/passwd | wc -l` -eq 1 ]; then
             sudo deluser $USER || exit 1
         fi
 
         if [ -d /home/$USER/ ]; then
-            sudo rm -Rf /home/$USER/ || exit
+            sudo rm -Rf /home/$USER/ || exit 1
         fi
     ;;
 

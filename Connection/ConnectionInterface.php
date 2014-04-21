@@ -222,13 +222,15 @@ interface ConnectionInterface
     public function is64BitSystem();
 
     /**
-     * Determine whether the $program is installed
+     * Determine whether the $packet is installed
      *
      * @api
      *
+     * @param $packet string
+     *
      * @return boolean
      */
-    public function isInstalled($program);
+    public function isInstalled($packet);
 
     /**
      * Determine whether java is installed
@@ -273,4 +275,32 @@ interface ConnectionInterface
      * @return string
      */
     public function resolvePath($path);
+
+    /**
+     * Fetch the user crontab
+     *
+     * @return string
+     */
+    public function getCrontab();
+
+    /**
+     * Add or update an existing line in the crontab
+     *
+     * @param $script string|string
+     * @param $hour string|integer
+     * @param $min string|integer
+     * @param $dayOfMonth string|integer
+     * @param $month string|integer
+     * @param $dayOfWeek string|integer
+     * @return boolean
+     */
+    public function updateCrontab($script, $hour, $min = 0, $dayOfMonth = '*', $month = '*', $dayOfWeek = '*');
+
+    /**
+     * Remove all the lines containing the given $script
+     *
+     * @param $script string
+     * @return boolean
+     */
+    public function removeFromCrontab($script);
 }

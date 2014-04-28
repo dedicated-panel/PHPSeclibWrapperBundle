@@ -11,14 +11,19 @@ class PasswordConnectionTest extends \PHPUnit_Framework_TestCase
     const USERNAME = 'dedipanel';
     const PASSWORD = 'dedipanel';
 
-    public function mockServer($fake = false)
+    public function mockServer($fakeUser = false, $fakePassword = false, $fakeIp = false)
     {
         $mock = $this->getMock('Dedipanel\PHPSeclibWrapperBundle\Server\ServerInterface');
+
+        $hostname = self::HOSTNAME;
+        if ($fakeIp) {
+            $hostname = '10.10.10.10';
+        }
 
         $mock
             ->expects($this->any())
             ->method('getServerIP')
-            ->will($this->returnValue(self::HOSTNAME))
+            ->will($this->returnValue($hostname))
         ;
 
         $mock
@@ -27,14 +32,19 @@ class PasswordConnectionTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(self::PORT))
         ;
 
+        $username = self::USERNAME;
+        if ($fakeUser) {
+            $username = 'test';
+        }
+
         $mock
             ->expects($this->any())
             ->method('getUsername')
-            ->will($this->returnValue(self::USERNAME))
+            ->will($this->returnValue($username))
         ;
 
         $passwd = self::PASSWORD;
-        if ($fake) {
+        if ($fakePassword) {
             $passwd = 'fake';
         }
 
@@ -52,9 +62,9 @@ class PasswordConnectionTest extends \PHPUnit_Framework_TestCase
         return $this->getMock('Psr\Log\NullLogger');
     }
 
-    public function getConnection($fake = false)
+    public function getConnection($fakeUser = false, $fakePassword = false, $fakeIp = false)
     {
-        $server = $this->mockServer($fake);
+        $server = $this->mockServer($fakeUser, $fakePassword, $fakeIp);
         $logger = $this->mockLogger();
 
         return new Connection($server, $logger);
@@ -67,9 +77,24 @@ class PasswordConnectionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($conn->testSSHConnection());
     }
 
+    /**
+     * @expectedException PHPUnit_Framework_Error
+     */
+    public function testConnectionWithBadIP()
+    {
+        $conn = $this->getConnection(false, false, true);
+        $conn->testSSHConnection();
+    }
+
+    public function testConnectionWithBadUser()
+    {
+        $conn = $this->getConnection(true, false, false);
+        $conn->testSSHConnection();
+    }
+
     public function testSSHConnectionWithIncorrectPassword()
     {
-        $conn = $this->getConnection(true);
+        $conn = $this->getConnection(false, true);
 
         $this->assertFalse($conn->testSSHConnection());
     }
@@ -79,13 +104,6 @@ class PasswordConnectionTest extends \PHPUnit_Framework_TestCase
         $conn = $this->getConnection();
 
         $this->assertTrue($conn->testSFTPConnection());
-    }
-
-    public function testSFTPConnectionWithIncorrectPassword()
-    {
-        $conn = $this->getConnection(true);
-
-        $this->assertFalse($conn->testSFTPConnection());
     }
 
     public function testPacketStatus()

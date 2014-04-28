@@ -9,10 +9,15 @@ use Dedipanel\PHPSeclibWrapperBundle\Server\ServerInterface;
  * @license http://opensource.org/licenses/MIT
  * @version 1.0
  */
-class ConnectionErrorException extends \exception
+class ConnectionErrorException extends \RuntimeException
 {
-    public function __construct(ServerInterface $server)
+    public function __construct(ServerInterface $server = null)
     {
-        parent::__construct('Connection to ' . $server->getUsername() . '@' . $server->getServerIP() . ':' . $server->getPort() . ' failed.');
+        if (is_null($server)) {
+            parent::__construct('Connection failed.');
+        }
+        else {
+            parent::__construct('Connection to ' . $server->getUsername() . '@' . $server->getServerIP() . ':' . $server->getPort() . ' failed.');
+        }
     }
 }

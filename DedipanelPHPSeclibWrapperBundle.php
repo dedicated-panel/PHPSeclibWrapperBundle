@@ -20,10 +20,17 @@ class DedipanelPHPSeclibWrapperBundle extends Bundle
 
     public static function errorHandler($errno, $errstr, $errfile, $errline, $errcontext)
     {
-        if ($errno == E_USER_NOTICE && strpos($errstr, 'Error 110. Connection timed out') !== false) {
-            list($ip,$port) = explode(':', $errcontext['host']);
-            $server = new Server();
-            $server->setIp($ip)->setPort($port);
+        if ($errno == E_USER_NOTICE
+        && (strpos($errstr, 'Error 110. Connection timed out') !== false
+        || strpos($errstr, 'Network is unreachable') !== false
+        || strpos($errstr, 'Connection closed prematurely') !== false)) {
+            $server = null;
+
+            if (isset($errcontext['host'])) {
+                list($ip,$port) = explode(':', $errcontext['host']);
+                $server = new Server();
+                $server->setIp($ip)->setPort($port);
+            }
 
             throw new ConnectionErrorException($server);
         }

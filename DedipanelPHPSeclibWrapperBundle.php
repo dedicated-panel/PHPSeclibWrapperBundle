@@ -3,6 +3,8 @@
 namespace Dedipanel\PHPSeclibWrapperBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Dedipanel\PHPSeclibWrapperBundle\Server\Server;
+use Dedipanel\PHPSeclibWrapperBundle\Connection\Exception\ConnectionErrorException;
 
 /**
  * @author Albin Kerouanton
@@ -11,4 +13,19 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class DedipanelPHPSeclibWrapperBundle extends Bundle
 {
+    public function boot()
+    {
+        set_error_handler(array($this, 'errorHandler'), E_USER_NOTICE | E_USER_ERROR | E_USER_WARNING);
+    }
+
+    public static function errorHandler($errno, $errstr, $errfile, $errline, $errcontext)
+    {
+        if ($errno == E_USER_NOTICE && strpos($errstr, 'Error 110. Connection timed out') !== false) {
+            list($ip,$port) = explode(':', $errcontext['host']);
+            $server = new Server();
+            $server->setIp($ip)->setPort($port);
+
+            throw new ConnectionErrorException($server);
+        }
+    }
 }

@@ -17,8 +17,8 @@ interface ConnectionInterface
      *
      * @api
      *
-     * @throws IncompleteLoginCredentialsException If no private key and no password are defined
-     * @throws ConnectionErrorException            If the connection can't be done (mostly due to bad credentials or timeout)
+     * @throws Exception\IncompleteLoginCredentialsException If no private key and no password are defined
+     * @throws Exception\ConnectionErrorException            If the connection can't be done (mostly due to bad credentials or timeout)
      *
      * @return \Net_SSH2 PHPSeclib SSH connection
      */
@@ -30,8 +30,8 @@ interface ConnectionInterface
      *
      * @api
      *
-     * @throws IncompleteLoginCredentialsException If no private key and no password are defined
-     * @throws ConnectionErrorException            If the connection can't be done (mostly due to bad credentials or timeout)
+     * @throws Exception\IncompleteLoginCredentialsException If no private key and no password are defined
+     * @throws Exception\ConnectionErrorException            If the connection can't be done (mostly due to bad credentials or timeout)
      *
      * @return \Net_SFTP PHPSeclib SFTP connection
      */
@@ -139,7 +139,7 @@ interface ConnectionInterface
      *
      * @api
      *
-     * @param string Public key to remove from the server
+     * @param $key string Public key to remove from the server
      *
      * @return boolean Return true if key successfully deleted or if authorized_keys doesn't exists
      */
@@ -303,4 +303,13 @@ interface ConnectionInterface
      * @return boolean
      */
     public function removeFromCrontab($script);
+
+    /**
+     * Retrieve path stat
+     *
+     * @param $path string
+     * @throws Exception\InvalidPathException
+     * @return false|\Dedipanel\PHPSeclibWrapperBundle\SFTP\AbstractItem
+     */
+    public function stat($path);
 }

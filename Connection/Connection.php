@@ -7,6 +7,9 @@ use Dedipanel\PHPSeclibWrapperBundle\Connection\Exception\IncompleteLoginCredent
 use Dedipanel\PHPSeclibWrapperBundle\Connection\Exception\ConnectionErrorException;
 use Psr\Log\LoggerInterface;
 use Dedipanel\PHPSeclibWrapperBundle\Connection\Exception\ScreenNotExistException;
+use Dedipanel\PHPSeclibWrapperBundle\SFTP\File;
+use Dedipanel\PHPSeclibWrapperBundle\SFTP\Directory;
+use Dedipanel\PHPSeclibWrapperBundle\Connection\Exception\InvalidPathException;
 
 /**
  * @author Albin Kerouanton
@@ -752,5 +755,47 @@ EOF;
         $this->exec($cmd);
 
         return $this->getSSH()->getExitStatus() == 0;
+    }
+
+    /**
+     * @{inheritdoc}
+     */
+    public function stat($path)
+    {
+        $path = $this->resolvePath($path);
+
+        $this->logger->info(get_class($this) . '::stat - Stat path "{path}" on sftp server "{server}" (cid: {cid}).', array(
+            'path' => $path,
+            'server' => strval($this->server),
+            'cid' => $this->getConnectionId(),
+        ));
+
+        $stat = $this->getSFTP()->stat($path);
+
+        $this->logger->debug(get_class($this) . '::stat', array('phpseclib_logs' => $this->getSFTP()->getSFTPLog()));
+
+        if (empty($stat)) {
+            $this->logger->error(get_class($this) . '::stat - Stat path "{path}" on sftp server "{server}" (cid: {cid}) failed.', array(
+                'path' => $path,
+                'server' => strval($this->server),
+                'cid' => $this->getConnectionId(),
+            ));
+
+            throw new InvalidPathException('stat', $path);
+        }
+
+        $item = ($stat['type'] == 1) ? new File : new Directory;
+
+        $pathinfo = pathinfo($path);
+        $item->setPath($pathinfo['dirname']);
+        $item->setName($pathinfo['basename']);
+
+        $this->logger->info(get_class($this) . '::stat - Stat path "{path}" on sftp server "{server}" (cid: {cid}) succeeded.', array(
+            'path' => $path,
+            'server' => strval($this->server),
+            'cid' => $this->getConnectionId(),
+        ));
+
+        return $item;
     }
 }

@@ -3,6 +3,8 @@
 namespace Dedipanel\PHPSeclibWrapperBundle\Tests\Functional;
 
 use Dedipanel\PHPSeclibWrapperBundle\Connection\Connection;
+use Dedipanel\PHPSeclibWrapperBundle\SFTP\File;
+use Dedipanel\PHPSeclibWrapperBundle\SFTP\Directory;
 
 class PasswordConnectionTest extends \PHPUnit_Framework_TestCase
 {
@@ -127,5 +129,29 @@ class PasswordConnectionTest extends \PHPUnit_Framework_TestCase
 
         $expected = '/home/' . self::USERNAME . '/test.sh';
         $this->assertEquals($expected, $conn->resolvePath('~/test.sh'));
+    }
+
+    public function testStatFile()
+    {
+        $conn = $this->getConnection();
+
+        $this->assertTrue($conn->stat('~/.ssh/authorized_keys') instanceof File);
+    }
+
+    public function testStatDirectory()
+    {
+        $conn = $this->getConnection();
+
+        $this->assertTrue($conn->stat('~/.ssh/') instanceof Directory);
+    }
+
+    /**
+     * @expectedException Dedipanel\PHPSeclibWrapperBundle\Connection\Exception\InvalidPathException
+     */
+    public function testStatInexistantFile()
+    {
+        $conn = $this->getConnection();
+
+        $this->assertTrue($conn->stat('~/.aze') instanceof File);
     }
 }

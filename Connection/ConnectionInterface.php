@@ -2,6 +2,9 @@
 
 namespace Dedipanel\PHPSeclibWrapperBundle\Connection;
 
+use Dedipanel\PHPSeclibWrapperBundle\SFTP\File;
+use Dedipanel\PHPSeclibWrapperBundle\SFTP\Directory;
+
 /**
  * @author Albin Kerouanton
  * @license http://opensource.org/licenses/MIT
@@ -312,4 +315,28 @@ interface ConnectionInterface
      * @return false|\Dedipanel\PHPSeclibWrapperBundle\SFTP\AbstractItem
      */
     public function stat($path);
+
+    /**
+     * Retrieve dir/file content
+     *
+     * @param $path string
+     * @return \Dedipanel\PHPSeclibWrapperBundle\SFTP\File|\Dedipanel\PHPSeclibWrapperBundle\SFTP\Directory
+     */
+    public function retrieve($path);
+
+    /**
+     * Retrieve file content from sftp
+     *
+     * @param $file \Dedipanel\PHPSeclibWrapperBundle\SFTP\File
+     * @return ConnectionInterface
+     */
+    public function retrieveFile(File $file);
+
+    /**
+     * Retrieve directory content from sftp
+     *
+     * @param $dir \Dedipanel\PHPSeclibWrapperBundle\SFTP\Directory
+     * @return ConnectionInterface
+     */
+    public function retrieveDirectory(Directory $dir);
 }

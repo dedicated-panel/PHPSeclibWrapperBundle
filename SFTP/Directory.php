@@ -2,7 +2,7 @@
 
 namespace Dedipanel\PHPSeclibWrapperBundle\SFTP;
 
-class Directory extends AbstractItem implements \Iterator
+class Directory extends AbstractItem implements \Iterator, \Countable
 {
     /** @var array $content **/
     private $content;
@@ -97,5 +97,10 @@ class Directory extends AbstractItem implements \Iterator
     public function valid()
     {
         return isset($this->content[$this->pos]);
+    }
+
+    public function count()
+    {
+        return count($this->content);
     }
 }

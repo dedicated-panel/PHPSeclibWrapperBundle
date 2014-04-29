@@ -4,8 +4,8 @@ namespace Dedipanel\PHPSeclibWrapperBundle\Connection\Exception;
 
 class InvalidPathException extends \RuntimeException
 {
-    public function __construct($action, $path)
+    public function __construct($path)
     {
-        parent::__construct("Can't $action the path: $path");
+        parent::__construct('Invalid path "' . $path . '".');
     }
 }

@@ -154,4 +154,23 @@ class PasswordConnectionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($conn->stat('~/.aze') instanceof File);
     }
+
+    public function testRetrieveDirectory()
+    {
+        $conn = $this->getConnection();
+
+        $retrieved = $conn->retrieve('~/.ssh/');
+        $this->assertTrue($retrieved instanceof Directory);
+        $this->assertEquals(3, count($retrieved));
+    }
+
+    public function testRetrieveFile()
+    {
+        $conn = $this->getConnection();
+
+        $retrieved = $conn->retrieve('~/.ssh/authorized_keys');
+
+        $this->assertTrue($retrieved instanceof File);
+        $this->assertNotEquals(0, $retrieved->getSize());
+    }
 }

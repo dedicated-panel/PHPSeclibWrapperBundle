@@ -7,9 +7,11 @@ use Dedipanel\PHPSeclibWrapperBundle\Connection\Exception\IncompleteLoginCredent
 use Dedipanel\PHPSeclibWrapperBundle\Connection\Exception\ConnectionErrorException;
 use Psr\Log\LoggerInterface;
 use Dedipanel\PHPSeclibWrapperBundle\Connection\Exception\ScreenNotExistException;
+use Dedipanel\PHPSeclibWrapperBundle\SFTP\AbstractItem;
 use Dedipanel\PHPSeclibWrapperBundle\SFTP\File;
 use Dedipanel\PHPSeclibWrapperBundle\SFTP\Directory;
 use Dedipanel\PHPSeclibWrapperBundle\Connection\Exception\InvalidPathException;
+use Dedipanel\PHPSeclibWrapperBundle\Connection\Exception\CantRetrieveItemException;
 
 /**
  * @author Albin Kerouanton
@@ -781,10 +783,14 @@ EOF;
                 'cid' => $this->getConnectionId(),
             ));
 
-            throw new InvalidPathException('stat', $path);
+            throw new InvalidPathException($path);
         }
 
-        $item = ($stat['type'] == 1) ? new File : new Directory;
+        $item = new Directory;
+        if ($stat['type'] == 1) {
+            $item = new File;
+            $item->setSize($stat['size']);
+        }
 
         $pathinfo = pathinfo($path);
         $item->setPath($pathinfo['dirname']);
@@ -797,5 +803,100 @@ EOF;
         ));
 
         return $item;
+    }
+
+    /**
+     * @{inheritdoc}
+     */
+    public function retrieve($path)
+    {
+        $item = $this->stat($path);
+
+        if ($item instanceof File) {
+            $this->retrieveFile($item);
+        }
+        else {
+            $this->retrieveDirectory($item);
+        }
+
+        return $item;
+    }
+
+    /**
+     * @{inheritdoc}
+     */
+    public function retrieveFile(File $file)
+    {
+        $this->logger->info(get_class($this) . '::retrieveFile - Retrieve file "{path}" on sftp server "{server}" (cid: {cid})', array(
+            'path' => strval($file),
+            'server' => strval($this->server),
+            'cid' => $this->getConnectionId(),
+        ));
+
+        $content = $this->getSFTP()->get(strval($file));
+
+        $this->logger->debug(get_class($this) . '::retrieveFile', array('phpseclib_logs' => $this->getSFTP()->getSFTPLog()));
+        $this->logger->info(get_class($this) . '::retrieveFile - Retrieving file "{path}" on sftp server "{server}" (cid: {cid}) {ret}', array(
+            'path' => strval($file),
+            'server' => strval($this->server),
+            'cid' => $this->getConnectionId(),
+            'ret' => ($content != false) ? 'succeed' : 'failed',
+        ));
+
+        if ($content == false) {
+            throw new CantRetrieveItem($file);
+        }
+
+        $file->setContent($content);
+
+        return $this;
+    }
+
+    /**
+     * @{inheritdoc}
+     */
+    public function retrieveDirectory(Directory $dir)
+    {
+        $this->logger->info(get_class($this) . '::retrieveDirectory - Retrieve directory "{path}" on sftp server "{server}" (cid: {cid})', array(
+            'path' => strval($dir),
+            'server' => strval($this->server),
+            'cid' => $this->getConnectionId(),
+        ));
+
+        $content = $this->getSFTP()->rawlist(strval($dir));
+
+        $this->logger->debug(get_class($this) . '::retrieveDirectory', array('phpseclib_logs' => $this->getSFTP()->getSFTPLog()));
+
+        if ($content == false) {
+            $this->logger->error(get_class($this) . '::retrieveDirectory - Retrieving directory "{path}" on sftp server "{server}" (cid: {cid}) failed.', array(
+                'path' => strval($dir),
+                'server' => strval($this->server),
+                'cid' => $this->getConnectionId(),
+            ));
+
+            throw new CantRetrieveItemException($dir);
+        }
+
+        $this->logger->info(get_class($this) . '::retrieveDirectory - Retrieving directory "{path}" on sftp server "{server}" (cid: {cid}) succeed.', array(
+            'path' => strval($dir),
+            'server' => strval($this->server),
+            'cid' => $this->getConnectionId(),
+        ));
+
+        $dirs  = array();
+        $files = array();
+
+        foreach ($content AS $name => $item) {
+            if ($item['type'] == 1) {
+                $files[] = new File($dir->getFullPath(), $name);
+            }
+            else {
+                $dirs[] = new Directory($dir->getFullPath(), $name);
+            }
+        }
+
+        $dir->setContent(array_merge($dirs, $files));
+
+        return $this;
     }
 }

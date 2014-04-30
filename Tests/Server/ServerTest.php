@@ -6,6 +6,13 @@ use Dedipanel\PHPSeclibWrapperBundle\Server\Server;
 
 class ServerTest extends \PHPUnit_Framework_TestCase
 {
+    private $privateKey;
+
+    public function __construct()
+    {
+        $this->privateKey = file_get_contents(__DIR__ . '/../id_rsa');
+    }
+
     public function testResolveGoodHostname()
     {
         $server = new Server();
@@ -58,5 +65,13 @@ class ServerTest extends \PHPUnit_Framework_TestCase
     {
         $server = new Server();
         $server->getServerIP();
+    }
+
+    public function testConvertStringToKey()
+    {
+        $server = new Server();
+        $server->setPrivateKey($this->privateKey);
+
+        $this->assertInstanceOf('\Crypt_RSA', $server->getPrivateKey());
     }
 }

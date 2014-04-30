@@ -8,10 +8,18 @@ use Dedipanel\PHPSeclibWrapperBundle\SFTP\Directory;
 
 class PasswordConnectionTest extends \PHPUnit_Framework_TestCase
 {
+    private $publicKey;
+
     const HOSTNAME = '127.0.0.1';
     const PORT     = 22;
     const USERNAME = 'dedipanel';
     const PASSWORD = 'dedipanel';
+
+
+    public function __construct()
+    {
+        $this->publicKey = file_get_contents(__DIR__ . '/../id_rsa.pub');
+    }
 
     public function mockServer($fakeUser = false, $fakePassword = false, $fakeIp = false)
     {
@@ -172,5 +180,6 @@ class PasswordConnectionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($retrieved instanceof File);
         $this->assertNotEquals(0, $retrieved->getSize());
+        $this->assertEquals($this->publicKey, $retrieved->getContent());
     }
 }

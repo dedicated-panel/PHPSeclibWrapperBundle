@@ -39,6 +39,6 @@ case "$1" in
     ;;
 
     *)
-        echo "Usage: $0 [configure|clean]"
+        echo "Usage: $0 [configure|test|clean]"
     ;;
 esac

@@ -496,6 +496,13 @@ class Connection implements ConnectionInterface
         $this->chmod('~/.ssh', 0700);
 
         $authorized = $this->download('~/.ssh/authorized_keys');
+
+        // Verify if the last line of file is an empty line or add
+        $lines = explode("\n", $authorized);
+        if (array_pop($lines) != '') {
+            $authorized .= "\n";
+        }
+
         $authorized .= $key . "\n";
 
         return $this->upload('~/.ssh/authorized_keys', $authorized);

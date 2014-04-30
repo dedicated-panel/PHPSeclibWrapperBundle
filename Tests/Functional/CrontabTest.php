@@ -6,10 +6,10 @@ use Dedipanel\PHPSeclibWrapperBundle\Connection\Connection;
 
 class CrontabTest extends \PHPUnit_Framework_TestCase
 {
-    const HOSTNAME = '127.0.0.1';
-    const PORT     = 22;
-    const USERNAME = 'dedipanel';
-    const PASSWORD = 'dedipanel';
+    const HOSTNAME = HOSTNAME;
+    const PORT     = PORT;
+    const USERNAME = USERNAME;
+    const PASSWORD = PASSWORD;
 
     public function mockServer($fake = false)
     {

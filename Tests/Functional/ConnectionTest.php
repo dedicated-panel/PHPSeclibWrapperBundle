@@ -10,10 +10,10 @@ class PasswordConnectionTest extends \PHPUnit_Framework_TestCase
 {
     private $publicKey;
 
-    const HOSTNAME = '127.0.0.1';
-    const PORT     = 22;
-    const USERNAME = 'dedipanel';
-    const PASSWORD = 'dedipanel';
+    const HOSTNAME = HOSTNAME;
+    const PORT     = PORT;
+    const USERNAME = USERNAME;
+    const PASSWORD = PASSWORD;
 
 
     public function __construct()

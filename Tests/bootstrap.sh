@@ -1,7 +1,7 @@
 #!/bin/bash
 
-USER="dedipanel"
-PASSWD="dedipanel"
+USER="testing"
+PASSWD="testing"
 DIR=$(dirname $(readlink -f $0))
 
 case "$1" in

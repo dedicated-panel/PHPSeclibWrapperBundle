@@ -19,7 +19,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.x-dev",
-        "doctrine/orm": "~2.2,>=2.2.3"
+        "doctrine/orm": "~2.2,>=2.2.3",
+        "twig/twig": "~1.12"
     },
     "autoload": {
         "psr-0": { 

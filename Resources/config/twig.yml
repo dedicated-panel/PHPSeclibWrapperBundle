@@ -1,0 +1,5 @@
+services:
+    dedipanel.extension.sftp:
+        class: Dedipanel\PHPSeclibWrapperBundle\Extension\SFTPExtension
+        tags:
+            - { name: twig.extension }

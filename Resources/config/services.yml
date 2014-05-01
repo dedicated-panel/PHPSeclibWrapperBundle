@@ -26,3 +26,7 @@ services:
         tags:
           - { name: doctrine.event_listener, event: postLoad, method: postLoad }
 
+    dedipanel.extension.sftp:
+        class: Dedipanel\PHPSeclibWrapperBundle\Extension\SFTPExtension
+        tags:
+            - { name: twig.extension }

@@ -5,8 +5,6 @@ namespace Dedipanel\PHPSeclibWrapperBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Dedipanel\PHPSeclibWrapperBundle\Server\Server;
 use Dedipanel\PHPSeclibWrapperBundle\Connection\Exception\ConnectionErrorException;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Dedipanel\PHPSeclibWrapperBundle\DependencyInjection\Compiler\TwigExtensionCompilerPass;
 
 /**
  * @author Albin Kerouanton
@@ -15,13 +13,6 @@ use Dedipanel\PHPSeclibWrapperBundle\DependencyInjection\Compiler\TwigExtensionC
  */
 class DedipanelPHPSeclibWrapperBundle extends Bundle
 {
-    public function build(ContainerBuilder $container)
-    {
-        parent::build($container);
-
-        $container->addCompilerPass(new TwigExtensionCompilerPass());
-    }
-
     public function boot()
     {
         set_error_handler(array($this, 'errorHandler'), E_USER_NOTICE | E_USER_ERROR | E_USER_WARNING);

@@ -3,6 +3,8 @@
 namespace Dedipanel\PHPSeclibWrapperBundle\Tests\Functional;
 
 use Dedipanel\PHPSeclibWrapperBundle\Connection\Connection;
+use Dedipanel\PHPSeclibWrapperBundle\Crontab\Crontab;
+use Dedipanel\PHPSeclibWrapperBundle\Crontab\CrontabItem;
 
 class CrontabTest extends \PHPUnit_Framework_TestCase
 {
@@ -10,6 +12,15 @@ class CrontabTest extends \PHPUnit_Framework_TestCase
     const PORT     = PORT;
     const USERNAME = USERNAME;
     const PASSWORD = PASSWORD;
+
+    public function setUp()
+    {
+        $server = $this->mockServer();
+        $logger = $this->mockLogger();
+
+        $connection = new Connection($server, $logger);
+        $connection->exec('echo "" | crontab -');
+    }
 
     public function mockServer($fake = false)
     {
@@ -47,27 +58,24 @@ class CrontabTest extends \PHPUnit_Framework_TestCase
         return $this->getMock('Psr\Log\NullLogger');
     }
 
-    public function testAddingToCrontab()
+    public function testCrontab()
     {
         $server = $this->mockServer();
         $logger = $this->mockLogger();
 
         $connection = new Connection($server, $logger);
+        $crontab = new Crontab($connection);
 
-        $this->assertEmpty($connection->getCrontab());
-        $this->assertTrue($connection->updateCrontab('~/test.sh', 2));
-        $this->assertNotEmpty($connection->getCrontab());
-    }
+        $item = new CrontabItem('~/test.sh', 2);
 
-    public function testRemovingFromCrontab()
-    {
-        $server = $this->mockServer();
-        $logger = $this->mockLogger();
+        $this->assertEmpty($crontab->getItems());
 
-        $connection = new Connection($server, $logger);
+        $crontab->addItem($item);
+        $this->assertTrue($crontab->update());
+        $this->assertNotEmpty($crontab->getItems());
 
-        $this->assertTrue($connection->updateCrontab('~/test.sh', 2));
-        $this->assertTrue($connection->removeFromCrontab('~/test.sh'));
-        $this->assertEmpty($connection->getCrontab());
+        $crontab->removeItem($item);
+        $this->assertTrue($crontab->update());
+        $this->assertEmpty($crontab->getItems());
     }
 }

@@ -4,6 +4,7 @@ namespace Dedipanel\PHPSeclibWrapperBundle\Connection;
 
 use Dedipanel\PHPSeclibWrapperBundle\SFTP\File;
 use Dedipanel\PHPSeclibWrapperBundle\SFTP\Directory;
+use Dedipanel\PHPSeclibWrapperBundle\Server\ServerInterface;
 
 /**
  * @author Albin Kerouanton
@@ -12,6 +13,11 @@ use Dedipanel\PHPSeclibWrapperBundle\SFTP\Directory;
  */
 interface ConnectionInterface
 {
+    /**
+     * Return the underlying server
+     *
+     * @return ServerInterface
+     */
     public function getServer();
 
     /**
@@ -280,34 +286,6 @@ interface ConnectionInterface
     public function resolvePath($path);
 
     /**
-     * Fetch the user crontab
-     *
-     * @return string
-     */
-    public function getCrontab();
-
-    /**
-     * Add or update an existing line in the crontab
-     *
-     * @param $script string|string
-     * @param $hour string|integer
-     * @param $min string|integer
-     * @param $dayOfMonth string|integer
-     * @param $month string|integer
-     * @param $dayOfWeek string|integer
-     * @return boolean
-     */
-    public function updateCrontab($script, $hour, $min = 0, $dayOfMonth = '*', $month = '*', $dayOfWeek = '*');
-
-    /**
-     * Remove all the lines containing the given $script
-     *
-     * @param $script string
-     * @return boolean
-     */
-    public function removeFromCrontab($script);
-
-    /**
      * Retrieve path stat
      *
      * @param $path string
@@ -339,4 +317,11 @@ interface ConnectionInterface
      * @return ConnectionInterface
      */
     public function retrieveDirectory(Directory $dir);
+
+    /**
+     * Return the exit status from the last command execution
+     *
+     * @return integer
+     */
+    public function getLastExitStatus();
 }

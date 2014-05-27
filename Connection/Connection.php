@@ -719,56 +719,6 @@ EOF;
     /**
      * @{inheritdoc}
      */
-    public function getCrontab()
-    {
-        $ret = $this->exec('crontab -l');
-
-        if ($this->getSSH()->getExitStatus() == 1) {
-            return null;
-        }
-
-        return $ret;
-    }
-
-    /**
-     * @{inheritdoc}
-     */
-    public function updateCrontab($script, $hour, $min = 0, $dayOfMonth = '*', $month = '*', $dayOfWeek = '*')
-    {
-        $script = $this->resolvePath($script);
-
-        $line  = $min . ' ' . $hour . ' ' . $dayOfMonth . ' ';
-        $line .= $month . ' ' . $dayOfWeek . ' ' . $script;
-
-        $cmd = <<<EOF
-crontab -l | awk 'BEGIN { search="${script}"; replacement="${line}" } \
-{ if ($6 == search) { print replacement; found=1 } else { print } } \
-END { if (!found) { print replacement } }' | crontab -
-EOF;
-        $this->exec($cmd);
-
-        return $this->getSSH()->getExitStatus() == 0;
-    }
-
-    /**
-     * @{inheritdoc}
-     */
-    public function removeFromCrontab($script)
-    {
-        $script = $this->resolvePath($script);
-
-        $cmd = <<<EOF
-crontab -l | awk 'BEGIN { search="${script}" } \
-{ if ($6 == search) { found=1 } else { print } }' | crontab -
-EOF;
-        $this->exec($cmd);
-
-        return $this->getSSH()->getExitStatus() == 0;
-    }
-
-    /**
-     * @{inheritdoc}
-     */
     public function stat($path)
     {
         $path = $this->resolvePath($path);
@@ -905,5 +855,13 @@ EOF;
         $dir->setContent(array_merge($dirs, $files));
 
         return $this;
+    }
+
+    /**
+     * @{inheritdoc}
+     */
+    public function getLastExitStatus()
+    {
+        return $this->getSSH()->getExitStatus();
     }
 }

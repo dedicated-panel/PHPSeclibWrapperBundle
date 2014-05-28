@@ -35,7 +35,7 @@ class Crontab implements \Countable
     public function getItems()
     {
         if (!$this->retrieved) {
-            $this->items = $this->retrieve();
+            $this->retrieve();
         }
 
         return $this->items;
@@ -68,7 +68,9 @@ class Crontab implements \Countable
             $items[] = new CrontabItem($command, $hour, $min, $dom, $month, $dow);
         }
 
-        return $items;
+        $this->items = $items;
+
+        return $this;
     }
 
     public function update()

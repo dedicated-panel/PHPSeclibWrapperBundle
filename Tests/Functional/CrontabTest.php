@@ -6,6 +6,9 @@ use Dedipanel\PHPSeclibWrapperBundle\Connection\Connection;
 use Dedipanel\PHPSeclibWrapperBundle\Crontab\Crontab;
 use Dedipanel\PHPSeclibWrapperBundle\Crontab\CrontabItem;
 
+/**
+ * @group crontab
+ */
 class CrontabTest extends \PHPUnit_Framework_TestCase
 {
     const HOSTNAME = HOSTNAME;
@@ -66,9 +69,9 @@ class CrontabTest extends \PHPUnit_Framework_TestCase
         $connection = new Connection($server, $logger);
         $crontab = new Crontab($connection);
 
-        $item = new CrontabItem('~/test.sh', 2);
-
         $this->assertEmpty($crontab->getItems());
+
+        $item = new CrontabItem('~/test.sh', 2);
 
         $crontab->addItem($item);
         $this->assertTrue($crontab->update());

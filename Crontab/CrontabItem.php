@@ -26,12 +26,12 @@ class CrontabItem
         $dayOfWeek = '*'
     )
     {
-        $this->command = $command;
-        $this->min = $min;
-        $this->hour = $hour;
-        $this->dayOfMonth = $dayOfMonth;
-        $this->month = $month;
-        $this->dayOfWeek = $dayOfWeek;
+        $this->setCommand($command);
+        $this->setMin($min);
+        $this->setHour($hour);
+        $this->setDayOfMonth($dayOfMonth);
+        $this->setMonth($month);
+        $this->setDayOfWeek($dayOfWeek);
     }
 
     public function setCommand($command)
@@ -46,8 +46,13 @@ class CrontabItem
         return $this->command;
     }
 
-    public function setMin($min)
+    public function setMin($min = '*')
     {
+        if ($min != '*'
+        && ($min < 0 || $min > 59)) {
+            throw new \InvalidArgumentException('The minute crontab item parameter must be between 0 and 59.');
+        }
+
         $this->min = $min;
 
         return $this;
@@ -58,8 +63,13 @@ class CrontabItem
         return $this->min;
     }
 
-    public function setHour($hour)
+    public function setHour($hour = '*')
     {
+        if ($hour != '*'
+        && ($hour < 0 || $hour > 23)) {
+            throw new \InvalidArgumentException('The hour crontab item parameter must be between 0 and 23.');
+        }
+
         $this->hour = $hour;
 
         return $this;
@@ -72,6 +82,11 @@ class CrontabItem
 
     public function setDayOfMonth($dayOfMonth = '*')
     {
+        if ($dayOfMonth != '*'
+        && ($dayOfMonth < 1 || $dayOfMonth > 31)) {
+            throw new \InvalidArgumentException('The day of month crontab item parameter must be between 1 and 31.');
+        }
+
         $this->dayOfMonth = $dayOfMonth;
 
         return $this;
@@ -84,6 +99,11 @@ class CrontabItem
 
     public function setMonth($month = '*')
     {
+        if ($month != '*'
+        && ($month < 1 || $month > 12)) {
+            throw new \InvalidArgumentException('Themonth crontab item parameter must be between 1 and 12.');
+        }
+
         $this->month = $month;
 
         return $this;
@@ -96,9 +116,19 @@ class CrontabItem
 
     public function setDayOfWeek($dayOfWeek = '*')
     {
+        if ($dayOfWeek != '*'
+        && ($dayOfWeek < 0 || $dayOfWeek > 6)) {
+            throw new \InvalidArgumentException('The day of week crontab item parameter must be between 0 and 6.');
+        }
+
         $this->dayOfWeek = $dayOfWeek;
 
         return $this;
+    }
+
+    public function getDayOfWeek()
+    {
+        return $this->dayOfWeek;
     }
 
     public function __toString()

@@ -14,6 +14,8 @@ abstract class AbstractItem
     protected $name;
     /** @var string $path */
     protected $path;
+    /** @var string $mtime */
+    protected $mtime;
     /** @var string $chrootDir */
     protected $chrootDir;
     /** @var boolean $retrieved */
@@ -135,6 +137,18 @@ abstract class AbstractItem
         return
             strpos($path, $this->chrootDir) === 0
             && strpos($path, '..') === false;
+    }
+
+    public function setMtime($mtime)
+    {
+        $this->mtime = $mtime;
+
+        return $this;
+    }
+
+    public function getMtime()
+    {
+        return $this->mtime;
     }
 
     /**

@@ -118,15 +118,17 @@ class Directory extends AbstractItem implements \Iterator, \Countable
             elseif ('.' == $name) continue;
 
             if ($item['type'] == 1) {
-                $file = new File($this->conn, $path . '/' . $name, $this->chrootDir);
-                $file->setSize($item['size']);
-                $file->setMtime($item['mtime']);
+                $resource = new File($this->conn, $path . '/' . $name, $this->chrootDir);
+                $files[$name] = $resource;
 
-                $files[$name] = $file;
+                $resource->setSize($item['size']);
             }
             else {
-                $dirs[$name] = new Directory($this->conn, $path . '/' . $name, $this->chrootDir, false);
+                $resource = new Directory($this->conn, $path . '/' . $name, $this->chrootDir, false);
+                $dirs[$name] = $resource;
             }
+
+            $resource->setMtime($item['mtime']);
         }
 
         ksort($dirs);

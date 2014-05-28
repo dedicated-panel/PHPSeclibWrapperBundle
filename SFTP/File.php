@@ -11,8 +11,6 @@ class File extends AbstractItem
     private $content;
     /** @var string $size */
     private $size;
-    /** @var string $mtime */
-    private $mtime;
 
 
     public function __construct(ConnectionInterface $conn, $pathname, $chrootDir = null, $validate = true, $content = null)
@@ -71,18 +69,6 @@ class File extends AbstractItem
     public function getSize()
     {
         return $this->size;
-    }
-
-    public function setMtime($mtime)
-    {
-        $this->mtime = $mtime;
-
-        return $this;
-    }
-
-    public function getMtime()
-    {
-        return $this->mtime;
     }
 
     /**

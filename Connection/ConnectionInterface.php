@@ -5,6 +5,7 @@ namespace Dedipanel\PHPSeclibWrapperBundle\Connection;
 use Dedipanel\PHPSeclibWrapperBundle\SFTP\File;
 use Dedipanel\PHPSeclibWrapperBundle\SFTP\Directory;
 use Dedipanel\PHPSeclibWrapperBundle\Server\ServerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * @author Albin Kerouanton
@@ -45,6 +46,22 @@ interface ConnectionInterface
      * @return \Net_SFTP PHPSeclib SFTP connection
      */
     public function getSFTP();
+
+    /**
+     * Sets the logger
+     *
+     * @param LoggerInterface $logger
+     *
+     * @return Connection
+     */
+    public function setLogger(LoggerInterface $logger);
+
+    /**
+     * Gets the logger
+     *
+     * @return LogerInterface Logger instance
+     */
+    public function getLogger();
 
     /**
      * Executes a shell command on the server
@@ -286,37 +303,13 @@ interface ConnectionInterface
     public function resolvePath($path);
 
     /**
-     * Retrieve path stat
+     * Retrieve path stat (array containing : 'type', 'path', 'name'
      *
      * @param $path string
      * @throws Exception\InvalidPathException
-     * @return false|\Dedipanel\PHPSeclibWrapperBundle\SFTP\AbstractItem
+     * @return false|array
      */
     public function stat($path);
-
-    /**
-     * Retrieve dir/file content
-     *
-     * @param $path string
-     * @return \Dedipanel\PHPSeclibWrapperBundle\SFTP\File|\Dedipanel\PHPSeclibWrapperBundle\SFTP\Directory
-     */
-    public function retrieve($path);
-
-    /**
-     * Retrieve file content from sftp
-     *
-     * @param $file \Dedipanel\PHPSeclibWrapperBundle\SFTP\File
-     * @return ConnectionInterface
-     */
-    public function retrieveFile(File $file);
-
-    /**
-     * Retrieve directory content from sftp
-     *
-     * @param $dir \Dedipanel\PHPSeclibWrapperBundle\SFTP\Directory
-     * @return ConnectionInterface
-     */
-    public function retrieveDirectory(Directory $dir);
 
     /**
      * Return the exit status from the last command execution

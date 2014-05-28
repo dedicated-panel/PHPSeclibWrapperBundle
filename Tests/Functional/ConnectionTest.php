@@ -3,8 +3,6 @@
 namespace Dedipanel\PHPSeclibWrapperBundle\Tests\Functional;
 
 use Dedipanel\PHPSeclibWrapperBundle\Connection\Connection;
-use Dedipanel\PHPSeclibWrapperBundle\SFTP\File;
-use Dedipanel\PHPSeclibWrapperBundle\SFTP\Directory;
 
 class PasswordConnectionTest extends \PHPUnit_Framework_TestCase
 {
@@ -139,47 +137,13 @@ class PasswordConnectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $conn->resolvePath('~/test.sh'));
     }
 
-    public function testStatFile()
-    {
-        $conn = $this->getConnection();
-
-        $this->assertTrue($conn->stat('~/.ssh/authorized_keys') instanceof File);
-    }
-
-    public function testStatDirectory()
-    {
-        $conn = $this->getConnection();
-
-        $this->assertTrue($conn->stat('~/.ssh/') instanceof Directory);
-    }
-
     /**
-     * @expectedException Dedipanel\PHPSeclibWrapperBundle\Connection\Exception\InvalidPathException
+     * @group sftp
      */
-    public function testStatInexistantFile()
+    public function testStat()
     {
         $conn = $this->getConnection();
 
-        $this->assertTrue($conn->stat('~/.aze') instanceof File);
-    }
-
-    public function testRetrieveDirectory()
-    {
-        $conn = $this->getConnection();
-
-        $retrieved = $conn->retrieve('~/.ssh/');
-        $this->assertTrue($retrieved instanceof Directory);
-        $this->assertEquals(3, count($retrieved));
-    }
-
-    public function testRetrieveFile()
-    {
-        $conn = $this->getConnection();
-
-        $retrieved = $conn->retrieve('~/.ssh/authorized_keys');
-
-        $this->assertTrue($retrieved instanceof File);
-        $this->assertNotEquals(0, $retrieved->getSize());
-        $this->assertEquals($this->publicKey, $retrieved->getContent());
+        $this->assertNotEmpty($conn->stat('~/.ssh/authorized_keys'));
     }
 }

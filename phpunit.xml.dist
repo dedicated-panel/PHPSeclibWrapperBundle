@@ -23,5 +23,6 @@
         <const name="PORT" value="22" />
         <const name="USERNAME" value="testing" />
         <const name="PASSWORD" value="testing" />
+        <const name="HOME" value="/home/testing/" />
     </php>
 </phpunit>

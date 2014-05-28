@@ -1,6 +1,6 @@
 <?php
 
-namespace Dedipanel\PHPSeclibWrapperBundle\Connection\Exception;
+namespace Dedipanel\PHPSeclibWrapperBundle\SFTP\Exception;
 
 class InvalidPathException extends \RuntimeException
 {

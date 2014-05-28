@@ -39,10 +39,6 @@ class Directory extends AbstractItem implements \Iterator, \Countable
     public function rewind()
     {
         $this->pos = 0;
-
-        if (!$this->retrieved) {
-            $this->retrieve();
-        }
         
         return $this;
     }

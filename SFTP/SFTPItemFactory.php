@@ -17,7 +17,7 @@ class SFTPItemFactory
         return $this->getDirectory($conn, $path, $chrootDir);
     }
 
-    public function getFile(ConnectionInterface $conn, $path, $name, $chrootDir = null)
+    public function getFile(ConnectionInterface $conn, $path, $chrootDir = null)
     {
         return new File($conn, $path, $chrootDir);
     }

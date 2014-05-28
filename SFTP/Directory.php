@@ -114,7 +114,8 @@ class Directory extends AbstractItem implements \Iterator, \Countable
         $files = array();
 
         foreach ($content AS $name => $item) {
-            if ($name == '..' && empty($path)) continue;
+            if ('..' == $name && empty($path)) continue;
+            elseif ('.' == $name) continue;
 
             if ($item['type'] == 1) {
                 $file = new File($this->conn, $path . $name, $this->chrootDir);

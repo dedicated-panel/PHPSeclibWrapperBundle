@@ -298,18 +298,20 @@ interface ConnectionInterface
      * Resolve a given path (useful for ~/)
      *
      * @param $path string
+     * @param $basePath string|null
      * @return string
      */
-    public function resolvePath($path);
+    public function resolvePath($path, $basePath = null);
 
     /**
-     * Retrieve path stat (array containing : 'type', 'path', 'name'
+     * Retrieve path stat (array containing : 'type', 'path', 'name')
      *
      * @param $path string
+     * @param $basePath string|null
      * @throws Exception\InvalidPathException
      * @return false|array
      */
-    public function stat($path);
+    public function stat($path, $basePath = null);
 
     /**
      * Return the exit status from the last command execution

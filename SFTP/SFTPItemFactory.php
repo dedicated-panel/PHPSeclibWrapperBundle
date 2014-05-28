@@ -8,7 +8,7 @@ class SFTPItemFactory
 {
     public function getItem(ConnectionInterface $conn, $path, $chrootDir = null)
     {
-        $stat = $conn->stat($path);
+        $stat = $conn->stat($path, $chrootDir);
 
         if ($stat['type'] == 1) {
             return $this->getFile($conn, $path, $chrootDir);

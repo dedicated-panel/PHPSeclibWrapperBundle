@@ -701,17 +701,21 @@ EOF;
     /**
      * @{inheritdoc}
      */
-    public function resolvePath($path)
+    public function resolvePath($path, $basePath = null)
     {
-        return str_replace('~/', $this->getHome() . '/', $path);
+        if (empty($basePath)) {
+            $basePath = $this->getHome();
+        }
+
+        return str_replace('~/', rtrim($basePath, '/') . '/', $path);
     }
 
     /**
      * @{inheritdoc}
      */
-    public function stat($path)
+    public function stat($path, $basePath = null)
     {
-        $path = $this->resolvePath($path);
+        $path = $this->resolvePath($path, $basePath);
 
         $this->logger->info(get_class($this) . '::stat - Stat path "{path}" on sftp server "{server}" (cid: {cid}).', array(
             'path' => $path,

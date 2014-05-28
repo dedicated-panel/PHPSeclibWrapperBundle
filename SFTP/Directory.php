@@ -119,6 +119,7 @@ class Directory extends AbstractItem implements \Iterator, \Countable
             if ($item['type'] == 1) {
                 $file = new File($this->conn, $path . $name, $this->chrootDir);
                 $file->setSize($item['size']);
+                $file->setMtime($item['mtime']);
 
                 $files[] = $file;
             }

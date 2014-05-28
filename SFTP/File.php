@@ -11,6 +11,8 @@ class File extends AbstractItem
     private $content;
     /** @var string $size */
     private $size;
+    /** @var boolean $new */
+    private $new;
 
 
     public function __construct(ConnectionInterface $conn, $pathname, $chrootDir = null, $validate = true, $content = null)
@@ -18,6 +20,7 @@ class File extends AbstractItem
         parent::__construct($conn, $pathname, $chrootDir);
 
         $this->setContent($content);
+        $this->new = false;
     }
 
     /**
@@ -41,7 +44,7 @@ class File extends AbstractItem
      */
     public function getContent()
     {
-        if (!$this->retrieved) {
+        if (!$this->retrieved && !$this->new) {
             $this->retrieve();
         }
 
@@ -69,6 +72,18 @@ class File extends AbstractItem
     public function getSize()
     {
         return $this->size;
+    }
+
+    public function setNew($new = true)
+    {
+        $this->new = $new;
+
+        return $this;
+    }
+
+    public function isNew()
+    {
+        return $this->new;
     }
 
     /**
@@ -118,7 +133,7 @@ class File extends AbstractItem
         $oldPath = $this->getFullPath($this->oldPath, $this->oldName);
         $newPath = $this->getFullPath();
 
-        if ($oldPath != $newPath) {
+        if ($oldPath != $newPath && !$this->new) {
             $this->rename();
         }
 

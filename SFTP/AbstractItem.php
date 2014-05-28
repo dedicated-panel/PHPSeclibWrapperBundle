@@ -182,7 +182,7 @@ abstract class AbstractItem
             return $path . $name;
         }
 
-        return $path . $this->name;
+        return rtrim($path . $this->name, '/');
     }
 
     /**

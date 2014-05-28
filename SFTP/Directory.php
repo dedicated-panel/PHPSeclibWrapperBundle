@@ -94,7 +94,7 @@ class Directory extends AbstractItem implements \Iterator, \Countable
      */
     public function retrieve()
     {
-        $path = $this->getPath();
+        $path = $this->getRelativePath();
         $fullPath = $this->getFullPath();
 
         $content = $this->conn->getSFTP()->rawlist($fullPath);
@@ -118,14 +118,14 @@ class Directory extends AbstractItem implements \Iterator, \Countable
             elseif ('.' == $name) continue;
 
             if ($item['type'] == 1) {
-                $file = new File($this->conn, $path . $name, $this->chrootDir);
+                $file = new File($this->conn, $path . '/' . $name, $this->chrootDir);
                 $file->setSize($item['size']);
                 $file->setMtime($item['mtime']);
 
                 $files[$name] = $file;
             }
             else {
-                $dirs[$name] = new Directory($this->conn, $path . $name, $this->chrootDir, false);
+                $dirs[$name] = new Directory($this->conn, $path . '/' . $name, $this->chrootDir, false);
             }
         }
 

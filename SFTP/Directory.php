@@ -122,12 +122,15 @@ class Directory extends AbstractItem implements \Iterator, \Countable
                 $file->setSize($item['size']);
                 $file->setMtime($item['mtime']);
 
-                $files[] = $file;
+                $files[$name] = $file;
             }
             else {
-                $dirs[] = new Directory($this->conn, $path . $name, $this->chrootDir, false);
+                $dirs[$name] = new Directory($this->conn, $path . $name, $this->chrootDir, false);
             }
         }
+
+        ksort($dirs);
+        ksort($files);
 
         $this->content = array_merge($dirs, $files);
         $this->retrieved = true;

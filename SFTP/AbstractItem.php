@@ -30,7 +30,7 @@ abstract class AbstractItem
      * @param null $chrootDir The constructor will automatically chroot
      *                        to the user home if no parameter is passed
      */
-    public function __construct(ConnectionInterface $conn, $pathname, $chrootDir = null)
+    public function __construct(ConnectionInterface $conn, $pathname, $chrootDir = null, $validate = true)
     {
         $this->conn = $conn;
 
@@ -52,7 +52,7 @@ abstract class AbstractItem
         }
 
         $this->setName($pathinfo['basename']);
-        $this->setPath($pathinfo['dirname']);
+        $this->setPath($pathinfo['dirname'], $validate);
     }
 
     /**
@@ -87,9 +87,11 @@ abstract class AbstractItem
      * (relative to the chrootDir)
      *
      * @param $path
+     * @param boolean $validate
      * @return Abstractitem
+     * @throws Exception\InvalidPathException
      */
-    public function setPath($path)
+    public function setPath($path, $validate = true)
     {
         if (strpos($path, $this->chrootDir) === 0) {
             $path = substr_replace($path, '', 0, strlen($this->chrootDir));
@@ -100,7 +102,7 @@ abstract class AbstractItem
 
         $this->path = trim($path, '/');
 
-        if (!$this->validatePath()) {
+        if ($validate && !$this->validatePath()) {
             throw new InvalidPathException($this->path);
         }
 

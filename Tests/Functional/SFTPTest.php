@@ -100,7 +100,7 @@ class SFTPTest extends \PHPUnit_Framework_TestCase
 
         $conn = $this->getConnection();
         $dir  = new Directory($conn, '~/test');
-        $file = new File($conn, '~/test/test.txt', self::HOME, $content);
+        $file = new File($conn, '~/test/test.txt', self::HOME, true, $content);
 
         $this->assertEquals(2, count($dir->retrieve()));
         $this->assertTrue($file->create());

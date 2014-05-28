@@ -94,13 +94,14 @@ class Directory extends AbstractItem implements \Iterator, \Countable
      */
     public function retrieve()
     {
-        $path = $this->getFullPath();
+        $path = $this->getPath();
+        $fullPath = $this->getFullPath();
 
-        $content = $this->conn->getSFTP()->rawlist($path);
+        $content = $this->conn->getSFTP()->rawlist($fullPath);
 
         $this->conn->getLogger()->debug(get_class($this) . '::retrieve', array('phpseclib_logs' => $this->conn->getSFTP()->getSFTPLog()));
         $this->conn->getLogger()->info(get_class($this) . '::retrieve - Retrieving directory "{path}" on sftp server "{server}" {ret}.', array(
-            'path' => $path,
+            'path' => $fullPath,
             'server' => strval($this->conn->getServer()),
             'ret' => ($content != false) ? 'succeed' : 'failed',
         ));
@@ -113,11 +114,13 @@ class Directory extends AbstractItem implements \Iterator, \Countable
         $files = array();
 
         foreach ($content AS $name => $item) {
+            if ($name == '..' && empty($path)) continue;
+
             if ($item['type'] == 1) {
-                $files[] = new File($this->conn, $path, $this->chrootDir);
+                $files[] = new File($this->conn, $path . $name, $this->chrootDir);
             }
             else {
-                $dirs[] = new Directory($this->conn, $path, $this->chrootDir);
+                $dirs[] = new Directory($this->conn, $path . $name, $this->chrootDir, false);
             }
         }
 

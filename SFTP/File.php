@@ -13,7 +13,7 @@ class File extends AbstractItem
     private $size;
 
 
-    public function __construct(ConnectionInterface $conn, $pathname, $chrootDir = null, $content = null)
+    public function __construct(ConnectionInterface $conn, $pathname, $chrootDir = null, $validate = true, $content = null)
     {
         parent::__construct($conn, $pathname, $chrootDir);
 

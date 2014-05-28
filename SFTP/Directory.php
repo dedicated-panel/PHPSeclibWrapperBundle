@@ -117,7 +117,10 @@ class Directory extends AbstractItem implements \Iterator, \Countable
             if ($name == '..' && empty($path)) continue;
 
             if ($item['type'] == 1) {
-                $files[] = new File($this->conn, $path . $name, $this->chrootDir);
+                $file = new File($this->conn, $path . $name, $this->chrootDir);
+                $file->setSize($item['size']);
+
+                $files[] = $file;
             }
             else {
                 $dirs[] = new Directory($this->conn, $path . $name, $this->chrootDir, false);

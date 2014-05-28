@@ -7,7 +7,7 @@ use Dedipanel\PHPSeclibWrapperBundle\SFTP\Exception\UnreachableItemException;
 class Directory extends AbstractItem implements \Iterator, \Countable
 {
     /** @var array $content **/
-    private $content;
+    protected $content;
     /** @var integer $pos **/
     private $pos = 0;
 
@@ -17,20 +17,6 @@ class Directory extends AbstractItem implements \Iterator, \Countable
         $this->content = $content;
 
         return $this;
-    }
-    
-    /**
-     * Get directory content
-     * 
-     * @return array
-     */
-    public function getContent()
-    {
-        if (!$this->retrieved) {
-            $this->retrieve();
-        }
-
-        return $this->content;
     }
 
     /**
@@ -120,7 +106,7 @@ class Directory extends AbstractItem implements \Iterator, \Countable
                 $resource->setSize($item['size']);
             }
             else {
-                $resource = new Directory($this->conn, $path . '/' . $name, $this->chrootDir, false);
+                $resource = new Directory($this->conn, $path . '/' . $name, $this->chrootDir);
                 $dirs[$name] = $resource;
             }
 

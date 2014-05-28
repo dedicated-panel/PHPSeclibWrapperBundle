@@ -8,19 +8,16 @@ use Dedipanel\PHPSeclibWrapperBundle\SFTP\Exception\UnreachableItemException;
 class File extends AbstractItem
 {
     /** @var string $content */
-    private $content;
+    protected $content;
     /** @var string $size */
     private $size;
-    /** @var boolean $new */
-    private $new;
 
 
-    public function __construct(ConnectionInterface $conn, $pathname, $chrootDir = null, $validate = true, $content = null)
+    public function __construct(ConnectionInterface $conn, $pathname, $chrootDir = null, $new = false, $content = null)
     {
-        parent::__construct($conn, $pathname, $chrootDir);
+        parent::__construct($conn, $pathname, $chrootDir, $new);
 
         $this->setContent($content);
-        $this->new = false;
     }
 
     /**
@@ -35,20 +32,6 @@ class File extends AbstractItem
         $this->size    = strlen($content);
 
         return $this;
-    }
-    
-    /**
-     * Get the file content
-     * 
-     * @return string
-     */
-    public function getContent()
-    {
-        if (!$this->retrieved && !$this->new) {
-            $this->retrieve();
-        }
-
-        return $this->content;
     }
 
     /**
@@ -72,18 +55,6 @@ class File extends AbstractItem
     public function getSize()
     {
         return $this->size;
-    }
-
-    public function setNew($new = true)
-    {
-        $this->new = $new;
-
-        return $this;
-    }
-
-    public function isNew()
-    {
-        return $this->new;
     }
 
     /**

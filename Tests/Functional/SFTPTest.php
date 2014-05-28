@@ -88,7 +88,7 @@ class SFTPTest extends \PHPUnit_Framework_TestCase
     public function testCreateDirectory()
     {
         $conn = $this->getConnection();
-        $dir  = new Directory($conn, '~/test');
+        $dir  = new Directory($conn, '~/test', null, true);
 
         $this->assertTrue($dir->create());
         $this->assertEquals(2, count($dir->retrieve()));

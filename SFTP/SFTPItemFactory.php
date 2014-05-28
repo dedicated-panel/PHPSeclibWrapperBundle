@@ -17,13 +17,13 @@ class SFTPItemFactory
         return $this->getDirectory($conn, $path, $chrootDir);
     }
 
-    public function getFile(ConnectionInterface $conn, $path, $chrootDir = null)
+    public function getFile(ConnectionInterface $conn, $path, $chrootDir = null, $new = false)
     {
-        return new File($conn, $path, $chrootDir);
+        return new File($conn, $path, $chrootDir, $new);
     }
 
-    public function getDirectory(ConnectionInterface $conn, $path, $chrootDir = null)
+    public function getDirectory(ConnectionInterface $conn, $path, $chrootDir = null, $new = false)
     {
-        return new Directory($conn, $path, $chrootDir);
+        return new Directory($conn, $path, $chrootDir, $new);
     }
 }

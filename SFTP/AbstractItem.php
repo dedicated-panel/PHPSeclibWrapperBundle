@@ -12,6 +12,8 @@ abstract class AbstractItem
     protected $conn;
     /** @var string $name */
     protected $name;
+    /** @var mixed $content */
+    protected $content;
     /** @var string $path */
     protected $path;
     /** @var string $mtime */
@@ -20,6 +22,8 @@ abstract class AbstractItem
     protected $chrootDir;
     /** @var boolean $retrieved */
     protected $retrieved;
+    /** @var boolean $new */
+    protected $new;
     /** @var string $oldPath */
     protected $oldPath;
     /** @var string $oldName */
@@ -32,7 +36,7 @@ abstract class AbstractItem
      * @param null $chrootDir The constructor will automatically chroot
      *                        to the user home if no parameter is passed
      */
-    public function __construct(ConnectionInterface $conn, $pathname, $chrootDir = null, $validate = true)
+    public function __construct(ConnectionInterface $conn, $pathname, $chrootDir = null, $new = false)
     {
         $this->conn = $conn;
 
@@ -53,8 +57,16 @@ abstract class AbstractItem
             $pathinfo['dirname'] = '~/';
         }
 
-        $this->setName($pathinfo['basename']);
-        $this->setPath($pathinfo['dirname'], $validate);
+        if ($new) {
+            $pathinfo['dirname'] .= '/' . $pathinfo['basename'];
+            $pathinfo['basename'] = '';
+        }
+
+        $this->setName($pathinfo['basename'], false);
+        $this->setPath($pathinfo['dirname'], !$new);
+
+        $this->new = $new;
+        $this->content = null;
     }
 
     /**
@@ -63,12 +75,16 @@ abstract class AbstractItem
      * @param $name
      * @return Abstractitem
      */
-    public function setName($name)
+    public function setName($name, $validate = true)
     {
         $this->name = $name;
 
         if (empty($this->oldName)) {
             $this->oldName = $name;
+        }
+
+        if ($validate && !$this->validatePath()) {
+            throw new InvalidPathException($this->name);
         }
 
         return $this;
@@ -82,6 +98,20 @@ abstract class AbstractItem
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Get the current item content
+     *
+     * @return mixed
+     */
+    public function getContent()
+    {
+        if (!$this->retrieved && !$this->new) {
+            $this->retrieve();
+        }
+
+        return $this->content;
     }
 
     /**
@@ -136,7 +166,7 @@ abstract class AbstractItem
 
         return
             strpos($path, $this->chrootDir) === 0
-            && strpos($path, '..') === false;
+            && (strpos($path, '..') === false || !empty($this->path));
     }
 
     public function setMtime($mtime)
@@ -159,6 +189,39 @@ abstract class AbstractItem
     public function getChrootDir()
     {
         return $this->chrootDir;
+    }
+
+    /**
+     * Is the item content already retrieved ?
+     *
+     * @return bool
+     */
+    public function isRetrieved()
+    {
+        return $this->retrieved;
+    }
+
+    /**
+     * Set if the current item is new
+     *
+     * @param bool $new
+     * @return $this
+     */
+    public function setNew($new = true)
+    {
+        $this->new = $new;
+
+        return $this;
+    }
+
+    /**
+     * Is the current item new ?
+     *
+     * @return bool
+     */
+    public function isNew()
+    {
+        return $this->new;
     }
     
     /**

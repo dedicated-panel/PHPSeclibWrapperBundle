@@ -30,3 +30,7 @@ services:
         class: Dedipanel\PHPSeclibWrapperBundle\Extension\SFTPExtension
         tags:
             - { name: twig.extension }
+
+    dedipanel.sftp_factory:
+        class: Dedipanel\PHPSeclibWrapperBundle\SFTP\SFTPItemFactory
+

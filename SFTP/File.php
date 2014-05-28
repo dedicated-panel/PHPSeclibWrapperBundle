@@ -115,13 +115,18 @@ class File extends AbstractItem
      */
     public function update()
     {
-        $path = $this->getFullPath();
+        $oldPath = $this->getFullPath($this->oldPath, $this->oldName);
+        $newPath = $this->getFullPath();
 
-        $pushed = $this->conn->getSFTP()->put($path, $this->content);
+        if ($oldPath != $newPath) {
+            $this->rename();
+        }
+
+        $pushed = $this->conn->getSFTP()->put($newPath, $this->content);
 
         $this->conn->getLogger()->debug(get_class($this) . '::update', array('phpseclib_logs' => $this->conn->getSFTP()->getSFTPLog()));
         $this->conn->getLogger()->info(get_class($this) . '::update - Updating file "{path}" on sftp server "{server}" {ret}', array(
-            'path' => $path,
+            'path' => $newPath,
             'server' => $this->conn->getServer(),
             'ret' => ($pushed != false) ? 'succeed' : 'failed',
         ));

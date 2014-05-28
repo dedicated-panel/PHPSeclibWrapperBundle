@@ -11,7 +11,7 @@ class SFTPItemFactory
         $stat = $conn->stat($path);
 
         if ($stat['type'] == 1) {
-            return $this->getFile($conn, $path, $name, $chrootDir);
+            return $this->getFile($conn, $path, $chrootDir);
         }
 
         return $this->getDirectory($conn, $path, $chrootDir);
@@ -19,7 +19,7 @@ class SFTPItemFactory
 
     public function getFile(ConnectionInterface $conn, $path, $name, $chrootDir = null)
     {
-        return new File($conn, $path, $name, $chrootDir);
+        return new File($conn, $path, $chrootDir);
     }
 
     public function getDirectory(ConnectionInterface $conn, $path, $chrootDir = null)

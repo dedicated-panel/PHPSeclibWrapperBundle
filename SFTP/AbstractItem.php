@@ -148,7 +148,7 @@ abstract class AbstractItem
     }
     
     /**
-     * Get the directory full path (path + name)
+     * Get the item full path (chroot dir + relative path + name)
      *
      * @param $itemPath string|null Can provide a string for resolving it
      * @param $name string|null Can provide a string for resolving it
@@ -156,7 +156,20 @@ abstract class AbstractItem
      */
     public function getFullPath($itemPath = null, $name = null)
     {
-        $path = $this->chrootDir . '/';
+
+        return $this->chrootDir . '/' . $this->getRelativePath($itemPath, $name);
+    }
+
+    /**
+     * Get the item path relative to the chrootDir
+     *
+     * @param string|null $itemPath
+     * @param string|null $name
+     * @return string
+     */
+    public function getRelativePath($itemPath = null, $name = null)
+    {
+        $path = '';
 
         if (!is_null($itemPath)) {
             $path .= $itemPath . '/';

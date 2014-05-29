@@ -73,7 +73,7 @@ class File extends AbstractItem
             'ret' => ($content != false) ? 'succeed' : 'failed',
         ));
 
-        if ($content == false) {
+        if ($content === false) {
             throw new UnreachableItemException($this);
         }
 

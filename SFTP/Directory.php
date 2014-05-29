@@ -150,10 +150,6 @@ class Directory extends AbstractItem implements \Iterator, \Countable
      */
     public function update()
     {
-        if (!$this->retrieved) {
-            throw new \RuntimeException("Can't update a directory that has not been already retrieved.");
-        }
-
         $this->conn->getLogger()->info(get_class($this) . '::update - Updating directory "{path}" on sftp server "{server}".', array(
             'path' => $this->getFullPath(),
             'server' => $this->conn->getServer(),

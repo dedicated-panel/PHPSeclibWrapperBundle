@@ -1,5 +1,5 @@
 # PHPSeclib Wrapper Bundle
-[![Build Status](https://travis-ci.org/NiR-/PHPSeclibWrapperBundle.png?branch=master)](https://travis-ci.org/NiR-/PHPSeclibWrapperBundle)
+[![Build Status](https://travis-ci.org/dedicated-panel/PHPSeclibWrapperBundle.png?branch=master)](https://travis-ci.org/NiR-/PHPSeclibWrapperBundle)
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/NiR-/PHPSeclibWrapperBundle/badges/quality-score.png?s=311420b59d0b3636eb346cd18573b864fc231d1f)](https://scrutinizer-ci.com/g/NiR-/PHPSeclibWrapperBundle/)
 
 This bundle contains useful methods (connection managing, easy key storing, packet installed verification ...) on top of PHPSeclib library (pure php ssh/sftp client).

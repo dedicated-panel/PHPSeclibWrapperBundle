@@ -319,4 +319,11 @@ interface ConnectionInterface
      * @return integer
      */
     public function getLastExitStatus();
+
+    /**
+     * Determine if current server is running Ubuntu
+     *
+     * @return boolean
+     */
+    public function isUbuntu();
 }

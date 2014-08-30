@@ -652,6 +652,10 @@ class Connection implements ConnectionInterface
      */
     public function hasCompatLib()
     {
+        if ($this->isUbuntu() && substr($this->getUbuntuRelease(), 0, 2) >= 14) {
+            return $this->isInstalled('gcc-multilib');
+        }
+
         // On récupère la version du système debian utilisé
         // puisque le paquet à vérifier diffère avec la debian wheezy
         $os_version = floatval(trim($this->exec('cat /etc/debian_version')));
@@ -758,5 +762,13 @@ EOF;
     public function getLastExitStatus()
     {
         return $this->getSSH()->getExitStatus();
+    }
+
+    /**
+     * @{inheritdoc}
+     */
+    public function isUbuntu()
+    {
+        return $this->fileExists('/etc/lsb-release');
     }
 }

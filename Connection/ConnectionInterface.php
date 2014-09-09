@@ -326,4 +326,11 @@ interface ConnectionInterface
      * @return boolean
      */
     public function isUbuntu();
+
+    /**
+     * Get the current ubuntu version
+     *
+     * @return mixed
+     */
+    public function getUbuntuRelease();
 }

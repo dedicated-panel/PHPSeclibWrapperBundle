@@ -771,4 +771,12 @@ EOF;
     {
         return $this->fileExists('/etc/lsb-release');
     }
+
+    /**
+     * @{inheritdoc}
+     */
+    public function getUbuntuRelease()
+    {
+        return $this->exec('lsb_release -r | sed \'s/Release:\t//\'');
+    }
 }

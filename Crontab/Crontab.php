@@ -10,14 +10,13 @@ class Crontab implements \Countable
     private $conn;
     /** @var $items CrontabItem[] */
     private $items;
-    /** @var $retrieved boolean */
-    private $retrieved;
 
     public function __construct(ConnectionInterface $conn)
     {
         $this->conn = $conn;
         $this->items = array();
-        $this->retrieved = false;
+
+        $this->retrieve();
     }
 
     public function count()
@@ -34,10 +33,6 @@ class Crontab implements \Countable
 
     public function getItems()
     {
-        if (!$this->retrieved) {
-            $this->retrieve();
-        }
-
         return $this->items;
     }
 
@@ -79,8 +74,6 @@ class Crontab implements \Countable
 
         $cmd = 'echo "' . $crontab . '" | crontab -';
         $this->conn->getSSH()->exec($cmd);
-
-        $this->retrieved = false;
 
         return $this->conn->getSSH()->getExitStatus() == 0;
     }

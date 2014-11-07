@@ -105,4 +105,23 @@ EOF
         $this->assertEquals('/home/test/css1/hlds.sh restart', $items[0]->getCommand());
         $this->assertEquals('/home/test/css2/hlds.sh restart >> /home/like/css2/cron-dp.log', $items[1]->getCommand());
     }
+
+    public function testRemoveItem()
+    {
+        $conn = $this
+            ->getMockBuilder('Dedipanel\PHPSeclibWrapperBundle\Connection\Connection')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $crontab = new Crontab($conn);
+
+        $obj1 = new CrontabItem('test');
+        $obj2 = new CrontabItem('test');
+        $this->assertNotEquals(spl_object_hash($obj1), spl_object_hash($obj2));
+
+        $crontab->addItem($obj1);
+        $this->assertNotEmpty($crontab->getItems());
+
+        $crontab->removeItem($obj2);
+        $this->assertEmpty($crontab->getItems());
+    }
 }

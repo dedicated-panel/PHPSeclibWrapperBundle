@@ -63,7 +63,7 @@ class Crontab implements \Countable
         foreach ($ret AS $line) {
             if (empty($line)) continue;
 
-            list($min, $hour, $dom, $month, $dow, $command) = explode(' ', $line);
+            list($min, $hour, $dom, $month, $dow, $command) = explode(' ', $line, 6);
 
             $items[] = new CrontabItem($command, $hour, $min, $dom, $month, $dow);
         }

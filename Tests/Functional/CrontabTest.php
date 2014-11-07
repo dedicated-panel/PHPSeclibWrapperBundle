@@ -81,4 +81,28 @@ class CrontabTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($crontab->update());
         $this->assertEmpty($crontab->getItems());
     }
+
+    public function testRetrieveContrab()
+    {
+
+        $conn = $this
+            ->getMockBuilder('Dedipanel\PHPSeclibWrapperBundle\Connection\Connection')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $conn
+            ->expects($this->once())
+            ->method('exec')
+            ->will($this->returnValue(<<<EOF
+01 01 * * * /home/test/css1/hlds.sh restart
+02 02 * * * /home/test/css2/hlds.sh restart >> /home/like/css2/cron-dp.log
+EOF
+        ));
+
+        $crontab = new Crontab($conn);
+        $items   = $crontab->getItems();
+
+        $this->assertCount(2, $items);
+        $this->assertEquals('/home/test/css1/hlds.sh restart', $items[0]->getCommand());
+        $this->assertEquals('/home/test/css2/hlds.sh restart >> /home/like/css2/cron-dp.log', $items[1]->getCommand());
+    }
 }

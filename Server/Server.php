@@ -5,6 +5,7 @@ namespace Dedipanel\PHPSeclibWrapperBundle\Server;
 use Dedipanel\PHPSeclibWrapperBundle\Server\Exception\ServerIPv6HostException;
 use Dedipanel\PHPSeclibWrapperBundle\Server\Exception\EmptyServerInfosException;
 use Dedipanel\PHPSeclibWrapperBundle\Server\Exception\UnresolvedHostnameException;
+use phpseclib\Crypt\RSA;
 
 /**
  * @author Albin Kerouanton
@@ -177,7 +178,7 @@ class Server implements ServerInterface
     public function setPrivateKey($privateKey)
     {
         if (is_string($privateKey)) {
-            $rsa = new \Crypt_RSA();
+            $rsa = new RSA;
             $rsa->loadKey($privateKey);
 
             $privateKey = $rsa;

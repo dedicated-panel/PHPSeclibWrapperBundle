@@ -6,6 +6,7 @@ use Dedipanel\PHPSeclibWrapperBundle\Connection\ConnectionManager;
 use Dedipanel\PHPSeclibWrapperBundle\Helper\KeyHelper;
 use Dedipanel\PHPSeclibWrapperBundle\Connection\Connection;
 use Dedipanel\PHPSeclibWrapperBundle\Server\Server;
+use phpseclib\Crypt\RSA;
 
 class KeyConnectionTest extends \PHPUnit_Framework_TestCase
 {
@@ -61,7 +62,7 @@ class KeyConnectionTest extends \PHPUnit_Framework_TestCase
             ;
         }
 
-        $pkey = new \Crypt_RSA();
+        $pkey = new RSA;
         $pkey->loadKey($this->privateKey);
 
         $mock
@@ -99,11 +100,11 @@ class KeyConnectionTest extends \PHPUnit_Framework_TestCase
 
     public function testSamePublicKey()
     {
-        $key = new \Crypt_RSA;
+        $key = new RSA;
         $key->loadKey($this->privateKey);
 
         $this->assertEquals($this->privateKey, $key->getPrivateKey());
-        $this->assertEquals($this->publicKey, $key->getPublicKey(CRYPT_RSA_PUBLIC_FORMAT_OPENSSH));
+        $this->assertEquals($this->publicKey, $key->getPublicKey(RSA::PUBLIC_FORMAT_OPENSSH));
     }
 
     public function testCreateAndDeleteKeyPair()

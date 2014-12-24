@@ -6,6 +6,3 @@ if (!file_exists($file)) {
 }
 
 $loader = require $file;
-
-$loader->loadClass('Net_SSH');
-$loader->loadClass('Net_SFTP');

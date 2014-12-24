@@ -5,9 +5,12 @@ namespace Dedipanel\PHPSeclibWrapperBundle\Connection;
 use Dedipanel\PHPSeclibWrapperBundle\Server\ServerInterface;
 use Dedipanel\PHPSeclibWrapperBundle\Connection\Exception\IncompleteLoginCredentialsException;
 use Dedipanel\PHPSeclibWrapperBundle\Connection\Exception\ConnectionErrorException;
+use phpseclib\Crypt\RSA;
 use Psr\Log\LoggerInterface;
 use Dedipanel\PHPSeclibWrapperBundle\Connection\Exception\ScreenNotExistException;
 use Dedipanel\PHPSeclibWrapperBundle\SFTP\Exception\InvalidPathException;
+use phpseclib\Net\SFTP;
+use phpseclib\Net\SSH2;
 
 /**
  * @author Albin Kerouanton
@@ -137,7 +140,7 @@ class Connection implements ConnectionInterface
             $hostname = $this->server->getServerIP();
             $port = $this->server->getPort();
 
-            $ssh = new \Net_SSH2($hostname, $port);
+            $ssh = new SSH2($hostname, $port);
             $login = false;
 
             $username = $this->server->getUsername();
@@ -151,7 +154,7 @@ class Connection implements ConnectionInterface
                 ));
 
                 $login = $ssh->login($username, $password);
-            } elseif ($privateKey instanceof \Crypt_RSA) {
+            } elseif ($privateKey instanceof RSA) {
                 $this->logger->info(get_class($this) . '::getSSH - Trying to connect to ssh server "{server}" (cid: {cid}) using privatekey.', array(
                     'server' => strval($this->server),
                     'cid' => $this->getConnectionId(),
@@ -197,7 +200,7 @@ class Connection implements ConnectionInterface
             $hostname = $this->server->getServerIP();
             $port = $this->server->getPort();
 
-            $sftp = new \Net_SFTP($hostname, $port);
+            $sftp = new SFTP($hostname, $port);
 
             $username = $this->server->getUsername();
             $password = $this->server->getPassword();

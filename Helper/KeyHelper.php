@@ -6,6 +6,7 @@ use Dedipanel\PHPSeclibWrapperBundle\KeyStore\Exception\KeyNotExistsException;
 use Dedipanel\PHPSeclibWrapperBundle\KeyStore\KeyStoreInterface;
 use Dedipanel\PHPSeclibWrapperBundle\Connection\ConnectionManagerInterface;
 use Dedipanel\PHPSeclibWrapperBundle\Server\ServerInterface;
+use phpseclib\Crypt\RSA;
 
 /**
  * @author Albin Kerouanton
@@ -43,8 +44,8 @@ class KeyHelper
     public function createKeyPair(ServerInterface $server, $bits = 1024)
     {
         // Generates a key pair
-        $rsa = new \Crypt_RSA();
-        $rsa->setPublicKeyFormat(CRYPT_RSA_PUBLIC_FORMAT_OPENSSH);
+        $rsa = new RSA;
+        $rsa->setPublicKeyFormat(RSA::PUBLIC_FORMAT_OPENSSH);
         $pair = $rsa->createKey($bits);
 
         // Stores the private key
@@ -74,8 +75,8 @@ class KeyHelper
     public function deleteKeyPair(ServerInterface $server)
     {
         try {
-            if ($server->getPrivateKey() instanceof \Crypt_RSA) {
-                $pubkey = $server->getPrivateKey()->getPublicKey(CRYPT_RSA_PUBLIC_FORMAT_OPENSSH);
+            if ($server->getPrivateKey() instanceof RSA) {
+                $pubkey = $server->getPrivateKey()->getPublicKey(RSA::PUBLIC_FORMAT_OPENSSH);
 
                 $conn = $this->manager->getConnectionFromServer($server);
                 $conn->removeKey($pubkey);

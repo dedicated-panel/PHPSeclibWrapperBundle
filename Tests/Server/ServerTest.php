@@ -72,6 +72,6 @@ class ServerTest extends \PHPUnit_Framework_TestCase
         $server = new Server();
         $server->setPrivateKey($this->privateKey);
 
-        $this->assertInstanceOf('\Crypt_RSA', $server->getPrivateKey());
+        $this->assertInstanceOf('phpseclib\Crypt\RSA', $server->getPrivateKey());
     }
 }

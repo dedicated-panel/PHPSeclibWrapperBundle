@@ -1,6 +1,5 @@
 {
     "name": "dedipanel/phpseclib-wrapper-bundle", 
-    "version": "0.1", 
     "description": "PHPSeclib Wrapper with connections manager, logging, os-specific helpers, ...", 
     "keywords": [ "phpseclib", "ssh", "sftp" ], 
     "license": "MIT", 

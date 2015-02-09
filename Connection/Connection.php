@@ -25,8 +25,6 @@ class Connection implements ConnectionInterface
     protected $connectionId;
 
     /** @var boolean **/
-    protected $debugMode;
-    /** @var LoggerInterface **/
     protected $logger;
 
     /** @var \Net_SSH2 PHPSeclib ssh2 instance **/
@@ -41,11 +39,10 @@ class Connection implements ConnectionInterface
      *
      * @return Connection Current instance, for method chaining
      */
-    public function __construct(ServerInterface $server, LoggerInterface $logger, $debugMode = false)
+    public function __construct(ServerInterface $server, LoggerInterface $logger)
     {
         $this->server    = $server;
         $this->logger    = $logger;
-        $this->debugMode = $debugMode;
 
         return $this;
     }
@@ -77,30 +74,6 @@ class Connection implements ConnectionInterface
     public function getConnectionId()
     {
         return $this->connectionId;
-    }
-
-    /**
-     * Sets the debug mode
-     *
-     * @param boolean $debugMode Indicates whether connection need to be in debug mode
-     *
-     * @return Connection Current instance, for method chaining
-     */
-    public function setDebugMode($debugMode)
-    {
-        $this->debugMode = $debugMode;
-
-        return $this;
-    }
-
-    /**
-     * Is in debug mode ?
-     *
-     * @return boolean Current debug mode for ssh/sftp connections
-     */
-    public function isDebugMode()
-    {
-        return $this->debugMode;
     }
 
     /**
@@ -257,17 +230,17 @@ class Connection implements ConnectionInterface
     {
         $this->logger->info(get_class($this) . '::exec - Execute cmd on ssh server "{server}" (cid: {cid}).', array(
             'server' => strval($this->server),
-            'cid' => $this->getConnectionId(),
-            'cmd' => $cmd,
+            'cid'    => $this->getConnectionId(),
+            'cmd'    => $cmd,
         ));
 
         $ret = $this->getSSH()->exec($cmd);
         $ret = trim($ret);
 
         $this->logger->info(get_class($this) . '::exec - Return of the command executed on "{server}" (cid: {cid}) : "{ret}".', array(
-            'cid' => $this->getConnectionId(),
-            'cmd' => $cmd,
-            'ret' => $ret,
+            'server' => strval($this->server), 
+            'cid'    => $this->getConnectionId(),
+            'ret'    => $ret,
         ));
         $this->logger->debug(get_class($this) . '::exec', array('phpseclib_logs' => $this->getSSH()->getLog()));
 

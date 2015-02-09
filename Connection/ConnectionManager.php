@@ -17,15 +17,13 @@ use Dedipanel\PHPSeclibWrapperBundle\Connection\Connection;
 class ConnectionManager extends ContainerAware implements ConnectionManagerInterface
 {
     protected $connections;
-    protected $debug;
     protected $logger;
 
-    public function __construct(LoggerInterface $logger, $debug = false)
+    public function __construct(LoggerInterface $logger)
     {
         $this->servers = array();
         $this->connections = array();
 
-        $this->debug = $debug;
         $this->logger = $logger;
     }
 
@@ -42,7 +40,7 @@ class ConnectionManager extends ContainerAware implements ConnectionManagerInter
         }
 
         if (!isset($this->connections[$hash][$cid]) || empty($this->connections[$hash][$cid])) {
-            $conn = new Connection($server, $this->logger, $this->debug);
+            $conn = new Connection($server, $this->logger);
             $conn->setConnectionId($cid);
 
             $this->connections[$hash][$cid] = $conn;

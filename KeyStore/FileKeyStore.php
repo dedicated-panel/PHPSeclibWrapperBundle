@@ -35,7 +35,7 @@ class FileKeyStore implements KeyStoreInterface
      */
     public function initialize()
     {
-        if (!file_exists($this->storePath) && @mkdir($this->storePath, 0775, true) !== true) {
+        if (!file_exists($this->storePath) && @mkdir($this->storePath, 0700, true) !== true) {
             throw new KeyStoreInitializationException();
         }
         
@@ -67,7 +67,7 @@ class FileKeyStore implements KeyStoreInterface
             throw new KeyAlreadyExistsException();
         }
         
-        return file_put_contents($this->getFilepath($name), $content) !== false;
+        return file_put_contents($filepath, $content) !== false && chmod($filepath, 0700);
     }
 
     /**

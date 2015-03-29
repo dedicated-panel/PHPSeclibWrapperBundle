@@ -85,19 +85,18 @@ class PasswordConnectionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($conn->testSSHConnection());
     }
 
-    /**
-     * @expectedException PHPUnit_Framework_Error
-     */
     public function testConnectionWithBadIP()
     {
         $conn = $this->getConnection(false, false, true);
-        $conn->testSSHConnection();
+
+        $this->assertFalse($conn->testSSHConnection());
     }
 
     public function testConnectionWithBadUser()
     {
         $conn = $this->getConnection(true, false, false);
-        $conn->testSSHConnection();
+
+        $this->assertFalse($conn->testSSHConnection());
     }
 
     public function testSSHConnectionWithIncorrectPassword()
